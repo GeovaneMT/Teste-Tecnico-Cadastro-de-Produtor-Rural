@@ -12,12 +12,12 @@ enum UserRole {
   ADMIN
 }
 
-enum Culture {
-  SOJA
-  MILHO
-  ALGODAO
-  CAFÉ
-  CANA_DE_ACUCAR
+enum CropType {
+  SOYBEANS
+  CORN
+  COTTON
+  COFFEE
+  SUGARCANE
 }
 
 model User {
@@ -47,19 +47,19 @@ model Notification {
 }
 
 model Farm {
-  id             String    @id @default(uuid())
-  producerId     String    @map("producer_id")
-  cpfCnpj        String    @unique
-  producerName   String    @map("producer_name")
-  farmName       String    @map("farm_name")
+  id             String     @id @default(uuid())
+  producerId     String     @map("producer_id")
+  cpfCnpj        String     @unique
+  producerName   String     @map("producer_name")
+  farmName       String     @map("farm_name")
   city           String
   state          String
-  totalArea      Float     @map("total_area") // em hectares
-  arableArea     Float     @map("arable_area") // em hectares
-  vegetationArea Float     @map("vegetation_area") // em hectares
-  cultures       Culture[] @map("cultures")
-  createdAt      DateTime  @default(now()) @map("created_at")
-  updatedAt      DateTime  @updatedAt @map("updated_at")
+  totalArea      Float      @map("total_area") // em hectares
+  arableArea     Float      @map("arable_area") // em hectares
+  vegetationArea Float      @map("vegetation_area") // em hectares
+  cultures       CropType[] @map("cultures")
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
 
   producer User @relation(fields: [producerId], references: [id])
 
@@ -69,7 +69,7 @@ model Farm {
 model FarmIndicator {
   id         String   @id @default(uuid())
   state      String
-  culture    Culture
+  culture    CropType
   totalFarms Int      @map("total_farms")
   totalArea  Float    @map("total_area") // em hectares
   createdAt  DateTime @default(now()) @map("created_at")
