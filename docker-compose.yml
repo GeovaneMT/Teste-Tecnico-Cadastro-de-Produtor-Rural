@@ -1,0 +1,27 @@
+services:
+  api-pg:
+    container_name: nest-api-pg
+    image: bitnami/postgresql
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRESQL_USERNAME: docker
+      POSTGRESQL_PASSWORD: docker
+      POSTGRESQL_DATABASE: postgre
+      PGDATA: /data/postgres
+    volumes:
+      - ./data/pg:/data/postgres
+    user: root
+
+  cache:
+    container_name: nest-clean-cache
+    image: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./data/redis:/data
+
+
+# In case of errors mounting the volume, run the folowing commands:
+# docker run --name api-pg -e POSTGRESQL_USERNAME=docker -e POSTGRESQL_PASSWORD=docker -e POSTGRESQL_DATABASE=postgre -p 5432:5432 bitnami/postgresql
+# docker run --name my-redis -p 6379:6379 -d redis
