@@ -51,14 +51,14 @@ export class DomainEvents {
     eventClassName: string,
   ) {
     const wasEventRegisteredBefore = eventClassName in this.handlersMap
-
+    
     if (!wasEventRegisteredBefore) {
       this.handlersMap[eventClassName] = []
     }
-
+    
     this.handlersMap[eventClassName].push(callback)
   }
-
+  
   public static clearHandlers() {
     this.handlersMap = {}
   }

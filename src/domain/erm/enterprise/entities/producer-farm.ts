@@ -11,7 +11,7 @@ export class ProducerFarm extends Entity<ProducerFarmProps> {
     return this.props.producerId
   }
 
-  get attachmentId() {
+  get farmId() {
     return this.props.farmId
   }
 

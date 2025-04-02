@@ -1,5 +1,6 @@
 import { PaginationParams } from '@/core/repositories/pagination-params'
 
+import { Crop } from '@/domain/erm/enterprise/entities/crop'
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
 
@@ -12,12 +13,12 @@ export abstract class FarmsRepository {
 
   abstract findDetailsById(id: string): Promise<FarmDetails | null>
   
-  abstract findManyByName(name: string): Promise<Farm[] | null>
-  abstract findManyByCity(city: string): Promise<Farm[] | null>
-  abstract findManyByState(state: string): Promise<Farm[] | null>
-  abstract findManyByCrops(crops: string): Promise<Farm[] | null>
   abstract findManyRecent(params: PaginationParams): Promise<Farm[]>
-  abstract findManyByFarmArea(farmArea: string): Promise<Farm[] | null>
-  abstract findManyByVegetationArea(vegetationArea: string): Promise<Farm[] | null>
-  abstract findManyByAgriculturalArea(agriculturalArea: string): Promise<Farm[] | null>
+  abstract findManyByName(name: string, params: PaginationParams): Promise<Farm[] | null>
+  abstract findManyByCity(city: string, params: PaginationParams): Promise<Farm[] | null>
+  abstract findManyByState(state: string, params: PaginationParams): Promise<Farm[] | null>
+  abstract findManyByCrops(crops: Crop[], params: PaginationParams): Promise<Farm[] | null>
+  abstract findManyByFarmArea(farmArea: string, params: PaginationParams): Promise<Farm[] | null>
+  abstract findManyByVegetationArea(vegetationArea: string, params: PaginationParams): Promise<Farm[] | null>
+  abstract findManyByAgriculturalArea(agriculturalArea: string, params: PaginationParams): Promise<Farm[] | null>
 }

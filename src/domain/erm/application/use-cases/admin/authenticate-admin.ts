@@ -5,7 +5,7 @@ import { Either, left, right } from '@/core/either'
 import { Encrypter } from '@/domain/erm/application/cryptography/encrypter'
 import { HashComparer } from '@/domain/erm/application/cryptography/hash-comparer'
 import { AdminsRepository } from '@/domain/erm/application/repositories/admins-repository'
-import { WrongCredentialsError } from '@/domain/erm/application/use-cases/core-errors/wrong-credentials-error'
+import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
 
 interface AuthenticateAdminUseCaseRequest {
   email: string

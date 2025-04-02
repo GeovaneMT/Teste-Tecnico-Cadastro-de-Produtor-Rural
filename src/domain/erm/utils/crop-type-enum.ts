@@ -1,7 +1,3 @@
-export enum CropType {
-  Soybeans = 'Soybeans',
-  Corn = 'Corn',
-  Cotton = 'Cotton',
-  Coffee = 'Coffee',
-  SugarCane = 'Sugar Cane',
-}
+import { CropType as PrismaCropType } from '@prisma/client'
+
+export type CropType = PrismaCropType

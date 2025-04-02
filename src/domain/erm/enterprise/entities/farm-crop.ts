@@ -11,7 +11,7 @@ export class FarmCrop extends Entity<FarmCropProps> {
     return this.props.farmId
   }
 
-  get attachmentId() {
+  get cropId() {
     return this.props.cropId
   }
 

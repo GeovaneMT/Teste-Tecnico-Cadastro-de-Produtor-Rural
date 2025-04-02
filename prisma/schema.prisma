@@ -8,7 +8,6 @@ datasource db {
 }
 
 enum UserRole {
-  PRODUCER
   ADMIN
 }
 
@@ -21,58 +20,80 @@ enum CropType {
 }
 
 model User {
-  id       String   @id @default(uuid())
+  id       String @id @default(uuid())
   name     String
-  email    String   @unique
+  email    String @unique
   password String
-  role     UserRole @default(ADMIN)
+
+  role UserRole @default(ADMIN)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   notifications Notification[]
-  farms         Farm[]
 
   @@map("users")
 }
 
-model Notification {
-  id          String    @id @default(uuid())
-  recipientId String    @map("recipient_id")
-  title       String
-  content     String
-  readAt      DateTime? @map("read_at")
-  createdAt   DateTime  @default(now()) @map("created_at")
+model Producer {
+  id       String @id @default(uuid())
+  name     String
+  email    String @unique
+  document String @unique
 
-  recipient User @relation(fields: [recipientId], references: [id])
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  @@map("notifications")
+  farms Farm[]
+
+  @@map("producers")
 }
 
 model Farm {
-  id             String     @id @default(uuid())
-  producerId     String     @map("producer_id")
-  cpfCnpj        String     @unique
-  producerName   String     @map("producer_name")
-  farmName       String     @map("farm_name")
-  city           String
-  state          String
-  totalArea      Float      @map("total_area") // em hectares
-  arableArea     Float      @map("arable_area") // em hectares
-  vegetationArea Float      @map("vegetation_area") // em hectares
-  cultures       CropType[] @map("cultures")
-  createdAt      DateTime   @default(now()) @map("created_at")
-  updatedAt      DateTime   @updatedAt @map("updated_at")
+  ownerId String? @map("producer_id")
+  id      String  @id @default(uuid())
+  name    String  @map("farm_name")
+  city    String
+  state   String
 
-  producer User @relation(fields: [producerId], references: [id])
+  farmArea         Float @map("farm_area")
+  vegetationArea   Float @map("vegetation_area")
+  agriculturalArea Float @map("agricultural_area")
+
+  crops Crop[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  producer Producer? @relation(fields: [ownerId], references: [id])
 
   @@map("farms")
 }
 
-model FarmIndicator {
-  id         String   @id @default(uuid())
-  state      String
-  culture    CropType
-  totalFarms Int      @map("total_farms")
-  totalArea  Float    @map("total_area") // em hectares
-  createdAt  DateTime @default(now()) @map("created_at")
+model Crop {
+  farmId      String?  @map("farm_id")
+  id          String   @id @default(uuid())
+  type        CropType
+  description String
 
-  @@map("farm_indicators")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  farm Farm? @relation(fields: [farmId], references: [id], onDelete: Cascade)
+
+  @@map("crops")
+}
+
+model Notification {
+  recipientId String    @map("recipient_id")
+  id          String    @id @default(uuid())
+  title       String
+  content     String
+  readAt      DateTime? @map("read_at")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  recipient User @relation(fields: [recipientId], references: [id])
+
+  @@map("notifications")
 }

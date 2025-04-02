@@ -22,9 +22,9 @@ export class OnAdminCreated implements EventHandler {
 
   private async sendAdminNotification({ admin }: AdminCreatedEvent) {
     const adm = await this.adminsRepository.findByEmail(
-      admin.email.toString(),
+      admin.email,
     )
-
+    
     if (adm) {
       await this.sendNotification.execute({
         recipientId: adm.id.toString(),

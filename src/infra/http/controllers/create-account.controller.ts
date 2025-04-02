@@ -27,7 +27,7 @@ type CreateAccountBodySchema = z.infer<typeof createAccountBodySchema>
 @Controller('/accounts')
 @Public()
 export class CreateAccountController {
-  constructor(private registerStudent: RegisterAdminUseCase) {}
+  constructor(private registerAdmin: RegisterAdminUseCase) {}
 
   @Post()
   @HttpCode(201)
@@ -35,7 +35,7 @@ export class CreateAccountController {
   async handle(@Body() body: CreateAccountBodySchema) {
     const { name, email, password } = body
 
-    const result = await this.registerStudent.execute({
+    const result = await this.registerAdmin.execute({
       name,
       email,
       password,

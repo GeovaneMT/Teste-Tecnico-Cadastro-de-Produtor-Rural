@@ -4,7 +4,7 @@ import { Public } from '@/infra/auth/public'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
 import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/admin/authenticate-admin'
-import { WrongCredentialsError } from '@/domain/erm/application/use-cases/core-errors/wrong-credentials-error'
+import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
 
 import {
   Body,
@@ -25,14 +25,14 @@ type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 @Controller('/sessions')
 @Public()
 export class AuthenticateController {
-  constructor(private authenticateStudent: AuthenticateAdminUseCase) {}
+  constructor(private authenticateAdmin: AuthenticateAdminUseCase) {}
 
   @Post()
   @UsePipes(new ZodValidationPipe(authenticateBodySchema))
   async handle(@Body() body: AuthenticateBodySchema) {
     const { email, password } = body
 
-    const result = await this.authenticateStudent.execute({
+    const result = await this.authenticateAdmin.execute({
       email,
       password,
     })

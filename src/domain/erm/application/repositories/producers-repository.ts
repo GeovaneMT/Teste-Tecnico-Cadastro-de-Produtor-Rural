@@ -21,7 +21,7 @@ export abstract class ProducersRepository {
   abstract findDetailsByFarmId(farmId: string): Promise<ProducerDetails | null>
   abstract findDetailsByDocument(document: CPF | CNPJ): Promise<ProducerDetails | null>
   
-  abstract findManyByName(name: string): Promise<Producer[] | null>
-  abstract findManyByFarmName(farmName: string): Promise<Producer[] | null>  
+  abstract findManyByName(name: string, params: PaginationParams): Promise<Producer[] | null>
+  abstract findManyByFarmName(farmName: string, params: PaginationParams): Promise<Producer[] | null>  
   abstract findManyRecent(params: PaginationParams): Promise<Producer[] | null>
 }

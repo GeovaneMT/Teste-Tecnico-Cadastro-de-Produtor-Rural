@@ -46,7 +46,6 @@ describe('On admin created (E2E)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         content: 'New admin',
-        attachments: [],
       })
 
     await waitFor(async () => {

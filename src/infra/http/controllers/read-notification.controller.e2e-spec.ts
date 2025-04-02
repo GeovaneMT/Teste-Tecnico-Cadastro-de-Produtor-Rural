@@ -15,7 +15,7 @@ describe('Read notification (E2E)', () => {
   let jwt: JwtService
   let app: INestApplication
   let prisma: PrismaService
-  let studentFactory: AdminFactory
+  let adminFactory: AdminFactory
   let notificationFactory: NotificationFactory
 
   beforeAll(async () => {
@@ -27,14 +27,14 @@ describe('Read notification (E2E)', () => {
     jwt = moduleRef.get(JwtService)
     app = moduleRef.createNestApplication()
     prisma = moduleRef.get(PrismaService)
-    studentFactory = moduleRef.get(AdminFactory)
+    adminFactory = moduleRef.get(AdminFactory)
     notificationFactory = moduleRef.get(NotificationFactory)
 
     await app.init()
   })
 
   test('[PATCH] /notifications/:notificationId/read', async () => {
-    const user = await studentFactory.makePrismaAdmin({
+    const user = await adminFactory.makePrismaAdmin({
       name: 'John Doe',
     })
 
