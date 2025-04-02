@@ -5,6 +5,9 @@ export interface AdminProps {
   name: string
   email: string
   password: string
+
+  createdAt: Date
+  updatedAt?: Date | null
 }
 
 export class Admin extends Entity<AdminProps> {
@@ -18,6 +21,14 @@ export class Admin extends Entity<AdminProps> {
 
   get password() {
     return this.props.password
+  }
+
+  get createdAt() {
+    return this.props.createdAt
+  }
+
+  get updatedAt() {
+    return this.props.updatedAt
   }
 
   static create(props: AdminProps, id?: UniqueEntityID) {

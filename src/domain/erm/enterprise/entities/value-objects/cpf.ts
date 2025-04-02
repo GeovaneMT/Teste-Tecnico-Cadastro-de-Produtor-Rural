@@ -1,11 +1,15 @@
 export class CPF {
   private value: string;
 
-  constructor(value: string) {
+  private constructor(value: string) {
     if (!this.isValid(value)) {
       throw new Error('Invalid CPF');
     }
     this.value = value;
+  }
+
+  static create(value: string) {
+    return new CPF(value)
   }
 
   private isValid(cpf: string): boolean {

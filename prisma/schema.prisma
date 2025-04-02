@@ -27,8 +27,8 @@ model User {
 
   role UserRole @default(ADMIN)
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   notifications Notification[]
 
@@ -41,8 +41,8 @@ model Producer {
   email    String @unique
   document String @unique
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   farms Farm[]
 
@@ -50,20 +50,21 @@ model Producer {
 }
 
 model Farm {
-  ownerId String? @map("producer_id")
-  id      String  @id @default(uuid())
-  name    String  @map("farm_name")
-  city    String
-  state   String
+  ownerId String @map("producer_id")
 
-  farmArea         Float @map("farm_area")
-  vegetationArea   Float @map("vegetation_area")
-  agriculturalArea Float @map("agricultural_area")
+  id    String @id @default(uuid())
+  name  String @map("farm_name")
+  city  String
+  state String
+
+  farmArea         String @map("farm_area")
+  vegetationArea   String @map("vegetation_area")
+  agriculturalArea String @map("agricultural_area")
 
   crops Crop[]
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   producer Producer? @relation(fields: [ownerId], references: [id])
 
@@ -76,8 +77,8 @@ model Crop {
   type        CropType
   description String
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
 
   farm Farm? @relation(fields: [farmId], references: [id], onDelete: Cascade)
 

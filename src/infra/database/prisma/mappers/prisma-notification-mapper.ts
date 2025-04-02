@@ -22,11 +22,12 @@ export class PrismaNotificationMapper {
     notification: Notification,
   ): Prisma.NotificationUncheckedCreateInput {
     return {
-      id: notification.id.toString(),
       recipientId: notification.recipientId.toString(),
+      id: notification.id.toString(),
       title: notification.title,
       content: notification.content,
       readAt: notification.readAt,
+
       createdAt: notification.createdAt,
     }
   }

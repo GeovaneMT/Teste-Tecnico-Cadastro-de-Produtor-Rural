@@ -20,6 +20,9 @@ export class PrismaCropMapper {
       id: crop.id.toString(),
       type: crop.type,
       description: crop.description,
+
+      createdAt: crop.createdAt,
+      updatedAt: crop.updatedAt,
     }
   }
 }

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 
 import { CacheModule } from '@/infra/cache/cache.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
+
 import { PrismaAdminsRepository } from '@/infra/database/prisma/repositories/prisma-admins-repository'
 import { PrismaNotificationsRepository } from '@/infra/database/prisma/repositories/prisma-notifications-repository'
 

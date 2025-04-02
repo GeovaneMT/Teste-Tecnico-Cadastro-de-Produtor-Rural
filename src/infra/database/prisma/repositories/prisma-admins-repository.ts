@@ -1,5 +1,8 @@
 import { Injectable } from '@nestjs/common'
 
+import { DomainEvents } from '@/core/events/domain-events'
+
+import { CacheRepository } from '@/infra/cache/cache-repository'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaAdminMapper } from '@/infra/database/prisma/mappers/prisma-admin-mapper'
 
@@ -8,7 +11,60 @@ import { AdminsRepository } from '@/domain/erm/application/repositories/admins-r
 
 @Injectable()
 export class PrismaAdminsRepository implements AdminsRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private cache: CacheRepository,
+    private prisma: PrismaService
+  ) {}
+
+  async save(admin: Admin): Promise<void> {
+    const data = PrismaAdminMapper.toPrisma(admin)
+
+    await Promise.all([
+      this.prisma.user.update({
+        where: {
+          id: admin.id.toString(),
+        },
+        data,
+      }),
+      this.cache.delete(`admin:${data.name}:details`),
+    ])
+
+    DomainEvents.dispatchEventsForAggregate(admin.id)
+  }
+
+  async create(admin: Admin): Promise<void> {
+    const data = PrismaAdminMapper.toPrisma(admin)
+  
+    await this.prisma.user.create({
+      data,
+    })
+
+    DomainEvents.dispatchEventsForAggregate(admin.id)
+  }
+
+  async delete(admin: Admin): Promise<void> {
+    const data = PrismaAdminMapper.toPrisma(admin)
+
+    await this.prisma.user.delete({
+      where: {
+        id: data.id,
+      },
+    })
+  }
+  
+  async findById(id: string): Promise<Admin | null> {
+    const admin = await this.prisma.user.findUnique({
+      where: {
+        id,
+      },
+    })
+
+    if (!admin) {
+      return null
+    }
+
+    return PrismaAdminMapper.toDomain(admin)
+  }
 
   async findByEmail(email: string): Promise<Admin | null> {
     const admin = await this.prisma.user.findUnique({
@@ -22,13 +78,5 @@ export class PrismaAdminsRepository implements AdminsRepository {
     }
 
     return PrismaAdminMapper.toDomain(admin)
-  }
-
-  async create(admin: Admin): Promise<void> {
-    const data = PrismaAdminMapper.toPrisma(admin)
-
-    await this.prisma.user.create({
-      data,
-    })
   }
 }

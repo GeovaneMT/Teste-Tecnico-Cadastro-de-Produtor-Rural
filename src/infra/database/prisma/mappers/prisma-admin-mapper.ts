@@ -11,6 +11,9 @@ export class PrismaAdminMapper {
         name: raw.name,
         email: raw.email,
         password: raw.password,
+
+        createdAt: raw.createdAt,
+        updatedAt: raw.updatedAt,
       },
       new UniqueEntityID(raw.id),
     )
@@ -22,6 +25,9 @@ export class PrismaAdminMapper {
       name: admin.name,
       email: admin.email,
       password: admin.password,
+
+      createdAt: admin.createdAt,
+      updatedAt: admin.updatedAt,
     }
   }
 }
