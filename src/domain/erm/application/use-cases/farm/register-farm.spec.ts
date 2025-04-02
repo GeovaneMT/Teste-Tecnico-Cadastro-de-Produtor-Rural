@@ -3,11 +3,16 @@ import { RegisterFarmUseCase } from '@/domain/erm/application/use-cases/farm/reg
 
 import { makeCrop } from 'test/factories/make-crop'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
+import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
+import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
+import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
+import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 
 let inMemoryCropsRepository: InMemoryCropsRepository
 let inMemoryFarmsRepository: InMemoryFarmsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
 let inMemoryProducersRepository: InMemoryProducersRepository
+let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 
 let sut: RegisterFarmUseCase
 
@@ -15,16 +20,17 @@ describe('Register Farm', () => {
   beforeEach(() => {
     inMemoryCropsRepository = new InMemoryCropsRepository()
     inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
-    inMemoryProducersRepository = new InMemoryProducersRepository()
-    inMemoryFarmsRepository = new InMemoryFarmsRepository(InMemoryCropsRepository, InMemoryFarmCropsRepository, InMemoryProducersRepository)
+    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository()
+    inMemoryProducersRepository = new InMemoryProducersRepository(inMemoryFarmsRepository, inMemoryProducerFarmsRepository)
+    inMemoryFarmsRepository = new InMemoryFarmsRepository(inMemoryCropsRepository, inMemoryFarmCropsRepository, inMemoryProducersRepository)
 
     sut = new RegisterFarmUseCase(inMemoryFarmsRepository)
   })
 
   it('should be able to register a new farm', async () => {
 
-    const cropOne = makeCrop({type: CropType.Cotton, description: 'crop_1_description'})
-    const cropTwo = makeCrop({type: CropType.Coffee, description: 'crop_2_description'})
+    const cropOne = makeCrop({type: 'COTTON', description: 'crop_1_description'})
+    const cropTwo = makeCrop({type: 'COFFEE', description: 'crop_2_description'})
 
     const cropsIds = [cropOne.id.toString(), cropTwo.id.toString()]
 
