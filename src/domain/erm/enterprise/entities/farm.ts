@@ -5,6 +5,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { FarmCropList } from '@/domain/erm/enterprise/entities/farm-crop-list'
 
 export interface FarmProps {
+  ownerId: UniqueEntityID
   name: string
   city: string
   state: string
@@ -20,6 +21,10 @@ export interface FarmProps {
 }
 
 export class Farm extends AggregateRoot<FarmProps> {
+  get ownerId() {
+    return this.props.ownerId
+  }
+
   get name() {
     return this.props.name
   }

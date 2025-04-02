@@ -8,6 +8,7 @@ import { ProducerFarmList } from '@/domain/erm/enterprise/entities/producer-farm
 
 export interface ProducerProps {
   name: string
+  email: string
   farms: ProducerFarmList
   document: CPF | CNPJ
 
@@ -18,6 +19,10 @@ export interface ProducerProps {
 export class Producer extends AggregateRoot<ProducerProps> {
   get name() {
     return this.props.name
+  }
+
+  get email() {
+    return this.props.email
   }
   
   get farms() {
@@ -38,6 +43,11 @@ export class Producer extends AggregateRoot<ProducerProps> {
   
   set name(name: string) {
     this.props.name = name
+    this.touch()
+  }
+
+  set email(email: string) {
+    this.props.email = email
     this.touch()
   }
   
