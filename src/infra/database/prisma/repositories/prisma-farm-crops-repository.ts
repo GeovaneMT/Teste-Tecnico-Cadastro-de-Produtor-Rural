@@ -9,7 +9,7 @@ import { ProducerFarm } from '@/domain/erm/enterprise/entities/producer-farm'
 import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/producer-farms-repository'
 
 @Injectable()
-export class PrismaProducerFarmsRepository implements ProducerFarmsRepository {
+export class PrismaFarmCropsRepository implements ProducerFarmsRepository {
   constructor(private prisma: PrismaService) {}
 
   async createMany(farms: ProducerFarm[]): Promise<void> {
