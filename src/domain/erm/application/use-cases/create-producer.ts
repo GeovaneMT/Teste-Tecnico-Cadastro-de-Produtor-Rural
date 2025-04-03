@@ -13,14 +13,14 @@ import { ProducerFarmList } from '@/domain/erm/enterprise/entities/producer-farm
 import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
 import { ProducerAlreadyExistsError } from '@/domain/erm/application/use-cases/errors/producer-already-exists-error'
 
-interface RegisterProducerUseCaseRequest {
+interface CreateProducerUseCaseRequest {
   name: string
   email: string
   farmsIds: string[]
   document: CPF | CNPJ
 }
 
-type RegisterProducerUseCaseResponse = Either<
+type CreateProducerUseCaseResponse = Either<
   ProducerAlreadyExistsError,
   {
     producer: Producer
@@ -28,7 +28,7 @@ type RegisterProducerUseCaseResponse = Either<
 >
 
 @Injectable()
-export class RegisterProducerUseCase {
+export class CreateProducerUseCase {
   constructor(
     private producersRepository: ProducersRepository,
   ) {}
@@ -38,7 +38,7 @@ export class RegisterProducerUseCase {
     email,
     document,
     farmsIds,
-  }: RegisterProducerUseCaseRequest): Promise<RegisterProducerUseCaseResponse> {
+  }: CreateProducerUseCaseRequest): Promise<CreateProducerUseCaseResponse> {
     const producerWithSameEmail = await this.producersRepository.findByEmail(email)
     const producerWithSameDocument = await this.producersRepository.findByDocument(document)
 

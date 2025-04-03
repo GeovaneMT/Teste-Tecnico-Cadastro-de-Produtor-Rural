@@ -2,9 +2,10 @@ import { expect, test } from 'vitest';
 import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj';
 
 test('it should be able to create a valid CNPJ', () => {
-  const validCNPJ = CNPJ.create('12.345.678/0001-90');
   
-  expect(validCNPJ.getValue()).toBe('12.345.678/0001-90');
+  const validCNPJ = CNPJ.create('12.345.678/0001-95');
+  
+  expect(validCNPJ.getValue()).toBe('12.345.678/0001-95');
 });
 
 test('it should throw an error for an invalid CNPJ', () => {

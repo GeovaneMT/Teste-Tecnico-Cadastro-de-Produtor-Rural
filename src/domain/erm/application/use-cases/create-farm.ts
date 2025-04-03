@@ -9,7 +9,7 @@ import { FarmCropList } from '@/domain/erm/enterprise/entities/farm-crop-list'
 
 import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
 
-interface RegisterFarmUseCaseRequest {
+interface CreateFarmUseCaseRequest {
   ownerId: string
   name: string
   city: string
@@ -22,7 +22,7 @@ interface RegisterFarmUseCaseRequest {
   cropsIds: string[]
 }
 
-type RegisterFarmUseCaseResponse = Either<
+type CreateFarmUseCaseResponse = Either<
   null,
   {
     farm: Farm
@@ -30,7 +30,7 @@ type RegisterFarmUseCaseResponse = Either<
 >
 
 @Injectable()
-export class RegisterFarmUseCase {
+export class CreateFarmUseCase {
   constructor(
     private farmsRepository: FarmsRepository,
   ) {}
@@ -46,7 +46,7 @@ export class RegisterFarmUseCase {
     agriculturalArea,
 
     cropsIds,
-  }: RegisterFarmUseCaseRequest): Promise<RegisterFarmUseCaseResponse> {
+  }: CreateFarmUseCaseRequest): Promise<CreateFarmUseCaseResponse> {
 
     const farm = Farm.create({
       ownerId: new UniqueEntityID(ownerId),

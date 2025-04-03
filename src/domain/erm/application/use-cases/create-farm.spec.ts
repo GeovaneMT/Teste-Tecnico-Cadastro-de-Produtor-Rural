@@ -1,5 +1,4 @@
-import { CropType } from '@/domain/erm/utils/crop-type-enum'
-import { RegisterFarmUseCase } from '@/domain/erm/application/use-cases/register-farm'
+import { CreateFarmUseCase } from '@/domain/erm/application/use-cases/create-farm'
 
 import { makeCrop } from 'test/factories/make-crops'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
@@ -14,9 +13,9 @@ let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
 let inMemoryProducersRepository: InMemoryProducersRepository
 let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 
-let sut: RegisterFarmUseCase
+let sut: CreateFarmUseCase
 
-describe('Register Farm', () => {
+describe('Create Farm', () => {
   beforeEach(() => {
     inMemoryCropsRepository = new InMemoryCropsRepository()
     inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
@@ -24,18 +23,13 @@ describe('Register Farm', () => {
     inMemoryProducersRepository = new InMemoryProducersRepository(inMemoryFarmsRepository, inMemoryProducerFarmsRepository)
     inMemoryFarmsRepository = new InMemoryFarmsRepository(inMemoryCropsRepository, inMemoryFarmCropsRepository, inMemoryProducersRepository)
 
-    sut = new RegisterFarmUseCase(inMemoryFarmsRepository)
+    sut = new CreateFarmUseCase(inMemoryFarmsRepository)
   })
 
-  it('should be able to register a new farm', async () => {
-
-    const cropOne = makeCrop({type: 'COTTON', description: 'crop_1_description'})
-    const cropTwo = makeCrop({type: 'COFFEE', description: 'crop_2_description'})
-
-    const cropsIds = [cropOne.id.toString(), cropTwo.id.toString()]
+  it('should be able to create a new farm with a crop', async () => {
 
     const result = await sut.execute({
-      ownerId: 'any_owner_id',
+      ownerId: '1',
       name: 'farm_name',
       city: 'farm_city',
       state: 'farm_state',
@@ -44,7 +38,7 @@ describe('Register Farm', () => {
       vegetationArea: 'vegetation_area',
       agriculturalArea: 'agricultural_area',
 
-      cropsIds,
+      cropsIds: ['1', '2'],
     })
 
     expect(result.isRight()).toBe(true)

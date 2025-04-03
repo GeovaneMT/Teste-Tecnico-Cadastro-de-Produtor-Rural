@@ -100,13 +100,6 @@ export class Farm extends AggregateRoot<FarmProps> {
     this.props.updatedAt = new Date()
   }
 
-  validateAreas(): boolean {
-    const farmAreaInHectares = this.farmArea
-    const agriculturalAreaInHectares = this.agriculturalArea
-    const vegetationAreaInHectares = this.vegetationArea
-    return agriculturalAreaInHectares + vegetationAreaInHectares <= farmAreaInHectares
-  }
-
   static create(
     props: Optional<FarmProps, 'createdAt' | 'crops'>,
     id?: UniqueEntityID,
@@ -119,11 +112,7 @@ export class Farm extends AggregateRoot<FarmProps> {
       },
       id,
     )
-
-    if (!farm.validateAreas()) {
-      throw new Error('The sum of agricultural and vegetation areas cannot be greater than the total area.')
-    }
-
+    
     return farm
   }
 

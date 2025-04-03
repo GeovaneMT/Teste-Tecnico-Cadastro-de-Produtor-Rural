@@ -55,7 +55,7 @@ export class InMemoryFarmsRepository implements FarmsRepository {
       return null
     }
 
-    const owner = await this.producersRepository.items.find((producer) => {
+    const owner = this.producersRepository.items.find((producer) => {
       return producer.id.equals(farm.ownerId)
     })
 
