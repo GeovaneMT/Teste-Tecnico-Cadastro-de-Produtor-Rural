@@ -9,8 +9,8 @@ import { ProducerFarmList } from '@/domain/erm/enterprise/entities/producer-farm
 export interface ProducerProps {
   name: string
   email: string
-  farms: ProducerFarmList
   document: CPF | CNPJ
+  farms: ProducerFarmList
 
   createdAt: Date
   updatedAt?: Date | null

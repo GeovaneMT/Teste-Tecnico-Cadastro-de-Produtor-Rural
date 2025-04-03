@@ -11,7 +11,7 @@ import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
 import { waitFor } from 'test/utils/wit-for'
-import { AdminFactory } from 'test/factories/make-admin'
+import { AdminFactory } from 'test/factories/make-admins'
 
 describe('On admin created (E2E)', () => {
   let app: INestApplication

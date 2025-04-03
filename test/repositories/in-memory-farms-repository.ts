@@ -1,14 +1,13 @@
 import { DomainEvents } from '@/core/events/domain-events'
+import { PaginationParams } from '@/core/repositories/pagination-params'
 
-import { Crop } from '@/domain/erm/enterprise/entities/crop'
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
 import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
-import { PaginationParams } from '@/core/repositories/pagination-params'
 
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
-import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
+import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 
 export class InMemoryFarmsRepository implements FarmsRepository {
   public items: Farm[] = []
@@ -27,16 +26,16 @@ export class InMemoryFarmsRepository implements FarmsRepository {
     DomainEvents.dispatchEventsForAggregate(farm.id)
   }
 
-  async delete(farm: Farm) {
-    const itemIndex = this.items.findIndex((item) => item.id === farm.id)
-
-    this.items.splice(itemIndex, 1)
-  }
-
   async create(farm: Farm) {
     this.items.push(farm)
 
     DomainEvents.dispatchEventsForAggregate(farm.id)
+  }
+
+  async delete(farm: Farm) {
+    const itemIndex = this.items.findIndex((item) => item.id === farm.id)
+
+    this.items.splice(itemIndex, 1)
   }
 
   async findById(id: string): Promise<Farm | null> {
@@ -118,6 +117,18 @@ export class InMemoryFarmsRepository implements FarmsRepository {
     return farms
   }
 
+  async findManyByOwnerId(ownerId: string, { page }: PaginationParams): Promise<Farm[] | null> {
+    const farms = this.items
+      .filter((item) => item.ownerId.toString() === ownerId)
+      .slice((page - 1) * 20, page * 20)
+
+    if (!farms || farms.length === 0) {
+      return null
+    }
+
+    return farms
+  }
+
   async findManyByName(name: string, { page }: PaginationParams): Promise<Farm[] | null> {
     const farms = this.items
       .filter((item) => item.name === name)
@@ -146,26 +157,6 @@ export class InMemoryFarmsRepository implements FarmsRepository {
     const farms = this.items
       .filter((item) => item.state === state)
       .slice((page - 1) * 20, page * 20)
-
-    if (!farms || farms.length === 0) {
-      return null
-    }
-
-    return farms
-  }
-
-  async findManyByCrops(crops: Crop[], { page }: PaginationParams): Promise<Farm[] | null> {
-    const farmCrops = await this.farmCropsRepository.findManyByCrops(crops, { page });
-
-    if (!farmCrops || farmCrops.length === 0) {
-      return null
-    }
-    
-    const farmIds = farmCrops.map((farmCrop) => farmCrop.farmId);
-    
-    const farms = this.items
-      .filter((item) => farmIds.includes(item.id))
-      .slice((page - 1) * 20, page * 20);
 
     if (!farms || farms.length === 0) {
       return null

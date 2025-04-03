@@ -19,7 +19,7 @@ export class PrismaProducerFarmMapper {
 
   static toPrismaUpdateMany(
     farms: ProducerFarm[],
-  ): Prisma.CropUpdateManyArgs {
+  ): Prisma.FarmUpdateManyArgs {
     const farmIds = farms.map((farm) => {
       return farm.farmId.toString()
     })
@@ -31,7 +31,7 @@ export class PrismaProducerFarmMapper {
         },
       },
       data: {
-        farmId: farms[0].farmId.toString(),
+        ownerId: farms[0].producerId.toString(),
       },
     }
   }

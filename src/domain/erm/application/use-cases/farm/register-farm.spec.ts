@@ -1,7 +1,7 @@
 import { CropType } from '@/domain/erm/utils/crop-type-enum'
 import { RegisterFarmUseCase } from '@/domain/erm/application/use-cases/farm/register-farm'
 
-import { makeCrop } from 'test/factories/make-crop'
+import { makeCrop } from 'test/factories/make-crops'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'

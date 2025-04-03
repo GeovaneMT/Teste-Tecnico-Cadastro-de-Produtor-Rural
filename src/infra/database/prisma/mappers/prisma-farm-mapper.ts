@@ -1,7 +1,5 @@
 import { Farm as PrismaFarm, Prisma } from '@prisma/client'
-
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
 
 export class PrismaFarmMapper {

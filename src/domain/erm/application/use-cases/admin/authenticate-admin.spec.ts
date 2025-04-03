@@ -1,6 +1,6 @@
 import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/admin/authenticate-admin'
 
-import { makeAdmin } from 'test/factories/make-admin'
+import { makeAdmin } from 'test/factories/make-admins'
 import { FakeHasher } from 'test/cryptography/fake-hasher'
 import { FakeEncrypter } from 'test/cryptography/fake-encrypter'
 import { InMemoryAdminsRepository } from 'test/repositories/in-memory-admins-repository'

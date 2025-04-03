@@ -1,7 +1,5 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-
 import { PrismaCropMapper } from '@/infra/database/prisma/mappers/prisma-crop-mapper'
-
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
 
 import {

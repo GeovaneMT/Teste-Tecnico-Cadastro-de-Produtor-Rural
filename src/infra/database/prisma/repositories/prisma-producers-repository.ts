@@ -1,15 +1,16 @@
 import { Injectable } from '@nestjs/common'
 
+import { PaginationParams } from '@/core/repositories/pagination-params'
+
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaProducerMapper } from '@/infra/database/prisma/mappers/prisma-producer-mapper'
+import { PrismaProducerDetailsMapper } from '@/infra/database/prisma/mappers/prisma-producer-details-mapper'
 
 import { Producer } from '@/domain/erm/enterprise/entities/producer'
-import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
-import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
 import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
+import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
+import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
 import { ProducerDetails } from '@/domain/erm/enterprise/entities/value-objects/producer-details'
-import { PrismaProducerDetailsMapper } from '@/infra/database/prisma/mappers/prisma-producer-details-mapper'
-import { PaginationParams } from '@/core/repositories/pagination-params'
 
 @Injectable()
 export class PrismaProducersRepository implements ProducersRepository {
@@ -77,14 +78,6 @@ export class PrismaProducersRepository implements ProducersRepository {
     return PrismaProducerMapper.toDomain(producer)
   }
 
-  async findByFarmId(farmId: string): Promise<Producer | null> {
-    const producer = await this.prisma.producer.findFirst({
-      where: { farms: { some: { id: farmId } } },
-    })
-  
-    return producer ? PrismaProducerMapper.toDomain(producer) : null;
-  }  
-
   async findByDocument(document: CPF | CNPJ): Promise<Producer | null> {
     const producer = await this.prisma.producer.findUnique({
       where: {
@@ -137,29 +130,6 @@ export class PrismaProducersRepository implements ProducersRepository {
     return producerDetails
   }
 
-  async findDetailsByFarmId(farmId: string): Promise<ProducerDetails | null> {
-    const producer = await this.prisma.producer.findFirst({
-      where: {
-        farms: { 
-          some: { 
-            id: farmId 
-          } 
-        }
-      },
-      include: {
-        farms: true,
-      },
-    })
-
-    if (!producer) {
-      return null
-    }
-
-    const producerDetails = PrismaProducerDetailsMapper.toDomain(producer)
-
-    return producerDetails
-  }
-  
   async findDetailsByDocument(document: CPF | CNPJ): Promise<ProducerDetails | null> {
     const producer = await this.prisma.producer.findUnique({
       where: {
@@ -179,6 +149,18 @@ export class PrismaProducersRepository implements ProducersRepository {
     return producerDetails
   }
 
+  async findManyRecent({ page }: PaginationParams): Promise<Producer[]> {
+    const producers = await this.prisma.producer.findMany({
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    })
+
+    return producers.map(PrismaProducerMapper.toDomain)
+  }
+
   async findManyByName(name: string, { page }: PaginationParams): Promise<Producer[]> {
     const producers = await this.prisma.producer.findMany({
       where: {
@@ -187,40 +169,6 @@ export class PrismaProducersRepository implements ProducersRepository {
           mode: 'insensitive',
         }
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 20,
-      skip: (page - 1) * 20,
-    })
-
-    return producers.map(PrismaProducerMapper.toDomain)
-  }
-
-  async findManyByFarmName(farmName: string, { page }: PaginationParams): Promise<Producer[]> {
-    const producers = await this.prisma.producer.findMany({
-      where: {
-        farms: { 
-          some: { 
-            name: {
-              contains: farmName,
-              mode: 'insensitive',
-            } 
-          } 
-        }
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 20,
-      skip: (page - 1) * 20,
-    })
-
-    return producers.map(PrismaProducerMapper.toDomain)
-  }
-
-  async findManyRecent({ page }: PaginationParams): Promise<Producer[]> {
-    const producers = await this.prisma.producer.findMany({
       orderBy: {
         createdAt: 'desc',
       },

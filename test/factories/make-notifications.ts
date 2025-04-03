@@ -1,8 +1,11 @@
 import { faker } from '@faker-js/faker'
 import { Injectable } from '@nestjs/common'
+
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaNotificationMapper } from '@/infra/database/prisma/mappers/prisma-notification-mapper'
+
 import { Notification, NotificationProps } from '@/domain/notification/enterprise/entities/notification'
 
 export function makeNotification(

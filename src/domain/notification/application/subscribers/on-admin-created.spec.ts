@@ -3,7 +3,7 @@ import { SpyInstance } from 'vitest'
 import { OnAdminCreated } from '@/domain/notification/application/subscribers/on-admin-created'
 
 import { waitFor } from 'test/utils/wit-for'
-import { makeAdmin } from 'test/factories/make-admin'
+import { makeAdmin } from 'test/factories/make-admins'
 import { InMemoryAdminsRepository } from 'test/repositories/in-memory-admins-repository'
 import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository'
 

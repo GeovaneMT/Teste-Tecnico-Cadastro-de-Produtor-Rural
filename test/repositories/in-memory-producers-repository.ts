@@ -1,4 +1,5 @@
 import { DomainEvents } from '@/core/events/domain-events'
+import { PaginationParams } from '@/core/repositories/pagination-params'
 
 import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
 import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
@@ -7,9 +8,8 @@ import { ProducerDetails } from '@/domain/erm/enterprise/entities/value-objects/
 import { Producer } from '@/domain/erm/enterprise/entities/producer'
 import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
 
-import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
-import { PaginationParams } from '@/core/repositories/pagination-params'
+import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 
 export class InMemoryProducersRepository implements ProducersRepository {
   public items: Producer[] = []
@@ -51,22 +51,6 @@ export class InMemoryProducersRepository implements ProducersRepository {
 
   async findByEmail(email: string) {
     const producer = this.items.find((item) => item.email === email)
-
-    if (!producer) {
-      return null
-    }
-
-    return producer
-  }
-  
-  async findByFarmId(farmId: string) {
-    const producerFarm = await this.producerFarmsRepository.findByFarmId(farmId)
-
-    if (!producerFarm) {
-      return null
-    }
-
-    const producer = this.items.find((item) => item.id.toString() === producerFarm.farmId.toString())
 
     if (!producer) {
       return null
@@ -167,48 +151,6 @@ export class InMemoryProducersRepository implements ProducersRepository {
       })
   }
 
-  async findDetailsByFarmId(farmId: string): Promise<ProducerDetails | null> {
-
-    const producer = await this.findByFarmId(farmId)
-  
-      if (!producer) {
-        return null
-      }
-  
-      const producerFarms = this.producerFarmsRepository.items.filter(
-        (producerFarm) => {
-          return producerFarm.producerId.equals(producer.id)
-        },
-      )
-  
-      const farms = producerFarms.map((producerFarm) => {
-        const farm = this.farmsRepository.items.find((farm) => 
-          farm.id.equals(producerFarm.farmId)
-        )
-  
-        if (!farm) {
-          throw new Error(
-            `Farm with ID "${producerFarm.farmId.toString()}" does not exist.`,
-          )
-        }
-  
-        return farm
-      })
-  
-      return ProducerDetails.create({
-        producerId: producer.id,
-        
-        name: producer.name,
-        email: producer.email,
-        document: producer.document,
-        
-        farms,
-  
-        createdAt: producer.createdAt,
-        updatedAt: producer.updatedAt,
-      })
-  }
-
   async findDetailsByDocument(document: CPF | CNPJ): Promise<ProducerDetails | null> {
     const producer = this.items.find((item) => item.document === document)
   
@@ -250,6 +192,18 @@ export class InMemoryProducersRepository implements ProducersRepository {
       })
   }
 
+  async findManyRecent({ page }: PaginationParams): Promise<Producer[]> {
+    const farms = this.items
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice((page - 1) * 20, page * 20)
+  
+    if (!farms || farms.length === 0) {
+      return []
+    }
+  
+    return farms
+  }
+  
   async findManyByName(name: string, { page }: PaginationParams): Promise<Producer[] | null> {
     const producers = this.items
       .filter((item) => item.name === name)
@@ -262,39 +216,4 @@ export class InMemoryProducersRepository implements ProducersRepository {
     return producers
   }
 
-  async findManyByFarmName(farmName: string, { page }: PaginationParams): Promise<Producer[] | null> {
-    const farms = await this.farmsRepository.findManyByName(farmName, { page })
-    if (!farms || farms.length === 0) {
-      return null
-    }
-    const farmsIds = farms.map((farm) => farm.id.toString())
-
-    const producerFarms = await this.producerFarmsRepository.findManyByFarmsIds(farmsIds, { page })
-    if (!producerFarms || producerFarms.length === 0) {
-      return null
-    }
-    const producerIds = producerFarms.map((producerFarm) => producerFarm.producerId)
-    
-    const producers = this.items
-      .filter((item) => producerIds.includes(item.id))
-      .slice((page - 1) * 20, page * 20)
-  
-    if (!producers || producers.length === 0) {
-      return null
-    }
-  
-    return producers
-  }
-  
-  async findManyRecent({ page }: PaginationParams): Promise<Producer[]> {
-    const farms = this.items
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-      .slice((page - 1) * 20, page * 20)
-  
-    if (!farms || farms.length === 0) {
-      return []
-    }
-  
-    return farms
-  }
 }

@@ -45,6 +45,7 @@ model Producer {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   farms Farm[]
+  Crop  Crop[]
 
   @@map("producers")
 }
@@ -72,7 +73,8 @@ model Farm {
 }
 
 model Crop {
-  farmId      String?  @map("farm_id")
+  ownerId     String   @map("owner_id")
+  landId      String   @map("farm_id")
   id          String   @id @default(uuid())
   type        CropType
   description String
@@ -80,7 +82,8 @@ model Crop {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  farm Farm? @relation(fields: [farmId], references: [id], onDelete: Cascade)
+  farm     Farm?     @relation(fields: [landId], references: [id], onDelete: Cascade)
+  producer Producer? @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@map("crops")
 }

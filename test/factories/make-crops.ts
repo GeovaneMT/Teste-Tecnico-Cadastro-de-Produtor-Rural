@@ -6,8 +6,6 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaCropMapper } from '@/infra/database/prisma/mappers/prisma-crop-mapper'
 
-import { CropType } from '@/domain/erm/utils/crop-type-enum'
-
 import {
   Crop,
   CropProps,
@@ -20,6 +18,8 @@ export function makeCrop(
 
   const crop = Crop.create(
     {
+      landId: new UniqueEntityID(),
+      ownerId: new UniqueEntityID(),
       type: 'SOYBEANS',
       description: faker.lorem.sentence(10),
       ...override,

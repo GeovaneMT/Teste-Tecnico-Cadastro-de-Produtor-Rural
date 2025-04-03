@@ -4,14 +4,14 @@ import { FarmCrop } from '@/domain/erm/enterprise/entities/farm-crop'
 
 export class PrismaFarmCropMapper {
   static toDomain(raw: PrismaCrop): FarmCrop {
-    if (!raw.farmId) {
+    if (!raw.landId) {
       throw new Error('Invalid crop type.')
     }
 
     return FarmCrop.create(
       {
         cropId: new UniqueEntityID(raw.id),
-        farmId: new UniqueEntityID(raw.farmId),
+        farmId: new UniqueEntityID(raw.landId),
       },
       new UniqueEntityID(raw.id),
     )
@@ -31,7 +31,7 @@ export class PrismaFarmCropMapper {
         },
       },
       data: {
-        farmId: crops[0].farmId.toString(),
+        landId: crops[0].farmId.toString(),
       },
     }
   }

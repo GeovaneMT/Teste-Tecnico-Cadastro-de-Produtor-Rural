@@ -8,8 +8,13 @@ export class PrismaCropMapper {
   static toDomain(raw: PrismaCrop): Crop {
     return Crop.create(
       {
+        landId: new UniqueEntityID(raw.landId),
+        ownerId: new UniqueEntityID(raw.ownerId),
         type: raw.type,
         description: raw.description,
+
+        createdAt: raw.createdAt,
+        updatedAt: raw.updatedAt,
       },
       new UniqueEntityID(raw.id),
     )
@@ -17,6 +22,8 @@ export class PrismaCropMapper {
 
   static toPrisma(crop: Crop): Prisma.CropUncheckedCreateInput {
     return {
+      landId: crop.landId.toString(),
+      ownerId: crop.ownerId.toString(),
       id: crop.id.toString(),
       type: crop.type,
       description: crop.description,

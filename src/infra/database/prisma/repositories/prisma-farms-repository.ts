@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common'
 
+import { PaginationParams } from '@/core/repositories/pagination-params'
+
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaFarmMapper } from '@/infra/database/prisma/mappers/prisma-farm-mapper'
+import { PrismaFarmDetailsMapper } from '@/infra/database/prisma/mappers/prisma-farm-details-mapper'
 
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
 import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
-import { PrismaFarmDetailsMapper } from '@/infra/database/prisma/mappers/prisma-farm-details-mapper'
-import { PaginationParams } from '@/core/repositories/pagination-params'
-import { Crop } from '@/domain/erm/enterprise/entities/crop'
 
 @Injectable()
 export class PrismaFarmsRepository implements FarmsRepository {
@@ -105,6 +105,24 @@ export class PrismaFarmsRepository implements FarmsRepository {
     return farms.map(PrismaFarmMapper.toDomain)
   }
 
+  async findManyByOwnerId(ownerId: string, { page }: PaginationParams): Promise<Farm[]> {
+    const farms = await this.prisma.farm.findMany({
+      where: {
+        ownerId: {
+          contains: ownerId,
+          mode: 'insensitive',
+        }
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    })
+
+    return farms.map(PrismaFarmMapper.toDomain)
+  }
+
   async findManyByName(name: string, { page }: PaginationParams): Promise<Farm[]> {
     const farms = await this.prisma.farm.findMany({
       where: {
@@ -157,25 +175,6 @@ export class PrismaFarmsRepository implements FarmsRepository {
     })
 
     return farms.map(PrismaFarmMapper.toDomain)
-  }
-  
-  async findManyByCrops(crops: Crop[], { page }: PaginationParams): Promise<Farm[]> {
-    const farms = await this.prisma.farm.findMany({
-      where: {
-        crops: {
-          some: {
-            id: { in: crops.map(crop => crop.id.toString()) }
-          }
-        }
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 20,
-      skip: (page - 1) * 20,
-    });
-  
-    return farms.map(PrismaFarmMapper.toDomain);
   }
   
   async findManyByVegetationArea(vegetationArea: string, { page }: PaginationParams): Promise<Farm[]> {
