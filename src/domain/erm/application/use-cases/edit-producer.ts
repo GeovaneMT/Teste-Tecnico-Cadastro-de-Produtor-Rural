@@ -65,7 +65,9 @@ export class EditProducerUseCase {
         producerId: producer.id,
       })
     })
-  
+    
+    producerFarmList.update(producerFarms)
+    
     let doc: CPF | CNPJ
 
     try {
@@ -73,9 +75,6 @@ export class EditProducerUseCase {
     } catch {
       doc = CNPJ.create(document)
     }
-
-    producerFarmList.update(producerFarms)
-
     producer.farms = producerFarmList
     producer.name = name
     producer.email = email

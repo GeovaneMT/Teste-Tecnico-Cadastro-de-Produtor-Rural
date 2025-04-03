@@ -23,9 +23,17 @@ export class InMemoryFarmsRepository implements FarmsRepository {
 
     this.items[itemIndex] = farm
 
+    await this.farmCropsRepository.createMany(
+      farm.crops.getNewItems(),
+    )
+
+    await this.farmCropsRepository.deleteMany(
+      farm.crops.getRemovedItems(),
+    )
+
     DomainEvents.dispatchEventsForAggregate(farm.id)
   }
-
+  
   async create(farm: Farm) {
     this.items.push(farm)
 

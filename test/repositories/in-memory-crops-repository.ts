@@ -15,6 +15,22 @@ export class InMemoryCropsRepository implements CropsRepository {
 
     DomainEvents.dispatchEventsForAggregate(crop.id)
   }
+  
+  async save(farm: Farm) {
+    const itemIndex = this.items.findIndex((item) => item.id === farm.id)
+
+    this.items[itemIndex] = farm
+
+    await this.farmCropsRepository.createMany(
+      farm.crops.getNewItems(),
+    )
+
+    await this.farmCropsRepository.deleteMany(
+      farm.crops.getRemovedItems(),
+    )
+
+    DomainEvents.dispatchEventsForAggregate(farm.id)
+  }
 
   async create(crop: Crop) {
     this.items.push(crop)

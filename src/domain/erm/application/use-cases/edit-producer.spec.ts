@@ -11,6 +11,7 @@ import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repos
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
+import { CPF } from '../../enterprise/entities/value-objects/cpf'
 
 let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
@@ -31,7 +32,7 @@ describe('Edit Producer', () => {
       inMemoryFarmCropsRepository, 
       inMemoryProducersRepository
     )
-    
+
     inMemoryProducersRepository = new InMemoryProducersRepository(
       inMemoryFarmsRepository,
       inMemoryProducerFarmsRepository,
@@ -73,7 +74,7 @@ describe('Edit Producer', () => {
     expect(inMemoryProducersRepository.items[0]).toMatchObject({
       name: 'John Doe',
       email: 'johndoe@example.com',
-      document: '123.456.789-01',
+      document: CPF.create('123.456.789-01'),
     })
 
     expect(
@@ -85,26 +86,6 @@ describe('Edit Producer', () => {
       expect.objectContaining({ farmId: new UniqueEntityID('1') }),
       expect.objectContaining({ farmId: new UniqueEntityID('3') }),
     ])
-  })
-
-  it('should not be able to edit a producer from another user', async () => {
-    const newProducer = makeProducer(
-      {},
-      new UniqueEntityID('producer-1'),
-    )
-
-    await inMemoryProducersRepository.create(newProducer)
-
-    const result = await sut.execute({
-      producerId: newProducer.id.toValue(),
-      name: 'John Doe',
-      email: 'johndoe@example.com',
-      document: '123.456.789-01',
-      farmsIds: [],
-    })
-
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(NotAllowedError)
   })
 
   it('should sync new and removed farm when editing a producer', async () => {

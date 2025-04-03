@@ -24,6 +24,14 @@ export class InMemoryProducersRepository implements ProducersRepository {
 
     this.items[itemIndex] = producer
 
+    await this.producerFarmsRepository.createMany(
+      producer.farms.getNewItems(),
+    )
+
+    await this.producerFarmsRepository.deleteMany(
+      producer.farms.getRemovedItems(),
+    )
+
     DomainEvents.dispatchEventsForAggregate(producer.id)
   }
 
