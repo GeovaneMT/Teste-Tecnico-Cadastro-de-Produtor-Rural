@@ -5,7 +5,7 @@ import { Either, left, right } from '@/core/either'
 import { Admin } from '@/domain/erm/enterprise/entities/admin'
 import { HashGenerator } from '@/domain/erm/application/cryptography/hash-generator'
 import { AdminsRepository } from '@/domain/erm/application/repositories/admins-repository'
-import { AdminAlreadyExistsError } from '@/domain/erm/application/use-cases/admin/errors/admin-already-exists-error'
+import { AdminAlreadyExistsError } from '@/domain/erm/application/use-cases/errors/admin-already-exists-error'
 
 interface RegisterAdminUseCaseRequest {
   name: string

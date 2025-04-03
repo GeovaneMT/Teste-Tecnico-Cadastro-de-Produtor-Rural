@@ -1,5 +1,5 @@
 import { CropType } from '@/domain/erm/utils/crop-type-enum'
-import { RegisterFarmUseCase } from '@/domain/erm/application/use-cases/farm/register-farm'
+import { RegisterFarmUseCase } from '@/domain/erm/application/use-cases/register-farm'
 
 import { makeCrop } from 'test/factories/make-crops'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'

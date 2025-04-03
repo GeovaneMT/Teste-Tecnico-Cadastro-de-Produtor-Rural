@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { Public } from '@/infra/auth/public'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
-import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/admin/authenticate-admin'
+import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/authenticate-admin'
 import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
 
 import {

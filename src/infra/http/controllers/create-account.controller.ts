@@ -3,8 +3,8 @@ import { z } from 'zod'
 import { Public } from '@/infra/auth/public'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
-import { RegisterAdminUseCase } from '@/domain/erm/application/use-cases/admin/register-admin'
-import { AdminAlreadyExistsError } from '@/domain/erm/application/use-cases/admin/errors/admin-already-exists-error'
+import { RegisterAdminUseCase } from '@/domain/erm/application/use-cases/register-admin'
+import { AdminAlreadyExistsError } from '@/domain/erm/application/use-cases/errors/admin-already-exists-error'
 
 import {
   Post,

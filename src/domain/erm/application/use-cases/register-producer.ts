@@ -11,7 +11,7 @@ import { ProducerFarm } from '@/domain/erm/enterprise/entities/producer-farm'
 import { ProducerFarmList } from '@/domain/erm/enterprise/entities/producer-farm-list'
 
 import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
-import { ProducerAlreadyExistsError } from '@/domain/erm/application/use-cases/producer/errors/producer-already-exists-error'
+import { ProducerAlreadyExistsError } from '@/domain/erm/application/use-cases/errors/producer-already-exists-error'
 
 interface RegisterProducerUseCaseRequest {
   name: string

@@ -1,4 +1,4 @@
-import { RegisterAdminUseCase } from '@/domain/erm/application/use-cases/admin/register-admin'
+import { RegisterAdminUseCase } from '@/domain/erm/application/use-cases/register-admin'
 
 import { FakeHasher } from 'test/cryptography/fake-hasher'
 import { InMemoryAdminsRepository } from 'test/repositories/in-memory-admins-repository'

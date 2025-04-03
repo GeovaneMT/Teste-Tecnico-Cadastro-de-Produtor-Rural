@@ -1,4 +1,4 @@
-import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/admin/authenticate-admin'
+import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/authenticate-admin'
 
 import { makeAdmin } from 'test/factories/make-admins'
 import { FakeHasher } from 'test/cryptography/fake-hasher'
