@@ -2,6 +2,7 @@ import { DomainEvents } from '@/core/events/domain-events'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
+import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
 import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
 
@@ -93,6 +94,12 @@ export class InMemoryFarmsRepository implements FarmsRepository {
       return crop
     })
 
+    const CreateFarmAreaData = {
+      farmArea: Number(farm.farmArea),
+      agriculturalArea: Number(farm.agriculturalArea),
+      vegetationArea: Number(farm.vegetationArea),
+    }
+
     return FarmDetails.create({
       farmId: farm.id,
       ownerId: farm.ownerId,
@@ -102,7 +109,7 @@ export class InMemoryFarmsRepository implements FarmsRepository {
       city: farm.city,
       state: farm.state,
       
-      farmArea: farm.farmArea,
+      farmArea: FarmArea.create(CreateFarmAreaData),
       vegetationArea: farm.vegetationArea,
       agriculturalArea: farm.agriculturalArea,
       
@@ -175,7 +182,7 @@ export class InMemoryFarmsRepository implements FarmsRepository {
 
   async findManyByFarmArea(farmArea: string, { page }: PaginationParams): Promise<Farm[] | null> {
     const farms = this.items
-      .filter((item) => item.farmArea === farmArea)
+      .filter((item) => item.farmArea.getValue().toString() === farmArea)
       .slice((page - 1) * 20, page * 20)
 
     if (!farms || farms.length === 0) {

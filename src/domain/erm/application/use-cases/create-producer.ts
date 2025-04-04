@@ -3,8 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { Either, left, right } from '@/core/either'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
-import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 
 import { Producer } from '@/domain/erm/enterprise/entities/producer'
 import { ProducerFarm } from '@/domain/erm/enterprise/entities/producer-farm'
@@ -17,7 +16,7 @@ interface CreateProducerUseCaseRequest {
   name: string
   email: string
   farmsIds: string[]
-  document: CPF | CNPJ
+  document: Document
 }
 
 type CreateProducerUseCaseResponse = Either<

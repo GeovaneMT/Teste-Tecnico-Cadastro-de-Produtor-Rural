@@ -2,6 +2,7 @@ import { ValueObject } from '@/core/entities/value-object'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { Crop } from '@/domain/erm/enterprise/entities/crop'
+import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 export interface FarmDetailsProps {
   farmId: UniqueEntityID
@@ -12,7 +13,7 @@ export interface FarmDetailsProps {
   city: string
   state: string
 
-  farmArea: string
+  farmArea: FarmArea
   vegetationArea: string
   agriculturalArea: string
 

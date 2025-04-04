@@ -1,6 +1,5 @@
 import { CreateFarmUseCase } from '@/domain/erm/application/use-cases/create-farm'
 
-import { makeCrop } from 'test/factories/make-crops'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'

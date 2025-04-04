@@ -1,3 +1,4 @@
+import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 import { GetProducerByEmailUseCase } from '@/domain/erm/application/use-cases/get-producer-by-email'
 
 import { makeCrop } from 'test/factories/make-crops'
@@ -50,15 +51,21 @@ describe('Get Producer By Email', () => {
 
     await inMemoryProducersRepository.create(newProducer)
 
+    const farmAreaCreateData = {
+      farmArea: 100, 
+      agriculturalArea: 80, 
+      vegetationArea: 10
+    }
+    
     const farm = makeFarm({
       ownerId: newProducer.id,
       name: 'Some farm',
       city: 'Some city',
       state: 'Some state',
 
-      farmArea: '100',
-      vegetationArea: '10',
-      agriculturalArea: '80',
+      farmArea: FarmArea.create(farmAreaCreateData),
+      vegetationArea: farmAreaCreateData.vegetationArea.toString(),
+      agriculturalArea: farmAreaCreateData.agriculturalArea.toString(),
     })
 
     inMemoryFarmsRepository.items.push(farm)

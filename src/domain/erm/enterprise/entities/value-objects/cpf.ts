@@ -1,23 +1,31 @@
 export class CPF {
-  private value: string;
+  private document: string
 
-  private constructor(value: string) {
-    if (!this.isValid(value)) {
-      throw new Error('Invalid CPF');
-    }
-    this.value = value;
+  private constructor(document: string) {
+    this.document = document
   }
 
   static create(value: string) {
     return new CPF(value)
   }
 
-  private isValid(cpf: string): boolean {
-    const regex = /^\d{3}\.\d{3}\.\d{3}-\d{2}$/; // simple regex for format validation
-    return regex.test(cpf);
+  static generateValidCPF(): string {
+    const randomDigits = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10));
+    
+    const calcCheckDigit = (base: number[], factor: number) => {
+      const total = base.reduce((sum, digit, index) => sum + digit * (factor - index), 0);
+      const remainder = (total * 10) % 11;
+      return remainder === 10 ? 0 : remainder;
+    };
+  
+    const digit1 = calcCheckDigit(randomDigits, 10);
+    const digit2 = calcCheckDigit([...randomDigits, digit1], 11);
+  
+    return [...randomDigits, digit1, digit2].join('');
   }
-
-  getValue(): string {
-    return this.value;
+  
+  getDocument(): string {
+    return this.document
   }
+  
 }

@@ -1,23 +1,31 @@
 export class CNPJ {
-  public value: string;
+  private document: string
 
-  private constructor(value: string) {
-    if (!this.isValid(value)) {
-      throw new Error('Invalid CNPJ');
-    }
-    this.value = value;
+  private constructor(document: string) {
+    this.document = document
   }
 
   static create(value: string) {
     return new CNPJ(value)
   }
 
-  private isValid(cnpj: string): boolean {
-    const regex = /^\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}$/; // simple regex for format validation
-    return regex.test(cnpj);
+  static generateValidCNPJ(): string {
+    const base = Array.from({ length: 8 }, () => Math.floor(Math.random() * 10)).concat([0, 0, 0, 1]);
+  
+    const calcCheckDigit = (numbers: number[], weights: number[]) => {
+      const sum = numbers.reduce((acc, digit, idx) => acc + digit * weights[idx], 0);
+      const rest = sum % 11;
+      return rest < 2 ? 0 : 11 - rest;
+    };
+  
+    const digit1 = calcCheckDigit(base, [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+    const digit2 = calcCheckDigit([...base, digit1], [6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]);
+  
+    return [...base, digit1, digit2].join('');
   }
-
-  getValue(): string {
-    return this.value;
+  
+  getDocument(): string {
+    return this.document
   }
+  
 }

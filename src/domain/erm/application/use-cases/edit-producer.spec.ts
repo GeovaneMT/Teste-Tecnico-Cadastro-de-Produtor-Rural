@@ -1,6 +1,6 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 import { EditProducerUseCase } from '@/domain/erm/application/use-cases/edit-producer'
 
 import { makeProducer } from 'test/factories/make-producers'
@@ -11,7 +11,6 @@ import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repos
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
-import { CPF } from '../../enterprise/entities/value-objects/cpf'
 
 let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
@@ -45,6 +44,7 @@ describe('Edit Producer', () => {
   })
 
   it('should be able to edit a producer', async () => {
+    const document = Document.generateValidDocument()
     const newProducer = makeProducer(
       {},
       new UniqueEntityID('producer-1'),
@@ -67,14 +67,14 @@ describe('Edit Producer', () => {
       producerId: newProducer.id.toValue(),
       name: 'John Doe',
       email: 'johndoe@example.com',
-      document: '123.456.789-01',
+      cpfcnpj: document.getValue(),
       farmsIds: ['1', '3'],
     })
 
     expect(inMemoryProducersRepository.items[0]).toMatchObject({
       name: 'John Doe',
       email: 'johndoe@example.com',
-      document: CPF.create('123.456.789-01'),
+      document,
     })
 
     expect(
@@ -89,6 +89,7 @@ describe('Edit Producer', () => {
   })
 
   it('should sync new and removed farm when editing a producer', async () => {
+    const document = Document.generateValidDocument()
     const newProducer = makeProducer(
       {},
       new UniqueEntityID('producer-1'),
@@ -111,7 +112,7 @@ describe('Edit Producer', () => {
       producerId: newProducer.id.toValue(),
       name: 'John Doe',
       email: 'johndoe@example.com',
-      document: '123.456.789-01',
+      cpfcnpj: document.getValue(),
       farmsIds: ['1', '3'],
     })
 

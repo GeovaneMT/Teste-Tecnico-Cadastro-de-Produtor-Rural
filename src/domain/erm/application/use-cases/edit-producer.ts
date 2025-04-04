@@ -5,12 +5,12 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
-import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
-import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 
 import { Producer } from '@/domain/erm/enterprise/entities/producer'
 import { ProducerFarm } from '@/domain/erm/enterprise/entities/producer-farm'
 import { ProducerFarmList } from '@/domain/erm/enterprise/entities/producer-farm-list'
+
 import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
 import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/producer-farms-repository'
 
@@ -18,7 +18,7 @@ interface EditProducerUseCaseRequest {
   producerId: string
   name: string
   email: string
-  document: string
+  cpfcnpj: string
   farmsIds: string[]
 }
 
@@ -40,7 +40,7 @@ export class EditProducerUseCase {
     producerId,
     name,
     email,
-    document,
+    cpfcnpj,
     farmsIds,
   }: EditProducerUseCaseRequest): Promise<EditProducerUseCaseResponse> {
     const producer = await this.producersRepository.findById(producerId)
@@ -68,17 +68,12 @@ export class EditProducerUseCase {
     
     producerFarmList.update(producerFarms)
     
-    let doc: CPF | CNPJ
+    const document = Document.create(cpfcnpj)
 
-    try {
-      doc = CPF.create(document)
-    } catch {
-      doc = CNPJ.create(document)
-    }
     producer.farms = producerFarmList
     producer.name = name
     producer.email = email
-    producer.document = doc
+    producer.document = document
 
     await this.producersRepository.save(producer)
 

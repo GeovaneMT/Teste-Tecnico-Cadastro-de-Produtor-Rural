@@ -1,8 +1,6 @@
 import { DomainEvents } from '@/core/events/domain-events'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 
-import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
-import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
 import { ProducerDetails } from '@/domain/erm/enterprise/entities/value-objects/producer-details'
 
 import { Producer } from '@/domain/erm/enterprise/entities/producer'
@@ -10,6 +8,7 @@ import { ProducersRepository } from '@/domain/erm/application/repositories/produ
 
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 
 export class InMemoryProducersRepository implements ProducersRepository {
   public items: Producer[] = []
@@ -45,6 +44,10 @@ export class InMemoryProducersRepository implements ProducersRepository {
     const itemIndex = this.items.findIndex((item) => item.id === producer.id)
 
     this.items.splice(itemIndex, 1)
+
+    this.producerFarmsRepository.deleteManyByProducerId(
+      producer.id.toString(),
+    )
   }
 
   async findById(id: string): Promise<Producer | null> {
@@ -67,7 +70,7 @@ export class InMemoryProducersRepository implements ProducersRepository {
     return producer
   }
 
-  async findByDocument(document: CPF | CNPJ) {
+  async findByDocument(document: Document) {
     const producer = this.items.find((item) => item.document === document)
 
     if (!producer) {
@@ -159,7 +162,7 @@ export class InMemoryProducersRepository implements ProducersRepository {
       })
   }
 
-  async findDetailsByDocument(document: CPF | CNPJ): Promise<ProducerDetails | null> {
+  async findDetailsByDocument(document: Document): Promise<ProducerDetails | null> {
     const producer = this.items.find((item) => item.document === document)
   
       if (!producer) {

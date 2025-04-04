@@ -8,6 +8,7 @@ import { FarmCrop } from '@/domain/erm/enterprise/entities/farm-crop'
 import { FarmCropList } from '@/domain/erm/enterprise/entities/farm-crop-list'
 
 import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
+import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 interface CreateFarmUseCaseRequest {
   ownerId: string
@@ -48,13 +49,19 @@ export class CreateFarmUseCase {
     cropsIds,
   }: CreateFarmUseCaseRequest): Promise<CreateFarmUseCaseResponse> {
 
+    const farmAreaCreateData = {
+      farmArea: Number(farmArea), 
+      agriculturalArea: Number(agriculturalArea), 
+      vegetationArea: Number(vegetationArea),
+    }
+
     const farm = Farm.create({
       ownerId: new UniqueEntityID(ownerId),
       name,
       city,
       state,
 
-      farmArea,
+      farmArea: FarmArea.create(farmAreaCreateData),
       vegetationArea,
       agriculturalArea,
     })

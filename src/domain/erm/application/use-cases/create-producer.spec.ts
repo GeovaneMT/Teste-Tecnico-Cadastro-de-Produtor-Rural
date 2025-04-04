@@ -1,7 +1,6 @@
 import { CreateProducerUseCase } from '@/domain/erm/application/use-cases/create-producer'
 
-import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
-import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
@@ -9,11 +8,11 @@ import { InMemoryProducersRepository } from 'test/repositories/in-memory-produce
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 
+let inMemoryCropsRepository: InMemoryCropsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
+let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 let inMemoryFarmsRepository: InMemoryFarmsRepository
 let inMemoryProducersRepository: InMemoryProducersRepository
-let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
-let inMemoryCropsRepository: InMemoryCropsRepository
 
 
 let sut: CreateProducerUseCase
@@ -34,7 +33,7 @@ describe('Create Producer', () => {
     const result = await sut.execute({
       name: 'jhon doe',
       email: 'johndoe@example.com',
-      document: CPF.create('123.456.789-09'),
+      document: Document.create('123.456.789-09'),
       farmsIds: ['1', '2'],
     })
 
@@ -49,7 +48,7 @@ describe('Create Producer', () => {
     const result = await sut.execute({
       name: 'jhon doe',
       email: 'johndoe@example.com',
-      document: CNPJ.create('12.345.678/0001-95'),
+      document: Document.create('12.345.678/0001-95'),
       farmsIds: ['1', '2'],
     })
 

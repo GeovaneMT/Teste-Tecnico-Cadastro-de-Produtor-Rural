@@ -1,10 +1,19 @@
 import { Farm as PrismaFarm, Prisma } from '@prisma/client'
+
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
+import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 export class PrismaFarmMapper {
 
   static toDomain(raw: PrismaFarm): Farm {
+
+    const CreateFarmAreaData = {
+      farmArea: Number(raw.farmArea),
+      agriculturalArea: Number(raw.agriculturalArea),
+      vegetationArea: Number(raw.vegetationArea),
+    }
 
     return Farm.create(
       {
@@ -13,7 +22,7 @@ export class PrismaFarmMapper {
         city: raw.city,
         state: raw.state,
 
-        farmArea: raw.farmArea,
+        farmArea: FarmArea.create(CreateFarmAreaData),
         vegetationArea: raw.vegetationArea,
         agriculturalArea: raw.agriculturalArea,
 
@@ -33,7 +42,7 @@ export class PrismaFarmMapper {
       city: farm.city,
       state: farm.state,
 
-      farmArea: farm.farmArea,
+      farmArea: farm.farmArea.getValue().toString(),
       vegetationArea: farm.vegetationArea,
       agriculturalArea: farm.agriculturalArea,
 

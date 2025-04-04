@@ -6,11 +6,11 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaProducerMapper } from '@/infra/database/prisma/mappers/prisma-producer-mapper'
 import { PrismaProducerDetailsMapper } from '@/infra/database/prisma/mappers/prisma-producer-details-mapper'
 
-import { Producer } from '@/domain/erm/enterprise/entities/producer'
-import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
-import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
-import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 import { ProducerDetails } from '@/domain/erm/enterprise/entities/value-objects/producer-details'
+
+import { Producer } from '@/domain/erm/enterprise/entities/producer'
+import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
 
 @Injectable()
 export class PrismaProducersRepository implements ProducersRepository {
@@ -78,7 +78,7 @@ export class PrismaProducersRepository implements ProducersRepository {
     return PrismaProducerMapper.toDomain(producer)
   }
 
-  async findByDocument(document: CPF | CNPJ): Promise<Producer | null> {
+  async findByDocument(document: Document): Promise<Producer | null> {
     const producer = await this.prisma.producer.findUnique({
       where: {
         document: document.getValue(),
@@ -130,7 +130,7 @@ export class PrismaProducersRepository implements ProducersRepository {
     return producerDetails
   }
 
-  async findDetailsByDocument(document: CPF | CNPJ): Promise<ProducerDetails | null> {
+  async findDetailsByDocument(document: Document): Promise<ProducerDetails | null> {
     const producer = await this.prisma.producer.findUnique({
       where: {
         document: document.getValue(),

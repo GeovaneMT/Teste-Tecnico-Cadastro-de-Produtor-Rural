@@ -3,6 +3,7 @@ import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { FarmCropList } from '@/domain/erm/enterprise/entities/farm-crop-list'
+import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 export interface FarmProps {
   ownerId: UniqueEntityID
@@ -10,7 +11,7 @@ export interface FarmProps {
   city: string
   state: string
 
-  farmArea: string
+  farmArea: FarmArea
   vegetationArea: string
   agriculturalArea: string
 
@@ -76,7 +77,7 @@ export class Farm extends AggregateRoot<FarmProps> {
     this.touch()
   }
 
-  set farmArea(farmArea: string) {
+  set farmArea(farmArea: FarmArea) {
     this.props.farmArea = farmArea
     this.touch()
   }

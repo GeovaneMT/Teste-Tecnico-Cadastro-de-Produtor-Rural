@@ -1,7 +1,8 @@
 import { PaginationParams } from '@/core/repositories/pagination-params'
 
-import { CropType } from '@/domain/erm/utils/crop-type-enum'
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
+
+import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
 
 export abstract class FarmsRepository {

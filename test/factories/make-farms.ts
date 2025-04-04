@@ -11,11 +11,18 @@ import {
   Farm,
   FarmProps,
 } from '@/domain/erm/enterprise/entities/farm'
+import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 export function makeFarm(
   override: Partial<FarmProps> = {},
   id?: UniqueEntityID,
 ) {
+
+  const CreateFarmAreaData = {
+    farmArea: faker.number.int({ min: 100, max: 200 }),
+    agriculturalArea: faker.number.int({ min: 10, max: 50 }),
+    vegetationArea: faker.number.int({ min: 10, max: 50 }),
+  }
 
   const farm = Farm.create(
     {
@@ -24,9 +31,9 @@ export function makeFarm(
       city: faker.location.city(),
       state: faker.location.state(),
 
-      farmArea: faker.datatype.number().toString(),
-      vegetationArea: faker.datatype.number().toString(),
-      agriculturalArea: faker.datatype.number().toString(),
+      farmArea: FarmArea.create(CreateFarmAreaData),
+      vegetationArea: CreateFarmAreaData.vegetationArea.toString(),
+      agriculturalArea: CreateFarmAreaData.agriculturalArea.toString(),
       
       ...override,
     },

@@ -2,14 +2,13 @@ import { ValueObject } from '@/core/entities/value-object'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
-import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
-import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 
 export interface ProducerDetailsProps {
   producerId: UniqueEntityID
   name: string
   email: string
-  document: CPF | CNPJ
+  document: Document
   farms: Farm[]
 
   createdAt: Date

@@ -2,14 +2,13 @@ import { Optional } from '@/core/types/optional'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
-import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 import { ProducerFarmList } from '@/domain/erm/enterprise/entities/producer-farm-list'
 
 export interface ProducerProps {
   name: string
   email: string
-  document: CPF | CNPJ
+  document: Document
   farms: ProducerFarmList
 
   createdAt: Date
@@ -56,7 +55,7 @@ export class Producer extends AggregateRoot<ProducerProps> {
     this.touch()
   }
   
-  set document(document: CPF | CNPJ) {
+  set document(document: Document) {
     this.props.document = document
     this.touch()
   }

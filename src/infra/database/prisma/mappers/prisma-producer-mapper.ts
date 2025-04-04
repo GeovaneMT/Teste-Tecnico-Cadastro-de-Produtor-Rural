@@ -3,19 +3,13 @@ import { Producer as PrismaProducer, Prisma } from '@prisma/client'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { Producer } from '@/domain/erm/enterprise/entities/producer'
-import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
-import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 
 export class PrismaProducerMapper {
 
   static toDomain(raw: PrismaProducer): Producer {
-    let document: CPF | CNPJ
 
-    try {
-      document = CPF.create(raw.document)
-    } catch {
-      document = CNPJ.create(raw.document)
-    }
+    const document = Document.create(raw.document)
 
     return Producer.create(
       {
