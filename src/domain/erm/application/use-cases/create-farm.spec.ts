@@ -33,9 +33,9 @@ describe('Create Farm', () => {
       city: 'farm_city',
       state: 'farm_state',
 
-      farmArea: 'farm_area',
-      vegetationArea: 'vegetation_area',
-      agriculturalArea: 'agricultural_area',
+      farmArea: '10 ',
+      vegetationArea: '4',
+      agriculturalArea: '4',
 
       cropsIds: ['1', '2'],
     })

@@ -53,8 +53,8 @@ describe('Get Producer By Email', () => {
 
     const farmAreaCreateData = {
       farmArea: 100, 
+      vegetationArea: 10,
       agriculturalArea: 80, 
-      vegetationArea: 10
     }
     
     const farm = makeFarm({
