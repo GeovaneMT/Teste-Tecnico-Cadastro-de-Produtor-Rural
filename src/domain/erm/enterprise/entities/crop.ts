@@ -5,8 +5,9 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { CropType } from '@/domain/erm/utils/crop-type-enum'
 
 export interface CropProps {
-  ownerId: UniqueEntityID
   landId: UniqueEntityID
+  ownerId: UniqueEntityID
+
   type: CropType
   description: string
 

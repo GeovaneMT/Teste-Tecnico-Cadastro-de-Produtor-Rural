@@ -1,19 +1,27 @@
 import { Injectable } from '@nestjs/common'
 
+import { DomainEvents } from '@/core/events/domain-events'
 import { PaginationParams } from '@/core/repositories/pagination-params'
+
+import { CacheRepository } from '@/infra/cache/cache-repository'
 
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaFarmMapper } from '@/infra/database/prisma/mappers/prisma-farm-mapper'
 import { PrismaFarmDetailsMapper } from '@/infra/database/prisma/mappers/prisma-farm-details-mapper'
 
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
-import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
+
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
+
+import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
+import { FarmCropsRepository } from '@/domain/erm/application/repositories/farm-crops-repository'
 
 @Injectable()
 export class PrismaFarmsRepository implements FarmsRepository {
   constructor(
-    private prisma: PrismaService
+    private prisma: PrismaService,
+    private cache: CacheRepository,
+    private farmCropsRepository: FarmCropsRepository
   ) {}
 
   async save(farm: Farm): Promise<void> {
@@ -26,7 +34,20 @@ export class PrismaFarmsRepository implements FarmsRepository {
         },
         data,
       }),
+
+      this.farmCropsRepository.createMany(
+        farm.crops.getNewItems(),
+      ),
+
+      this.farmCropsRepository.deleteMany(
+        farm.crops.getRemovedItems(),
+      ),
+
+      this.cache.delete(`question:${data.id}:details`),
     ])
+
+    DomainEvents.dispatchEventsForAggregate(farm.id)
+
   }
 
   async create(farm: Farm): Promise<void> {
@@ -36,6 +57,11 @@ export class PrismaFarmsRepository implements FarmsRepository {
       data,
     })
 
+    await this.farmCropsRepository.createMany(
+      farm.crops.getItems(),
+    )
+
+    DomainEvents.dispatchEventsForAggregate(farm.id)
   }
 
   async delete(farm: Farm): Promise<void> {
@@ -63,6 +89,14 @@ export class PrismaFarmsRepository implements FarmsRepository {
   }
 
   async findDetailsById(id: string): Promise<FarmDetails | null> {
+    const cacheHit = await this.cache.get(`question:${id}:details`)
+
+    if (cacheHit) {
+      const cacheData = JSON.parse(cacheHit)
+
+      return cacheData
+    }
+
     const farm = await this.prisma.farm.findUnique({
       where: {
         id,
@@ -77,18 +111,17 @@ export class PrismaFarmsRepository implements FarmsRepository {
       return null
     }
     
-    const { producer, ...rest } = farm
-    
-    if (!producer) {
-      return null
-    }
-    
-    const convertedFarm = {
-      ...rest,
-      owner: producer
-    }
+    if (!farm.producer) return null
 
-    const farmDetails = PrismaFarmDetailsMapper.toDomain(convertedFarm)
+    const farmDetails = PrismaFarmDetailsMapper.toDomain({
+      ...farm,
+      owner: farm.producer,
+    })
+
+    await this.cache.set(
+      `question:${id}:details`,
+      JSON.stringify(farmDetails),
+    )
 
     return farmDetails
   }

@@ -6,13 +6,13 @@ import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/p
 export class InMemoryProducerFarmsRepository implements ProducerFarmsRepository {
   public items: ProducerFarm[] = []
 
-  async createMany(producerFarms: ProducerFarm[]): Promise<void> {
-    this.items.push(...producerFarms)
+  async createMany(farms: ProducerFarm[]): Promise<void> {
+    this.items.push(...farms)
   }
 
-  async deleteMany(crops: ProducerFarm[]): Promise<void> {
+  async deleteMany(farms: ProducerFarm[]): Promise<void> {
     const producerFarms = this.items.filter((item) => {
-      return !crops.some((crop) => crop.equals(item))
+      return !farms.some((farm) => farm.equals(item))
     })
 
     this.items = producerFarms

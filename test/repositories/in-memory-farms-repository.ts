@@ -38,6 +38,10 @@ export class InMemoryFarmsRepository implements FarmsRepository {
   async create(farm: Farm) {
     this.items.push(farm)
 
+    await this.farmCropsRepository.createMany(
+      farm.crops.getItems(),
+    )
+
     DomainEvents.dispatchEventsForAggregate(farm.id)
   }
 
@@ -45,6 +49,10 @@ export class InMemoryFarmsRepository implements FarmsRepository {
     const itemIndex = this.items.findIndex((item) => item.id === farm.id)
 
     this.items.splice(itemIndex, 1)
+
+    await this.farmCropsRepository.deleteManyByFarmId(
+      farm.id.toString(),
+    )
   }
 
   async findById(id: string): Promise<Farm | null> {

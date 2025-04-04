@@ -25,7 +25,6 @@ export class PrismaFarmMapper {
         farmArea: FarmArea.create(CreateFarmAreaData),
         vegetationArea: raw.vegetationArea,
         agriculturalArea: raw.agriculturalArea,
-
       
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt,

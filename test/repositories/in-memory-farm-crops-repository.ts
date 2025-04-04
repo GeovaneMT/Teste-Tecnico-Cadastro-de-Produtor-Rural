@@ -6,8 +6,8 @@ import { FarmCropsRepository } from '@/domain/erm/application/repositories/farm-
 export class InMemoryFarmCropsRepository implements FarmCropsRepository {
   public items: FarmCrop[] = []
 
-  async createMany(farmCrops: FarmCrop[]): Promise<void> {
-    this.items.push(...farmCrops)
+  async createMany(crops: FarmCrop[]): Promise<void> {
+    this.items.push(...crops)
   }
 
   async deleteMany(crops: FarmCrop[]): Promise<void> {

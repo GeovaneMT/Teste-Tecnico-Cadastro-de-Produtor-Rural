@@ -37,6 +37,10 @@ export class InMemoryProducersRepository implements ProducersRepository {
   async create(producer: Producer) {
     this.items.push(producer)
 
+    await this.producerFarmsRepository.createMany(
+      producer.farms.getItems(),
+    )
+
     DomainEvents.dispatchEventsForAggregate(producer.id)
   }
 

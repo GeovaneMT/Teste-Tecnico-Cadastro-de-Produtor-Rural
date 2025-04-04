@@ -67,7 +67,7 @@ model Farm {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  producer Producer? @relation(fields: [ownerId], references: [id])
+  owner Producer @relation(fields: [ownerId], references: [id])
 
   @@map("farms")
 }
@@ -82,8 +82,8 @@ model Crop {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  farm     Farm?     @relation(fields: [landId], references: [id], onDelete: Cascade)
-  producer Producer? @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  land  Farm     @relation(fields: [landId], references: [id], onDelete: Cascade)
+  owner Producer @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@map("crops")
 }

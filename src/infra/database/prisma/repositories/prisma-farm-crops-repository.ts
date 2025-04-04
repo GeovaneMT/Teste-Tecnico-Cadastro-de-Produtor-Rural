@@ -3,69 +3,73 @@ import { Injectable } from '@nestjs/common'
 import { PaginationParams } from '@/core/repositories/pagination-params'
 
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { PrismaProducerFarmMapper } from '@/infra/database/prisma/mappers/prisma-producer-farm-mapper'
+import { PrismaFarmCropMapper } from '@/infra/database/prisma/mappers/prisma-farm-crop-mapper'
+import { PrismaCropWithLandMapper } from '@/infra/database/prisma/mappers/prisma-crop-with-land-mapper'
+import { PrismaCropWithOwnerMapper } from '@/infra/database/prisma/mappers/prisma-crop-with-owner-mapper'
 
-import { ProducerFarm } from '@/domain/erm/enterprise/entities/producer-farm'
-import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/producer-farms-repository'
+import { FarmCrop } from '@/domain/erm/enterprise/entities/farm-crop'
+import { CropWithLand } from '@/domain/erm/enterprise/entities/value-objects/crop-with-land'
+import { FarmCropsRepository } from '@/domain/erm/application/repositories/farm-crops-repository'
+import { CropWithOwner } from '@/domain/erm/enterprise/entities/value-objects/crop-with-owner'
 
 @Injectable()
-export class PrismaFarmCropsRepository implements ProducerFarmsRepository {
+export class PrismaFarmCropsRepository implements FarmCropsRepository {
   constructor(private prisma: PrismaService) {}
 
-  async createMany(farms: ProducerFarm[]): Promise<void> {
-    if (farms.length === 0) {
+  async createMany(crops: FarmCrop[]): Promise<void> {
+    if (crops.length === 0) {
       return
     }
 
-    const data = PrismaProducerFarmMapper.toPrismaUpdateMany(farms)
+    const data = PrismaFarmCropMapper.toPrismaUpdateMany(crops)
 
-    await this.prisma.farm.updateMany(data)
+    await this.prisma.crop.updateMany(data)
   }
 
-  async deleteMany(farms: ProducerFarm[]): Promise<void> {
-    if (farms.length === 0) {
+  async deleteMany(crops: FarmCrop[]): Promise<void> {
+    if (crops.length === 0) {
       return
     }
 
-    const farmIds = farms.map((farm) => {
-      return farm.id.toString()
+    const cropIds = crops.map((crop) => {
+      return crop.id.toString()
     })
 
-    await this.prisma.farm.deleteMany({
+    await this.prisma.crop.deleteMany({
       where: {
         id: {
-          in: farmIds,
+          in: cropIds,
         },
       },
     })
   }
 
-  async findById(id: string): Promise<ProducerFarm | null> {
-    const ProducerFarm = await this.prisma.farm.findUnique({
+  async findById(id: string): Promise<FarmCrop | null> {
+    const FarmCrop = await this.prisma.crop.findUnique({
       where: {
         id,
       },
     })
 
-    if (!ProducerFarm) {
+    if (!FarmCrop) {
       return null
     }
 
-    return PrismaProducerFarmMapper.toDomain(ProducerFarm)
+    return PrismaFarmCropMapper.toDomain(FarmCrop)
   }
 
-  async deleteManyByProducerId(producerId: string): Promise<void> {
-    await this.prisma.farm.deleteMany({
+  async deleteManyByFarmId(farmId: string): Promise<void> {
+    await this.prisma.crop.deleteMany({
       where: {
-        ownerId: producerId,
+        ownerId: farmId,
       },
     })
   }
 
-  async findManyByProducerId(producerId: string, { page }: PaginationParams): Promise<ProducerFarm[] | null> {
-    const producerFarms = await this.prisma.farm.findMany({
+  async findManyByFarmId(farmId: string, { page }: PaginationParams): Promise<FarmCrop[] | null> {
+    const farmCrops = await this.prisma.crop.findMany({
       where: {
-        ownerId: producerId,
+        ownerId: farmId,
       },
       orderBy: {
         createdAt: 'desc',
@@ -74,6 +78,43 @@ export class PrismaFarmCropsRepository implements ProducerFarmsRepository {
       skip: (page - 1) * 20,
     })
 
-    return producerFarms.map(PrismaProducerFarmMapper.toDomain)
+    return farmCrops.map(PrismaFarmCropMapper.toDomain)
   }
+  
+  async findManyByFarmIdWithLand(farmId: string, { page }: PaginationParams): Promise<CropWithLand[]> {
+    const farmCrops = await this.prisma.crop.findMany({
+      where: {
+        landId: farmId,
+      },
+      include: {
+        land: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    })
+
+    return farmCrops.map(PrismaCropWithLandMapper.toDomain)
+  }
+
+  async findManyByFarmIdWithOwner(farmId: string, { page }: PaginationParams): Promise<CropWithOwner[]> {
+    const farmCrops = await this.prisma.crop.findMany({
+      where: {
+        ownerId: farmId,
+      },
+      include: {
+        owner: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      take: 20,
+      skip: (page - 1) * 20,
+    })
+
+    return farmCrops.map(PrismaCropWithOwnerMapper.toDomain)
+  }
+
 }
