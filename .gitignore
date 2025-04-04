@@ -40,3 +40,10 @@ lerna-debug.log*
 
 # Docker
 data
+
+# JWT
+
+private_key.pem
+public_key.pem
+private_key_base64.txt
+public_key_base64.txt

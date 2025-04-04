@@ -45,7 +45,7 @@ model Producer {
   updatedAt DateTime? @updatedAt @map("updated_at")
 
   farms Farm[]
-  Crop  Crop[]
+  crops Crop[]
 
   @@map("producers")
 }
@@ -99,5 +99,6 @@ model Notification {
 
   recipient User @relation(fields: [recipientId], references: [id])
 
+  @@index([recipientId, readAt])
   @@map("notifications")
 }

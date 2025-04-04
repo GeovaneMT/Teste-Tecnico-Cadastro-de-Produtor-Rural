@@ -35,7 +35,6 @@ describe('On Admin Created', () => {
 
   it('should  send a notification when an admin is created', async () => {
     const admin = makeAdmin()
-
     
     inMemoryAdminsRepository.create(admin)
 
