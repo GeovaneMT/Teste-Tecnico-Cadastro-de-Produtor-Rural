@@ -4,10 +4,8 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaProducerFarmMapper } from '@/infra/database/prisma/mappers/prisma-producer-farm-mapper'
-import { PrismaFarmWithOwnerMapper } from '@/infra/database/prisma/mappers/prisma-farm-with-owner-mapper'
 
 import { ProducerFarm } from '@/domain/erm/enterprise/entities/producer-farm'
-import { FarmWithOwner } from '@/domain/erm/enterprise/entities/value-objects/farm-with-owner'
 import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/producer-farms-repository'
 
 @Injectable()
@@ -78,22 +76,5 @@ export class PrismaProducerFarmsRepository implements ProducerFarmsRepository {
 
     return producerFarms.map(PrismaProducerFarmMapper.toDomain)
   }
-  
-  async findManyByProducerIdWithOwner(producerId: string, { page }: PaginationParams): Promise<FarmWithOwner[]> {
-    const farmCrops = await this.prisma.crop.findMany({
-      where: {
-        ownerId: producerId,
-      },
-      include: {
-        owner: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 20,
-      skip: (page - 1) * 20,
-    })
 
-    return farmCrops.map(PrismaFarmWithOwnerMapper.toDomain)
-  }
 }

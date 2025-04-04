@@ -4,13 +4,9 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaFarmCropMapper } from '@/infra/database/prisma/mappers/prisma-farm-crop-mapper'
-import { PrismaCropWithLandMapper } from '@/infra/database/prisma/mappers/prisma-crop-with-land-mapper'
-import { PrismaCropWithOwnerMapper } from '@/infra/database/prisma/mappers/prisma-crop-with-owner-mapper'
 
 import { FarmCrop } from '@/domain/erm/enterprise/entities/farm-crop'
-import { CropWithLand } from '@/domain/erm/enterprise/entities/value-objects/crop-with-land'
 import { FarmCropsRepository } from '@/domain/erm/application/repositories/farm-crops-repository'
-import { CropWithOwner } from '@/domain/erm/enterprise/entities/value-objects/crop-with-owner'
 
 @Injectable()
 export class PrismaFarmCropsRepository implements FarmCropsRepository {
@@ -79,42 +75,6 @@ export class PrismaFarmCropsRepository implements FarmCropsRepository {
     })
 
     return farmCrops.map(PrismaFarmCropMapper.toDomain)
-  }
-  
-  async findManyByFarmIdWithLand(farmId: string, { page }: PaginationParams): Promise<CropWithLand[]> {
-    const farmCrops = await this.prisma.crop.findMany({
-      where: {
-        landId: farmId,
-      },
-      include: {
-        land: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 20,
-      skip: (page - 1) * 20,
-    })
-
-    return farmCrops.map(PrismaCropWithLandMapper.toDomain)
-  }
-
-  async findManyByFarmIdWithOwner(farmId: string, { page }: PaginationParams): Promise<CropWithOwner[]> {
-    const farmCrops = await this.prisma.crop.findMany({
-      where: {
-        ownerId: farmId,
-      },
-      include: {
-        owner: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 20,
-      skip: (page - 1) * 20,
-    })
-
-    return farmCrops.map(PrismaCropWithOwnerMapper.toDomain)
   }
 
 }

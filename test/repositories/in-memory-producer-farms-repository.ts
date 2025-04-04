@@ -6,6 +6,7 @@ import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/p
 export class InMemoryProducerFarmsRepository implements ProducerFarmsRepository {
   public items: ProducerFarm[] = []
 
+
   async createMany(farms: ProducerFarm[]): Promise<void> {
     this.items.push(...farms)
   }
@@ -47,5 +48,5 @@ export class InMemoryProducerFarmsRepository implements ProducerFarmsRepository 
 
     return producerFarms
   }
-  
+
 }

@@ -103,7 +103,7 @@ export class PrismaFarmsRepository implements FarmsRepository {
       },
       include: {
         crops: true,
-        producer: true,
+        owner: true,
       },
     })
 
@@ -111,11 +111,11 @@ export class PrismaFarmsRepository implements FarmsRepository {
       return null
     }
     
-    if (!farm.producer) return null
+    if (!farm.owner) return null
 
     const farmDetails = PrismaFarmDetailsMapper.toDomain({
       ...farm,
-      owner: farm.producer,
+      owner: farm.owner,
     })
 
     await this.cache.set(
