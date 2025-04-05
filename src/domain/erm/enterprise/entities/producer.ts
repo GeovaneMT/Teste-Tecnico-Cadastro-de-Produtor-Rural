@@ -4,6 +4,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 import { ProducerFarmList } from '@/domain/erm/enterprise/entities/producer-farm-list'
+import { ProducerCreatedEvent } from '../events/producer-created-event'
 
 export interface ProducerProps {
   name: string
@@ -38,6 +39,10 @@ export class Producer extends AggregateRoot<ProducerProps> {
 
   get updatedAt() {
     return this.props.updatedAt
+  }
+
+  get excerpt() {
+    return this.email.substring(0, 120).trimEnd().concat('...')
   }
   
   set name(name: string) {
@@ -76,6 +81,12 @@ export class Producer extends AggregateRoot<ProducerProps> {
       },
       id,
     )
+
+    const isNewProducer = !id
+
+    if (isNewProducer) {
+      producer.addDomainEvent(new ProducerCreatedEvent(producer))
+    }
 
     return producer
   }

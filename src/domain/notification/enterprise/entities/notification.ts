@@ -4,6 +4,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 export interface NotificationProps {
   recipientId: UniqueEntityID
+  userId?: UniqueEntityID | null
   title: string
   content: string
   readAt?: Date | null
@@ -13,6 +14,10 @@ export interface NotificationProps {
 export class Notification extends Entity<NotificationProps> {
   get recipientId() {
     return this.props.recipientId
+  }
+
+  get userId() {
+    return this.props.userId
   }
 
   get title() {

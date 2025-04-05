@@ -1,7 +1,6 @@
 import { Optional } from '@/core/types/optional'
-import { AggregateRoot } from '@/core/entities/aggregate-root'
+import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { AdminCreatedEvent } from '@/domain/erm/enterprise/events/admin-created-event'
 
 export interface AdminProps {
   name: string
@@ -12,7 +11,7 @@ export interface AdminProps {
   updatedAt?: Date | null
 }
 
-export class Admin extends AggregateRoot<AdminProps> {
+export class Admin extends Entity<AdminProps> {
   get name() {
     return this.props.name
   }
@@ -44,12 +43,6 @@ export class Admin extends AggregateRoot<AdminProps> {
       },
       id,
     )
-
-    const isNewAdmin = !id
-
-    if (isNewAdmin) {
-      admin.addDomainEvent(new AdminCreatedEvent(admin))
-    }
 
     return admin
   }

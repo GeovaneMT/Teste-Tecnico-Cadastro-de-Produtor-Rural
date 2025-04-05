@@ -2,13 +2,13 @@ import { Module } from '@nestjs/common'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 
-import { OnAdminCreated } from '@/domain/notification/application/subscribers/on-admin-created'
+import { OnProducerCreated } from '@/domain/notification/application/subscribers/on-producer-created'
 import { SendNotificationUseCase } from '@/domain/notification/application/use-cases/send-notification'
 
 @Module({
   imports: [DatabaseModule],
   providers: [
-    OnAdminCreated,
+    OnProducerCreated,
     SendNotificationUseCase,
   ],
 })

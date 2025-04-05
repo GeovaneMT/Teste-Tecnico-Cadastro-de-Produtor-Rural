@@ -9,6 +9,7 @@ import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
 import { AdminFactory } from 'test/factories/make-admins'
+import { ProducerFactory } from 'test/factories/make-producers'
 import { NotificationFactory } from 'test/factories/make-notifications'
 
 describe('Read notification (E2E)', () => {
@@ -16,17 +17,19 @@ describe('Read notification (E2E)', () => {
   let app: INestApplication
   let prisma: PrismaService
   let adminFactory: AdminFactory
+  let producerFactory: ProducerFactory
   let notificationFactory: NotificationFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [AdminFactory, NotificationFactory],
+      providers: [AdminFactory, ProducerFactory, NotificationFactory],
     }).compile()
 
     jwt = moduleRef.get(JwtService)
     app = moduleRef.createNestApplication()
     prisma = moduleRef.get(PrismaService)
+    producerFactory = moduleRef.get(ProducerFactory)
     adminFactory = moduleRef.get(AdminFactory)
     notificationFactory = moduleRef.get(NotificationFactory)
 
@@ -40,14 +43,18 @@ describe('Read notification (E2E)', () => {
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
+    const producer = await producerFactory.makePrismaProducer({
+      name: 'John Doe',
+    })
+
     const notification = await notificationFactory.makePrismaNotification({
-      recipientId: user.id,
+      recipientId: producer.id,
     })
 
     const notificationId = notification.id.toString()
 
     const response = await request(app.getHttpServer())
-      .patch(`/notifications/${notificationId}/read`)
+      .patch(`/notifications/${notificationId}/read/${producer.id}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send()
 

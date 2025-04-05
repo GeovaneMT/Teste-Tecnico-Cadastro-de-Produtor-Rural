@@ -1,3 +1,4 @@
+import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
 import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
@@ -11,7 +12,7 @@ import {
   Patch,
 } from '@nestjs/common'
 
-@Controller('/notifications/:notificationId/read')
+@Controller('/notifications/:notificationId/read/:producerId')
 export class ReadNotificationController {
   constructor(private readNotification: ReadNotificationUseCase) {}
 
@@ -20,10 +21,12 @@ export class ReadNotificationController {
   async handle(
     @CurrentUser() user: UserPayload,
     @Param('notificationId') notificationId: string,
+    @Param('producerId') producerId: string,
   ) {
+
     const result = await this.readNotification.execute({
       notificationId,
-      recipientId: user.sub,
+      recipientId: producerId,
     })
 
     if (result.isLeft()) {
