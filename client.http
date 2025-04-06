@@ -31,8 +31,8 @@ Authorization: Bearer {{authToken}}
 
 {
   "name": "New producer",
-  "email": "Test@email.com",
-  "document": "48984114871",
+  "email": "Test2@email.com",
+  "document": "12345678909",
   "farms": []
 }
 

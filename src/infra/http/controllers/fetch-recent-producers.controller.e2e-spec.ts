@@ -46,7 +46,7 @@ describe('Fetch recent producers (E2E)', () => {
     ])
 
     const response = await request(app.getHttpServer())
-      .get('/producers?page=1')
+      .get('/producers')
       .set('Authorization', `Bearer ${accessToken}`)
       .send()
 
