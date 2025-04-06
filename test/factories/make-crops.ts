@@ -10,17 +10,24 @@ import {
   Crop,
   CropProps,
 } from '@/domain/erm/enterprise/entities/crop'
+import { CropType } from '@prisma/client'
 
 export function makeCrop(
   override: Partial<CropProps> = {},
   id?: UniqueEntityID,
 ) {
+  
+  function getRandomCropType(): CropType {
+    const values = Object.values(CropType)
+    const randomIndex = Math.floor(Math.random() * values.length);
+    return values[randomIndex] as CropType
+  }
 
   const crop = Crop.create(
     {
       landId: new UniqueEntityID(),
       ownerId: new UniqueEntityID(),
-      type: 'SOYBEANS',
+      type: getRandomCropType(),
       description: faker.lorem.sentence(10),
       ...override,
     },

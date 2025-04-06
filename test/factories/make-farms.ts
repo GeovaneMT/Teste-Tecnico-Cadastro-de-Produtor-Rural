@@ -12,6 +12,7 @@ import {
   FarmProps,
 } from '@/domain/erm/enterprise/entities/farm'
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
+import { States } from '@prisma/client'
 
 export function makeFarm(
   override: Partial<FarmProps> = {},
@@ -24,12 +25,18 @@ export function makeFarm(
     vegetationArea: faker.number.int({ min: 10, max: 50 }),
   }
 
+  function getRandomState(): States {
+    const values = Object.values(States);
+    const randomIndex = Math.floor(Math.random() * values.length);
+    return values[randomIndex] as States
+  }
+
   const farm = Farm.create(
     {
       ownerId: new UniqueEntityID(),
       name: faker.person.fullName(),
       city: faker.location.city(),
-      state: faker.location.state(),
+      state: getRandomState(),
 
       farmArea: FarmArea.create(CreateFarmAreaData),
       vegetationArea: CreateFarmAreaData.vegetationArea.toString(),

@@ -24,7 +24,8 @@ export class FetchRecentProducersUseCase {
   async execute({
     page,
   }: FetchRecentProducersUseCaseRequest): Promise<FetchRecentProducersUseCaseResponse> {
-    const producers = (await this.producersRepository.findManyRecent({ page })) ?? []
+    const producers = await this.producersRepository.findManyRecent({ page })
+
     if (!producers) {
       return left(new ResourceNotFoundError())
     }

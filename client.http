@@ -31,7 +31,7 @@ Authorization: Bearer {{authToken}}
 
 {
   "name": "New producer",
-  "email": "Test2@email.com",
+  "email": "Test@email.com",
   "document": "48984114871",
   "farms": []
 }
@@ -46,6 +46,6 @@ Authorization: Bearer {{authToken}}
 ###
 
 # @name get_producer_by_email
-GET {{baseUrl}}/producers/Test2@email.com
+GET {{baseUrl}}/producers/Test@email.com
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

@@ -9,8 +9,10 @@ import { ReadNotificationController } from '@/infra/http/controllers/read-notifi
 import { CreateAccountController } from '@/infra/http/controllers/create-account.controller'
 import { CreateProducerController } from '@/infra/http/controllers/create-producer.controller'
 
+import { FetchTotalAreaController } from '@/infra/http/controllers/fetch-total-area.controller'
+import { FetchTotalFarmsController } from '@/infra/http/controllers/fetch-total-farms.controller'
+import { GetCropIndicatorsController } from '@/infra/http/controllers/get-crop-indicators.controller'
 import { GetProducerByEmailController } from '@/infra/http/controllers/get-producer-by-email'
-
 import { FetchRecentProducersController } from '@/infra/http/controllers/fetch-recent-producers.controller'
 
 
@@ -21,8 +23,10 @@ import { ReadNotificationUseCase } from '@/domain/notification/application/use-c
 import { RegisterAdminUseCase } from '@/domain/erm/application/use-cases/register-admin'
 import { CreateProducerUseCase } from '@/domain/erm/application/use-cases/create-producer'
 
+import { FetchTotalAreaUseCase } from '@/domain/erm/application/use-cases/fetch-total-area'
+import { FetchTotalFarmsUseCase } from '@/domain/erm/application/use-cases/fetch-total-farms'
+import { GetCropIndicatorsUseCase } from '@/domain/erm/application/use-cases/get-crop-indicators'
 import { GetProducerByEmailUseCase } from '@/domain/erm/application/use-cases/get-producer-by-email'
-
 import { FetchRecentProducersUseCase } from '@/domain/erm/application/use-cases/fetch-recent-producers'
 
 @Module({
@@ -34,8 +38,10 @@ import { FetchRecentProducersUseCase } from '@/domain/erm/application/use-cases/
     CreateAccountController,
     CreateProducerController,
     
+    FetchTotalAreaController,
+    FetchTotalFarmsController,
+    GetCropIndicatorsController,
     GetProducerByEmailController,
-    
     FetchRecentProducersController,
   ],
   providers: [
@@ -45,6 +51,9 @@ import { FetchRecentProducersUseCase } from '@/domain/erm/application/use-cases/
     RegisterAdminUseCase,
     CreateProducerUseCase,
 
+    FetchTotalAreaUseCase,
+    FetchTotalFarmsUseCase,
+    GetCropIndicatorsUseCase,
     GetProducerByEmailUseCase,
     FetchRecentProducersUseCase,
   ],

@@ -1,8 +1,10 @@
 import { ValueObject } from '@/core/entities/value-object'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
+import { States } from '@/domain/erm/utils/state-type-enum'
 import { Crop } from '@/domain/erm/enterprise/entities/crop'
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
+
 
 export interface FarmDetailsProps {
   farmId: UniqueEntityID
@@ -11,7 +13,7 @@ export interface FarmDetailsProps {
 
   name: string
   city: string
-  state: string
+  state: States
 
   farmArea: FarmArea
   vegetationArea: string

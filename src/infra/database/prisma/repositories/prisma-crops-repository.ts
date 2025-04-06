@@ -8,10 +8,14 @@ import { PrismaCropMapper } from '@/infra/database/prisma/mappers/prisma-crop-ma
 import { Crop } from '@/domain/erm/enterprise/entities/crop'
 import { CropType } from '@/domain/erm/utils/crop-type-enum'
 import { CropsRepository } from '@/domain/erm/application/repositories/crops-repository'
+import { FarmCropsRepository } from '@/domain/erm/application/repositories/farm-crops-repository'
+import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
 
 @Injectable()
 export class PrismaCropsRepository implements CropsRepository {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService
+  ) {}
 
   async save(crop: Crop): Promise<void> {
     const data = PrismaCropMapper.toPrisma(crop)
@@ -128,6 +132,6 @@ export class PrismaCropsRepository implements CropsRepository {
     })
 
     return crops.map(PrismaCropMapper.toDomain)
-  }
-  
+  } 
+
 }

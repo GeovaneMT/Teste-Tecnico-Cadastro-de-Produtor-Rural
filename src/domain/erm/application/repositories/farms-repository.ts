@@ -2,8 +2,8 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
 
-import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
+import { StateCropIndicators } from '@/domain/erm/enterprise/entities/value-objects/state-crop-indicators'
 
 export abstract class FarmsRepository {
   abstract save(farm: Farm): Promise<void>
@@ -24,4 +24,10 @@ export abstract class FarmsRepository {
   abstract findManyByFarmArea(farmArea: string, params: PaginationParams): Promise<Farm[] | null>
   abstract findManyByVegetationArea(vegetationArea: string, params: PaginationParams): Promise<Farm[] | null>
   abstract findManyByAgriculturalArea(agriculturalArea: string, params: PaginationParams): Promise<Farm[] | null>
+
+  abstract findTotalFarmsQuantity(): Promise<number>
+
+  abstract findTotalArea(): Promise<number>
+
+  abstract getCropIndicators(): Promise<StateCropIndicators[][][] | null>
 }

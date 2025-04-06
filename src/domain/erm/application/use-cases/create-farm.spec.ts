@@ -42,7 +42,7 @@ describe('Create Farm', () => {
       ownerId: '1',
       name: 'farm_name',
       city: 'farm_city',
-      state: 'farm_state',
+      state: 'SP',
 
       farmArea: '10 ',
       vegetationArea: '4',

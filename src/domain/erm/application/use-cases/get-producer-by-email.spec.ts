@@ -12,7 +12,6 @@ import { InMemoryProducersRepository } from 'test/repositories/in-memory-produce
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 import { makeFarmCrop } from 'test/factories/make-farm-crops'
-import { error } from 'console'
 
 let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 let inMemoryFarmsRepository: InMemoryFarmsRepository
@@ -64,7 +63,7 @@ describe('Get Producer By Email', () => {
       ownerId: newProducer.id,
       name: 'Some farm',
       city: 'Some city',
-      state: 'Some state',
+      state: 'SP',
 
       farmArea: FarmArea.create(farmAreaCreateData),
       vegetationArea: farmAreaCreateData.vegetationArea.toString(),

@@ -9,6 +9,9 @@ import { FarmsRepository } from '@/domain/erm/application/repositories/farms-rep
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
+import { StateCropIndicators } from '@/domain/erm/enterprise/entities/value-objects/state-crop-indicators'
+import { States } from '@/domain/erm/utils/state-type-enum'
+import { CropType } from '@/domain/erm/utils/crop-type-enum'
 
 export class InMemoryFarmsRepository implements FarmsRepository {
   public items: Farm[] = []
@@ -37,11 +40,11 @@ export class InMemoryFarmsRepository implements FarmsRepository {
   
   async create(farm: Farm) {
     this.items.push(farm)
-
+    
     await this.farmCropsRepository.createMany(
       farm.crops.getItems(),
     )
-
+    
     DomainEvents.dispatchEventsForAggregate(farm.id)
   }
 
@@ -222,6 +225,83 @@ export class InMemoryFarmsRepository implements FarmsRepository {
     }
 
     return farms
+  }
+
+  async findTotalArea(): Promise<number> {
+    const farms = this.items
+
+    const total = farms.reduce((sum, farm) => {
+      const area = farm.farmArea.getValue()
+      return sum + (isNaN(area) ? 0 : area)
+    }, 0)
+  
+    return total
+  }
+
+  async findTotalFarmsQuantity(): Promise<number> {
+    const farms = this.items
+
+    return farms.length
+  }
+
+  async getCropIndicators(): Promise<StateCropIndicators[][][]> {
+    type StateCropKey = `${States}-${CropType}`
+  
+    interface CropIndicatorData {
+      state: States
+      cropType: CropType
+      total: number
+    }
+  
+    const farms = this.items
+    
+    const CropIndicatorDatasForEachCropForEachFarm = await Promise.all(farms.map(async (farm) => {
+      const crops = await this.cropsRepository.findManyByLandId(farm.id.toString(), { page: 1 })
+      
+      if (!crops) {
+        throw new Error('crops not found')
+      }
+      
+      const stateCropIndicatorMap: Map<StateCropKey, CropIndicatorData>[] = await Promise.all (crops.map(async (crop) => {
+
+        const key: StateCropKey = `${farm.state}-${crop.type}`
+  
+        const stateCropIndicatorMap: Map<StateCropKey, CropIndicatorData> = new Map()
+        const cropIndicatorData = stateCropIndicatorMap.get(key)
+        
+        const updateTotalCropIndicator = (cropIndicatorData: CropIndicatorData) => {
+          cropIndicatorData.total += 1
+        }
+        
+        if (cropIndicatorData) {
+          updateTotalCropIndicator(cropIndicatorData)
+        }
+        
+        if (!cropIndicatorData) {
+          const newIndicator: CropIndicatorData = {
+            state: farm.state,
+            cropType: crop.type,
+            total: 1,
+          }
+          stateCropIndicatorMap.set(key, newIndicator)
+        }
+
+        return stateCropIndicatorMap
+      }))
+
+      const CropIndicatorDatasForEachCrop = stateCropIndicatorMap.map((map) => Array.from(map.values()))
+      return CropIndicatorDatasForEachCrop
+  
+    }))
+
+    const result = CropIndicatorDatasForEachCropForEachFarm.map((farm) =>
+      farm.map((crop) =>
+        crop.map((indicator) =>
+          StateCropIndicators.create(indicator)
+        )
+      )
+    )    
+    return result
   }
 
 }

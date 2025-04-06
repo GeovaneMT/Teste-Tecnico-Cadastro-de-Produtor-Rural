@@ -15,4 +15,5 @@ export abstract class CropsRepository {
 
   abstract findManyByType(type: CropType, params: PaginationParams): Promise<Crop[] | null>
   abstract findManyByDescription(description: string, params: PaginationParams): Promise<Crop[] | null>
+
 }

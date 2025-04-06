@@ -7,6 +7,7 @@ import { Farm } from '@/domain/erm/enterprise/entities/farm'
 import { FarmCrop } from '@/domain/erm/enterprise/entities/farm-crop'
 import { FarmCropList } from '@/domain/erm/enterprise/entities/farm-crop-list'
 
+import { States } from '@/domain/erm/utils/state-type-enum'
 import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
@@ -14,7 +15,7 @@ interface CreateFarmUseCaseRequest {
   ownerId: string
   name: string
   city: string
-  state: string
+  state: States
 
   farmArea: string
   vegetationArea: string
