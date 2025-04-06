@@ -40,9 +40,9 @@ describe('Create producer (E2E)', () => {
     const user = await adminFactory.makePrismaAdmin()
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
-    const producer = await producerFactory.makePrismaProducer()
-    const farm1 = await farmFactory.makePrismaFarm({ownerId: producer.id})
-    const farm2 = await farmFactory.makePrismaFarm({ownerId: producer.id})
+    // const producer = await producerFactory.makePrismaProducer()
+    // const farm1 = await farmFactory.makePrismaFarm({ownerId: producer.id})
+    // const farm2 = await farmFactory.makePrismaFarm({ownerId: producer.id})
 
     const response = await request(app.getHttpServer())
       .post('/producers')
@@ -50,7 +50,8 @@ describe('Create producer (E2E)', () => {
       .send({
         name: 'New producer',
         email: 'Test@email.com',
-        document: Document.generateValidDocument().getValue(),
+        document: '48984114871',
+        // document: Document.generateValidDocument().getValue(),
         farms: [],
         // farms: [farm1.id.toString(), farm2.id.toString()],
       })

@@ -1,4 +1,5 @@
-import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
+import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
@@ -6,8 +7,10 @@ import { UserPayload } from '@/infra/auth/jwt.strategy'
 
 import {
   BadRequestException,
+  UnauthorizedException,
   Controller,
   HttpCode,
+  NotFoundException,
   Param,
   Patch,
 } from '@nestjs/common'
@@ -30,7 +33,16 @@ export class ReadNotificationController {
     })
 
     if (result.isLeft()) {
-      throw new BadRequestException()
+      const error =result.value
+
+      switch (error.constructor) {
+        case ResourceNotFoundError:
+          throw new NotFoundException(error.message)
+        case NotAllowedError:
+          throw new UnauthorizedException(error.message)
+        default:
+          throw new BadRequestException(error.message)
+      }
     }
   }
 }

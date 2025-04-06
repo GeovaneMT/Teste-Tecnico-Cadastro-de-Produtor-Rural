@@ -38,7 +38,7 @@ Authorization: Bearer {{authToken}}
 
 ###
 
-# @name fetch_recent_questions
-GET {{baseUrl}}/questions?page=1
+# @name fetch_recent_producers
+GET {{baseUrl}}/producers?page=1
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

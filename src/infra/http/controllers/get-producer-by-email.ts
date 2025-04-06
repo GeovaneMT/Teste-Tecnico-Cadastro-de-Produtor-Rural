@@ -1,6 +1,7 @@
-import { BadRequestException, Controller, Get, Param } from '@nestjs/common'
+import { BadRequestException, NotFoundException, Controller, Get, Param } from '@nestjs/common'
 import { ProducerDetailsPresenter } from '@/infra/http/presenters/producer-details-presenter'
 import { GetProducerByEmailUseCase } from '@/domain/erm/application/use-cases/get-producer-by-email'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
 @Controller('/producers/:email')
 export class GetProducerByEmailController {
@@ -13,7 +14,14 @@ export class GetProducerByEmailController {
     })
 
     if (result.isLeft()) {
-      throw new BadRequestException()
+      const error =result.value
+
+      switch (error.constructor) {
+        case ResourceNotFoundError:
+          throw new NotFoundException(error.message)
+        default:
+          throw new BadRequestException(error.message)
+      }
     }
 
     return { producer: ProducerDetailsPresenter.toHTTP(result.value.producer) }

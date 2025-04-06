@@ -48,7 +48,11 @@ describe('Fetch Recent Producers', () => {
       page: 1,
     })
 
-    expect(result.value?.producers).toEqual([
+    if (result.isLeft()) {
+      throw new Error(result.value.message)
+    }
+
+    expect(result.value.producers).toEqual([
       expect.objectContaining({ createdAt: new Date(2022, 0, 23) }),
       expect.objectContaining({ createdAt: new Date(2022, 0, 20) }),
       expect.objectContaining({ createdAt: new Date(2022, 0, 18) }),
@@ -64,6 +68,10 @@ describe('Fetch Recent Producers', () => {
       page: 2,
     })
 
-    expect(result.value?.producers).toHaveLength(2)
+    if (result.isLeft()) {
+      throw new Error(result.value.message)
+    }
+
+    expect(result.value.producers).toHaveLength(2)
   })
 })
