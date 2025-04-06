@@ -33,7 +33,9 @@ describe('Edit Producer', () => {
     )
 
     inMemoryProducersRepository = new InMemoryProducersRepository(
+      inMemoryCropsRepository,
       inMemoryFarmsRepository,
+      inMemoryFarmCropsRepository,
       inMemoryProducerFarmsRepository,
     )
 

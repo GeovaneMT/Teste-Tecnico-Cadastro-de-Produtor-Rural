@@ -19,8 +19,19 @@ describe('Create Farm', () => {
     inMemoryCropsRepository = new InMemoryCropsRepository()
     inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
     inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository()
-    inMemoryProducersRepository = new InMemoryProducersRepository(inMemoryFarmsRepository, inMemoryProducerFarmsRepository)
-    inMemoryFarmsRepository = new InMemoryFarmsRepository(inMemoryCropsRepository, inMemoryFarmCropsRepository, inMemoryProducersRepository)
+
+    inMemoryProducersRepository = new InMemoryProducersRepository(
+      inMemoryCropsRepository,
+      inMemoryFarmsRepository,
+      inMemoryFarmCropsRepository,
+      inMemoryProducerFarmsRepository,
+    )    
+    
+    inMemoryFarmsRepository = new InMemoryFarmsRepository(
+      inMemoryCropsRepository, 
+      inMemoryFarmCropsRepository, 
+      inMemoryProducersRepository
+    )
 
     sut = new CreateFarmUseCase(inMemoryFarmsRepository)
   })

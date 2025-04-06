@@ -92,9 +92,8 @@ export class PrismaFarmsRepository implements FarmsRepository {
     const cacheHit = await this.cache.get(`question:${id}:details`)
 
     if (cacheHit) {
-      const cacheData = JSON.parse(cacheHit)
-
-      return cacheData
+      const producer = JSON.parse(cacheHit)
+      return PrismaFarmDetailsMapper.toDomain(producer)
     }
 
     const farm = await this.prisma.farm.findUnique({
@@ -120,7 +119,7 @@ export class PrismaFarmsRepository implements FarmsRepository {
 
     await this.cache.set(
       `question:${id}:details`,
-      JSON.stringify(farmDetails),
+      JSON.stringify(farm),
     )
 
     return farmDetails

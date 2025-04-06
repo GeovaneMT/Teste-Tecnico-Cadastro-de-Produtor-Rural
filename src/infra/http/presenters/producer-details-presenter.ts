@@ -1,4 +1,4 @@
-import { FarmPresenter } from '@/infra/http/presenters/farm-presenter'
+import { FarmDetailsPresenter } from '@/infra/http/presenters/farm-details-presenter'
 import { ProducerDetails } from '@/domain/erm/enterprise/entities/value-objects/producer-details'
 
 export class ProducerDetailsPresenter {
@@ -9,7 +9,7 @@ export class ProducerDetailsPresenter {
       email: producerDetails.email,
       document: producerDetails.document.getValue(),
       
-      farms: producerDetails.farms.map(FarmPresenter.toHTTP),
+      farmsDetails: producerDetails.farmsDetails.map(FarmDetailsPresenter.toHTTP),
 
       createdAt: producerDetails.createdAt,
       updatedAt: producerDetails.updatedAt,

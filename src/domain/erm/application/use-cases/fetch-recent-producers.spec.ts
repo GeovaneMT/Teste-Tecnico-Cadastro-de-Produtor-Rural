@@ -26,10 +26,14 @@ describe('Fetch Recent Producers', () => {
       inMemoryFarmCropsRepository, 
       inMemoryProducersRepository
     )
+
     inMemoryProducersRepository = new InMemoryProducersRepository(
+      inMemoryCropsRepository,
       inMemoryFarmsRepository,
+      inMemoryFarmCropsRepository,
       inMemoryProducerFarmsRepository,
     )
+    
     sut = new FetchRecentProducersUseCase(inMemoryProducersRepository)
   })
 

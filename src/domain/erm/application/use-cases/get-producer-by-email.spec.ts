@@ -12,6 +12,7 @@ import { InMemoryProducersRepository } from 'test/repositories/in-memory-produce
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 import { makeFarmCrop } from 'test/factories/make-farm-crops'
+import { error } from 'console'
 
 let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 let inMemoryFarmsRepository: InMemoryFarmsRepository
@@ -35,7 +36,9 @@ describe('Get Producer By Email', () => {
     )
     
     inMemoryProducersRepository = new InMemoryProducersRepository(
+      inMemoryCropsRepository,
       inMemoryFarmsRepository,
+      inMemoryFarmCropsRepository,
       inMemoryProducerFarmsRepository,
     )
     
@@ -97,15 +100,50 @@ describe('Get Producer By Email', () => {
       email: 'john.doe@example',
     })
 
-    expect(result.value).toMatchObject({
-      producer: expect.objectContaining({
-        name: newProducer.name,
-        farms: [
-          expect.objectContaining({
+    if (result.isLeft()) {
+      throw result.value
+    }
+
+    expect(result.value.producer.name).toBe(newProducer.name)
+    expect(result.value.producer.email).toBe(newProducer.email)
+    expect(result.value.producer.producerId).toBe(newProducer.id)
+    expect(result.value.producer.document).toBe(newProducer.document)
+
+    expect(result.value.producer.farmsDetails).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          props: expect.objectContaining({
             name: farm.name,
+            city: farm.city,
+            state: farm.state,
           }),
-        ],
-      }),
-    })
+        }),
+      ]),
+    )
+
+    expect(result.value.producer.farmsDetails).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          props: expect.objectContaining({
+            name: farm.name,
+            city: farm.city,
+            state: farm.state,
+          }),
+        }),
+      ]),
+    )
+
+    expect(result.value.producer.farmsDetails[0].crops).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          props: expect.objectContaining({
+            type: crop.type,
+            ownerId: newProducer.id,
+            description: crop.description,
+          }),
+        }),
+      ]),
+    )
+
   })
 })

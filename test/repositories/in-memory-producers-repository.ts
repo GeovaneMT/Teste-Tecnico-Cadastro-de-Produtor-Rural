@@ -4,17 +4,24 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 import { ProducerDetails } from '@/domain/erm/enterprise/entities/value-objects/producer-details'
 
 import { Producer } from '@/domain/erm/enterprise/entities/producer'
+
+import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
+import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
+
 import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
 
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
+import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
+import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
-import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 
 export class InMemoryProducersRepository implements ProducersRepository {
   public items: Producer[] = []
 
   constructor(
+    private cropsRepository: InMemoryCropsRepository,
     private farmsRepository: InMemoryFarmsRepository,
+    private farmCropsRepository: InMemoryFarmCropsRepository,
     private producerFarmsRepository: InMemoryProducerFarmsRepository,
   ) {}
 
@@ -110,6 +117,22 @@ export class InMemoryProducersRepository implements ProducersRepository {
   
         return farm
       })
+
+      const farmsDetails = await Promise.all(
+        farms.map(async (farm) => {
+          const farmDetails = await this.farmsRepository.findDetailsById(farm.id.toString());
+      
+          if (!farmDetails) {
+            throw new Error(`Farm with ID "${farm.id.toString()}" does not exist.`);
+          }
+      
+          return farmDetails
+        }),
+      )
+
+      if (!farmsDetails) {
+        return null
+      }
   
       return ProducerDetails.create({
         producerId: producer.id,
@@ -118,7 +141,7 @@ export class InMemoryProducersRepository implements ProducersRepository {
         email: producer.email,
         document: producer.document,
         
-        farms,
+        farmsDetails,
   
         createdAt: producer.createdAt,
         updatedAt: producer.updatedAt,
@@ -151,6 +174,51 @@ export class InMemoryProducersRepository implements ProducersRepository {
   
         return farm
       })
+
+      const farmsDetails = await Promise.all(farms.map(async (farm) => {
+        const farmCrops = this.farmCropsRepository.items.filter(
+          (farmCrop) => {
+            return farmCrop.farmId.equals(farm.id)
+          },
+        )
+    
+        const crops = farmCrops.map((farmCrop) => {
+          const crop = this.cropsRepository.items.find((crop) => {
+            return crop.id.equals(farmCrop.cropId)
+          })
+    
+          if (!crop) {
+            throw new Error(
+              `Crop with ID "${farmCrop.cropId.toString()}" does not exist.`,
+            )
+          }
+    
+          return crop
+        })
+    
+        return FarmDetails.create({
+          farmId: farm.id,
+          ownerId: farm.ownerId,
+          owner: producer.name,
+          
+          name: farm.name,
+          city: farm.city,
+          state: farm.state,
+          
+          farmArea: farm.farmArea,
+          vegetationArea: farm.vegetationArea,
+          agriculturalArea: farm.agriculturalArea,
+          
+          crops,
+    
+          createdAt: farm.createdAt,
+          updatedAt: farm.updatedAt,
+        })
+      }))
+
+      if (!farmsDetails) {
+        return null
+      }
   
       return ProducerDetails.create({
         producerId: producer.id,
@@ -159,7 +227,7 @@ export class InMemoryProducersRepository implements ProducersRepository {
         email: producer.email,
         document: producer.document,
         
-        farms,
+        farmsDetails,
   
         createdAt: producer.createdAt,
         updatedAt: producer.updatedAt,
@@ -192,6 +260,22 @@ export class InMemoryProducersRepository implements ProducersRepository {
   
         return farm
       })
+
+      const farmsDetails = await Promise.all(
+        farms.map(async (farm) => {
+          const farmDetails = await this.farmsRepository.findDetailsById(farm.id.toString());
+      
+          if (!farmDetails) {
+            throw new Error(`Farm with ID "${farm.id.toString()}" does not exist.`);
+          }
+      
+          return farmDetails
+        }),
+      )
+
+      if (!farmsDetails) {
+        return null
+      }
   
       return ProducerDetails.create({
         producerId: producer.id,
@@ -200,7 +284,7 @@ export class InMemoryProducersRepository implements ProducersRepository {
         email: producer.email,
         document: producer.document,
         
-        farms,
+        farmsDetails,
   
         createdAt: producer.createdAt,
         updatedAt: producer.updatedAt,

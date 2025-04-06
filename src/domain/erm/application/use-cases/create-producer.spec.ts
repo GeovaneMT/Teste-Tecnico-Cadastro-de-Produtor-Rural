@@ -22,9 +22,19 @@ describe('Create Producer', () => {
     inMemoryCropsRepository = new InMemoryCropsRepository()
     inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
     inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository()
-    inMemoryFarmsRepository = new InMemoryFarmsRepository(inMemoryCropsRepository, inMemoryFarmCropsRepository, inMemoryProducersRepository)
-    inMemoryProducersRepository = new InMemoryProducersRepository(inMemoryFarmsRepository, inMemoryProducerFarmsRepository)
 
+    inMemoryFarmsRepository = new InMemoryFarmsRepository(
+      inMemoryCropsRepository, 
+      inMemoryFarmCropsRepository, 
+      inMemoryProducersRepository
+    )
+    
+    inMemoryProducersRepository = new InMemoryProducersRepository(
+      inMemoryCropsRepository,
+      inMemoryFarmsRepository,
+      inMemoryFarmCropsRepository,
+      inMemoryProducerFarmsRepository,
+    )
     sut = new CreateProducerUseCase(inMemoryProducersRepository)
   })
 

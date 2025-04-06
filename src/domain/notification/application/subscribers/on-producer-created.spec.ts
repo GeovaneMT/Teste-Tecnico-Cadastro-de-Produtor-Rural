@@ -49,7 +49,9 @@ describe('On Producer Created', () => {
     )
 
     inMemoryProducersRepository = new InMemoryProducersRepository(
+      inMemoryCropsRepository,
       inMemoryFarmsRepository,
+      inMemoryFarmCropsRepository,
       inMemoryProducerFarmsRepository,
     )
 

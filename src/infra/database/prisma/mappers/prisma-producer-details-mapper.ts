@@ -1,17 +1,21 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-import { PrismaFarmMapper } from '@/infra/database/prisma/mappers/prisma-farm-mapper'
+import { PrismaFarmDetailsMapper } from '@/infra/database/prisma/mappers/prisma-farm-details-mapper'
 
 import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 import { ProducerDetails } from '@/domain/erm/enterprise/entities/value-objects/producer-details'
 
 import {
-  Producer as PrismaProducer,
   Farm as PrismaFarm,
+  Crop as PrismaCrop,
+  Producer as PrismaProducer,
 } from '@prisma/client'
 
 type PrismaProducerDetails = PrismaProducer & {
-  farms: PrismaFarm[]
+  farms: (PrismaFarm & {
+    owner: PrismaProducer
+    crops: PrismaCrop[]
+  })[]
 }
 
 export class PrismaProducerDetailsMapper {
@@ -24,7 +28,7 @@ export class PrismaProducerDetailsMapper {
       name: raw.name,
       email: raw.email,
       document,
-      farms: raw.farms.map(PrismaFarmMapper.toDomain),
+      farmsDetails: raw.farms.map(PrismaFarmDetailsMapper.toDomain),
       createdAt: raw.createdAt,
       updatedAt: raw.updatedAt,
     })

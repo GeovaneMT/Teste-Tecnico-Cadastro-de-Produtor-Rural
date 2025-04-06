@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common'
 
 import { DomainEvents } from '@/core/events/domain-events'
 
-import { CacheRepository } from '@/infra/cache/cache-repository'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { PrismaAdminMapper } from '@/infra/database/prisma/mappers/prisma-admin-mapper'
 
@@ -12,7 +11,6 @@ import { AdminsRepository } from '@/domain/erm/application/repositories/admins-r
 @Injectable()
 export class PrismaAdminsRepository implements AdminsRepository {
   constructor(
-    private cache: CacheRepository,
     private prisma: PrismaService
   ) {}
 
@@ -26,7 +24,6 @@ export class PrismaAdminsRepository implements AdminsRepository {
         },
         data,
       }),
-      this.cache.delete(`admin:${data.name}:details`),
     ])
 
     DomainEvents.dispatchEventsForAggregate(admin.id)

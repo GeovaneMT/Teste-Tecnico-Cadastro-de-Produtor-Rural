@@ -123,9 +123,8 @@ export class PrismaProducersRepository implements ProducersRepository {
     const cacheHit = await this.cache.get(`question:${id}:details`)
 
     if (cacheHit) {
-      const cacheData = JSON.parse(cacheHit)
-
-      return cacheData
+      const producer = JSON.parse(cacheHit)
+      return PrismaProducerDetailsMapper.toDomain(producer)
     }
 
     const producer = await this.prisma.producer.findUnique({
@@ -133,7 +132,13 @@ export class PrismaProducersRepository implements ProducersRepository {
         id,
       },
       include: {
-        farms: true,
+        farms: {
+          include: {
+            owner: true,
+            crops: true,
+          },
+        },
+        crops: true,
       },
     })
 
@@ -145,7 +150,7 @@ export class PrismaProducersRepository implements ProducersRepository {
 
     await this.cache.set(
       `question:${id}:details`,
-      JSON.stringify(producerDetails),
+      JSON.stringify(producer),
     )
 
     return producerDetails
@@ -155,9 +160,8 @@ export class PrismaProducersRepository implements ProducersRepository {
     const cacheHit = await this.cache.get(`question:${email}:details`)
 
     if (cacheHit) {
-      const cacheData = JSON.parse(cacheHit)
-
-      return cacheData
+      const producer = JSON.parse(cacheHit)
+      return PrismaProducerDetailsMapper.toDomain(producer)
     }
 
     const producer = await this.prisma.producer.findUnique({
@@ -165,7 +169,13 @@ export class PrismaProducersRepository implements ProducersRepository {
         email,
       },
       include: {
-        farms: true,
+        farms: {
+          include: {
+            owner: true,
+            crops: true,
+          },
+        },
+        crops: true,
       },
     })
 
@@ -177,7 +187,7 @@ export class PrismaProducersRepository implements ProducersRepository {
 
     await this.cache.set(
       `question:${email}:details`,
-      JSON.stringify(producerDetails),
+      JSON.stringify(producer),
     )
 
     return producerDetails
@@ -187,9 +197,8 @@ export class PrismaProducersRepository implements ProducersRepository {
     const cacheHit = await this.cache.get(`question:${document}:details`)
 
     if (cacheHit) {
-      const cacheData = JSON.parse(cacheHit)
-
-      return cacheData
+      const producer = JSON.parse(cacheHit)
+      return PrismaProducerDetailsMapper.toDomain(producer)
     }
 
     const producer = await this.prisma.producer.findUnique({
@@ -197,7 +206,13 @@ export class PrismaProducersRepository implements ProducersRepository {
         document: document.getValue(),
       },
       include: {
-        farms: true,
+        farms: {
+          include: {
+            owner: true,
+            crops: true,
+          },
+        },
+        crops: true,
       },
     })
 
@@ -209,7 +224,7 @@ export class PrismaProducersRepository implements ProducersRepository {
 
     await this.cache.set(
       `question:${document}:details`,
-      JSON.stringify(producerDetails),
+      JSON.stringify(producer),
     )
 
     return producerDetails

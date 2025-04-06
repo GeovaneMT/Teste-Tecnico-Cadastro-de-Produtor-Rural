@@ -32,7 +32,9 @@ describe('Delete Producer', () => {
     )
 
     inMemoryProducersRepository = new InMemoryProducersRepository(
+      inMemoryCropsRepository,
       inMemoryFarmsRepository,
+      inMemoryFarmCropsRepository,
       inMemoryProducerFarmsRepository,
     )
 
