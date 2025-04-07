@@ -49,18 +49,6 @@ export class InMemoryCropsRepository implements CropsRepository {
 
     return crops
   }
-  
-  async findManyByOwnerId(ownerId: string, { page }: PaginationParams): Promise<Crop[] | null> {
-    const crops = this.items
-      .filter((item) => item.ownerId.toString() === ownerId)
-      .slice((page - 1) * 20, page * 20)
-
-    if (!crops || crops.length === 0) {
-      return null
-    }
-
-    return crops
-  }
 
   async findManyRecent({ page }: PaginationParams): Promise<Crop[]> {
     const crops = this.items

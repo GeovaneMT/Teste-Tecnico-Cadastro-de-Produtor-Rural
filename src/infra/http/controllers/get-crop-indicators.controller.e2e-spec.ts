@@ -92,21 +92,38 @@ describe('Fetch total farms (E2E)', () => {
       .send()
 
     expect(response.statusCode).toBe(200)
-    expect(response.body).toEqual({
-      indicators: expect.arrayContaining([
-        expect.arrayContaining([
-          expect.arrayContaining([
+    expect(response.body.indicators).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          state: expect.any(String),
+          cropTypesWithQuantity: expect.arrayContaining([
             expect.objectContaining({
-              props: {
-                state: expect.any(String),
-                cropType: expect.any(String),
-                total: expect.any(Number),
-              }
-            })
-          ])
-        ])
+              cropType: expect.any(String),
+              total: 1,
+            }),
+          ]),
+        }),
+        expect.objectContaining({
+          state: expect.any(String),
+          cropTypesWithQuantity: expect.arrayContaining([
+            expect.objectContaining({
+              cropType: expect.any(String),
+              total: 1,
+            }),
+          ]),
+        }),
+        expect.objectContaining({
+          state: expect.any(String),
+          cropTypesWithQuantity: expect.arrayContaining([
+            expect.objectContaining({
+              cropType: expect.any(String),
+              total: 1,
+            }),
+          ]),
+        }),
       ])
-    })
+    )
+    
     
   })
 })

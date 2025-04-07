@@ -1,10 +1,16 @@
 import { ValueObject } from '@/core/entities/value-object'
 import { CropType } from '@/domain/erm/utils/crop-type-enum'
 
-export interface CropByStateProps {
-  state: string
+import { States } from '@prisma/client'
+
+export type CropTypeWithQuantity = {
   cropType: CropType
   total: number
+}
+
+export interface CropByStateProps {
+  state: States
+  cropTypesWithQuantity: CropTypeWithQuantity[]
 }
 
 export class CropByState extends ValueObject<CropByStateProps> {
@@ -12,12 +18,8 @@ export class CropByState extends ValueObject<CropByStateProps> {
     return this.props.state
   }
 
-  get cropType() {
-    return this.props.cropType
-  }
-
-  get total() {
-    return this.props.total
+  get cropTypesWithQuantity() {
+    return this.props.cropTypesWithQuantity
   }
 
   static create(props: CropByStateProps) {

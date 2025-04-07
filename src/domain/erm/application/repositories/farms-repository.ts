@@ -3,7 +3,7 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 import { Farm } from '@/domain/erm/enterprise/entities/farm'
 
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
-import { StateCropIndicators } from '@/domain/erm/enterprise/entities/value-objects/state-crop-indicators'
+import { CropByState } from '@/domain/erm/enterprise/entities/value-objects/crop-by-state'
 
 export abstract class FarmsRepository {
   abstract save(farm: Farm): Promise<void>
@@ -29,5 +29,5 @@ export abstract class FarmsRepository {
 
   abstract findTotalArea(): Promise<number>
 
-  abstract getCropIndicators(): Promise<StateCropIndicators[][][] | null>
+  abstract getCropIndicators(): Promise<CropByState[] | null>
 }

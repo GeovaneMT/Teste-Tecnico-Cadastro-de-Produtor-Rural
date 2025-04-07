@@ -6,6 +6,7 @@ import { CryptographyModule } from '@/infra/cryptography/cryptography.module'
 import { AuthenticateController } from '@/infra/http/controllers/authenticate.controller'
 import { ReadNotificationController } from '@/infra/http/controllers/read-notification.controller'
 
+import { CreateFarmController } from '@/infra/http/controllers/create-farm.controller'
 import { CreateAccountController } from '@/infra/http/controllers/create-account.controller'
 import { CreateProducerController } from '@/infra/http/controllers/create-producer.controller'
 
@@ -20,6 +21,7 @@ import { FetchRecentProducersController } from '@/infra/http/controllers/fetch-r
 import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/authenticate-admin'
 import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 
+import { CreateFarmUseCase } from '@/domain/erm/application/use-cases/create-farm'
 import { RegisterAdminUseCase } from '@/domain/erm/application/use-cases/register-admin'
 import { CreateProducerUseCase } from '@/domain/erm/application/use-cases/create-producer'
 
@@ -35,6 +37,7 @@ import { FetchRecentProducersUseCase } from '@/domain/erm/application/use-cases/
     AuthenticateController,
     ReadNotificationController,
 
+    CreateFarmController,
     CreateAccountController,
     CreateProducerController,
     
@@ -48,6 +51,7 @@ import { FetchRecentProducersUseCase } from '@/domain/erm/application/use-cases/
     AuthenticateAdminUseCase,
     ReadNotificationUseCase,
 
+    CreateFarmUseCase,
     RegisterAdminUseCase,
     CreateProducerUseCase,
 

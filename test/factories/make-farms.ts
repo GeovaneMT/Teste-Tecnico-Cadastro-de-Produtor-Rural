@@ -21,8 +21,8 @@ export function makeFarm(
 
   const CreateFarmAreaData = {
     farmArea: faker.number.int({ min: 100, max: 200 }),
-    agriculturalArea: faker.number.int({ min: 10, max: 50 }),
-    vegetationArea: faker.number.int({ min: 10, max: 50 }),
+    agriculturalArea: faker.number.int({ min: 10, max: 40 }),
+    vegetationArea: faker.number.int({ min: 10, max: 40 }),
   }
 
   function getRandomState(): States {

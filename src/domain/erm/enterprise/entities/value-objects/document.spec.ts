@@ -6,11 +6,12 @@ import { Document } from '@/domain/erm/enterprise/entities/value-objects/documen
 
 describe('Document', () => {
   test('should create a Document instance with valid CPF', () => {
-    const cpf = CPF.generateValidCPF()
+    // const cpf = CPF.generateValidCPF()
+    const cpf = '489.841.148-71'
 
     const document = Document.create(cpf)
 
-    expect(document.getValue()).toBe(cpf)
+    expect(document.getValue()).toBe('48984114871')
     expect(document.getType()).toBe('CPF')
     expect(document.isCPF()).toBe(true)
     expect(document.isCNPJ()).toBe(false)

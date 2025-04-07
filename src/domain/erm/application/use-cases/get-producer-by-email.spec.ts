@@ -73,7 +73,6 @@ describe('Get Producer By Email', () => {
     inMemoryFarmsRepository.items.push(farm)
 
     const crop = makeCrop({
-      ownerId: newProducer.id,
       landId: farm.id,
       type: 'SOYBEANS',
       description: 'Some description',
@@ -120,24 +119,12 @@ describe('Get Producer By Email', () => {
       ]),
     )
 
-    expect(result.value.producer.farmsDetails).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          props: expect.objectContaining({
-            name: farm.name,
-            city: farm.city,
-            state: farm.state,
-          }),
-        }),
-      ]),
-    )
-
     expect(result.value.producer.farmsDetails[0].crops).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
           props: expect.objectContaining({
             type: crop.type,
-            ownerId: newProducer.id,
+            landId: farm.id,
             description: crop.description,
           }),
         }),

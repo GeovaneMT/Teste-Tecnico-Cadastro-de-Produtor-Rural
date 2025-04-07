@@ -47,5 +47,7 @@ export class CreateProducerController {
           throw new BadRequestException(error.message)
       }
     }
+
+    return { producer: result.value.producer }
   }
 }

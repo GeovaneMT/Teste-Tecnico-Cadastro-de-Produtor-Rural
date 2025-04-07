@@ -1,4 +1,9 @@
-import { CreateFarmUseCase } from '@/domain/erm/application/use-cases/create-farm'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+
+import { DeleteFarmUseCase } from '@/domain/erm/application/use-cases/delete-farm'
+
+import { makeFarm } from 'test/factories/make-farms'
+import { makeFarmCrop } from 'test/factories/make-farm-crops'
 
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
@@ -12,9 +17,9 @@ let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
 let inMemoryProducersRepository: InMemoryProducersRepository
 let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 
-let sut: CreateFarmUseCase
+let sut: DeleteFarmUseCase
 
-describe('Create Farm', () => {
+describe('Delete Farm', () => {
   beforeEach(() => {
     inMemoryCropsRepository = new InMemoryCropsRepository()
     inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
@@ -33,27 +38,35 @@ describe('Create Farm', () => {
       inMemoryProducersRepository
     )
 
-    sut = new CreateFarmUseCase(inMemoryFarmsRepository)
+    sut = new DeleteFarmUseCase(inMemoryFarmsRepository)
   })
 
-  it('should be able to create a new farm with a crop', async () => {
+  it('should be able to delete a farm', async () => {
+    const newFarm = makeFarm(
+      {},
+      new UniqueEntityID('farm-1'),
+    )
 
-    const result = await sut.execute({
-      ownerId: '1',
-      name: 'farm_name',
-      city: 'farm_city',
-      state: 'SP',
+    await inMemoryFarmsRepository.create(newFarm)
 
-      farmArea: '10',
-      vegetationArea: '4',
-      agriculturalArea: '4',
+    inMemoryFarmCropsRepository.items.push(
+      makeFarmCrop({
+        farmId: newFarm.id,
+        cropId: new UniqueEntityID('1'),
+      }),
+      makeFarmCrop({
+        farmId: newFarm.id,
+        cropId: new UniqueEntityID('2'),
+      }),
+    )
 
-      cropsIds: ['1', '2'],
+    await sut.execute({
+      farmId: 'farm-1',
     })
 
-    expect(result.isRight()).toBe(true)
-    expect(result.value).toEqual({
-      farm: inMemoryFarmsRepository.items[0],
-    })
+    expect(inMemoryFarmsRepository.items).toHaveLength(0)
+
+    expect(inMemoryFarmCropsRepository.items).toHaveLength(0)
+    expect(inMemoryCropsRepository.items).toHaveLength(0)
   })
 })

@@ -10,7 +10,6 @@ export abstract class CropsRepository {
   abstract findById(id: string): Promise<Crop | null>
 
   abstract findManyByLandId(landId: string, params: PaginationParams): Promise<Crop[] | null>
-  abstract findManyByOwnerId(OwnerId: string, params: PaginationParams): Promise<Crop[] | null>
   abstract findManyRecent(params: PaginationParams): Promise<Crop[] | null>
 
   abstract findManyByType(type: CropType, params: PaginationParams): Promise<Crop[] | null>

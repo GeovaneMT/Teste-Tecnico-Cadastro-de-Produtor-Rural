@@ -7,9 +7,7 @@ import { InMemoryProducersRepository } from 'test/repositories/in-memory-produce
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 import { makeCrop } from 'test/factories/make-crops'
-import { makeFarmCrop } from 'test/factories/make-farm-crops'
 import { makeProducer } from 'test/factories/make-producers'
-import { StateCropIndicators } from '../../enterprise/entities/value-objects/state-crop-indicators'
 
 let inMemoryCropsRepository: InMemoryCropsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
@@ -59,13 +57,13 @@ describe('Get Crop Indicators', () => {
     const farm3 = makeFarm({ ownerId: newProducer.id })
     await inMemoryFarmsRepository.create(farm3)
     
-    const crop1 = makeCrop({landId: farm1.id, ownerId: newProducer.id})
+    const crop1 = makeCrop({landId: farm1.id})
     await inMemoryCropsRepository.create(crop1)
 
-    const crop2 = makeCrop({landId: farm2.id, ownerId: newProducer.id})
+    const crop2 = makeCrop({landId: farm2.id})
     await inMemoryCropsRepository.create(crop2)
 
-    const crop3 = makeCrop({landId: farm3.id, ownerId: newProducer.id})
+    const crop3 = makeCrop({landId: farm3.id})
     await inMemoryCropsRepository.create(crop3)
     
     const result = await sut.execute()
@@ -74,23 +72,43 @@ describe('Get Crop Indicators', () => {
       throw new Error(result.value.message)
     }
     
-    expect(result.value.indicators).toEqual([
-      [
-        [
-          expect.any(StateCropIndicators),
-        ],
-      ],
-      [
-        [
-          expect.any(StateCropIndicators),
-        ],
-      ],
-      [
-        [
-          expect.any(StateCropIndicators),
-        ],
-      ],
-    ]);
+    expect(result.value.cropsByState).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          props: expect.objectContaining({
+            state: expect.any(String),
+            cropTypesWithQuantity: expect.arrayContaining([
+              expect.objectContaining({
+                cropType: expect.any(String),
+                total: 1,
+              }),
+            ]),
+          }),
+        }),
+        expect.objectContaining({
+          props: expect.objectContaining({
+            state: expect.any(String),
+            cropTypesWithQuantity: expect.arrayContaining([
+              expect.objectContaining({
+                cropType: expect.any(String),
+                total: 1,
+              }),
+            ]),
+          }),
+        }),
+        expect.objectContaining({
+          props: expect.objectContaining({
+            state: expect.any(String),
+            cropTypesWithQuantity: expect.arrayContaining([
+              expect.objectContaining({
+                cropType: expect.any(String),
+                total: 1,
+              }),
+            ]),
+          }),
+        }),
+      ])
+    )
     
   })
 })

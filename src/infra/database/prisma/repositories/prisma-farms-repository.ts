@@ -18,8 +18,8 @@ import { FarmCropsRepository } from '@/domain/erm/application/repositories/farm-
 import { StateCropIndicators } from '@/domain/erm/enterprise/entities/value-objects/state-crop-indicators'
 
 import { CropsRepository } from '@/domain/erm/application/repositories/crops-repository'
-import { States } from '@/domain/erm/utils/state-type-enum'
-import { CropType } from '@/domain/erm/utils/crop-type-enum'
+import { CropByState, CropTypeWithQuantity } from '@/domain/erm/enterprise/entities/value-objects/crop-by-state'
+import { CropType, States } from '@prisma/client'
 
 @Injectable()
 export class PrismaFarmsRepository implements FarmsRepository {
@@ -287,68 +287,38 @@ export class PrismaFarmsRepository implements FarmsRepository {
     return total
   }
 
-  async getCropIndicators(): Promise<StateCropIndicators[][][]> {
-    type StateCropKey = `${States}-${CropType}`
-  
-    interface CropIndicatorData {
-      state: States
-      cropType: CropType
-      total: number
-    }
-  
-    const farms = await this.prisma.farm.findMany({
-      include: {
-        crops: true,
-      },
-    })
-    
-    const CropIndicatorDatasForEachCropForEachFarm = await Promise.all(farms.map(async (farm) => {
-      const crops = await this.cropsRepository.findManyByLandId(farm.id, { page: 1 })
-      
-      if (!crops) {
-        throw new Error('crops not found')
+  async getCropIndicators(): Promise<CropByState[]> {
+    const cropsByState: CropByState[] = []
+
+    for (const state of Object.values(States)) {
+      const farms = await this.prisma.farm.findMany({
+        where: { state },
+        select: { id: true },
+      })
+
+      const farmsIds = farms.map((farm) => farm.id)
+
+      const cropTypesWithQuantity: CropTypeWithQuantity[] = []
+
+      for (const cropType of Object.values(CropType)) {
+        const CropQuantity = await this.prisma.crop.count({
+          where: {
+            type: cropType,
+            landId: { in: farmsIds },
+          },
+        })
+        
+        if (CropQuantity > 0) {
+          cropTypesWithQuantity.push({ cropType, total: CropQuantity })
+        }
       }
-      
-      const stateCropIndicatorMap: Map<StateCropKey, CropIndicatorData>[] = await Promise.all (crops.map(async (crop) => {
 
-        const key: StateCropKey = `${farm.state}-${crop.type}`
-  
-        const stateCropIndicatorMap: Map<StateCropKey, CropIndicatorData> = new Map()
-        const cropIndicatorData = stateCropIndicatorMap.get(key)
-        
-        const updateTotalCropIndicator = (cropIndicatorData: CropIndicatorData) => {
-          cropIndicatorData.total += 1
-        }
-        
-        if (cropIndicatorData) {
-          updateTotalCropIndicator(cropIndicatorData)
-        }
-        
-        if (!cropIndicatorData) {
-          const newIndicator: CropIndicatorData = {
-            state: farm.state,
-            cropType: crop.type,
-            total: 1,
-          }
-          stateCropIndicatorMap.set(key, newIndicator)
-        }
+      if (cropTypesWithQuantity.length > 0) {
+          cropsByState.push(CropByState.create({state, cropTypesWithQuantity}))
+      }
+    }
 
-        return stateCropIndicatorMap
-      }))
-
-      const CropIndicatorDatasForEachCrop = stateCropIndicatorMap.map((map) => Array.from(map.values()))
-      return CropIndicatorDatasForEachCrop
-  
-    }))
-
-    const result = CropIndicatorDatasForEachCropForEachFarm.map((farm) =>
-      farm.map((crop) =>
-        crop.map((indicator) =>
-          StateCropIndicators.create(indicator)
-        )
-      )
-    )    
-    return result
+    return cropsByState
   }
 
 }

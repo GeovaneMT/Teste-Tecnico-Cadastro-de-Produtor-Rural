@@ -6,7 +6,6 @@ import { CropType } from '@/domain/erm/utils/crop-type-enum'
 
 export interface CropProps {
   landId: UniqueEntityID
-  ownerId: UniqueEntityID
 
   type: CropType
   description: string
@@ -16,10 +15,6 @@ export interface CropProps {
 }
 
 export class Crop extends Entity<CropProps> {
-
-  get ownerId() {
-    return this.props.ownerId
-  }
 
   get landId() {
     return this.props.landId

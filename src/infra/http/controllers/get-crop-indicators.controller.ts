@@ -3,6 +3,7 @@ import { BadRequestException, NotFoundException, Controller, Get } from '@nestjs
 
 import { GetCropIndicatorsUseCase } from '@/domain/erm/application/use-cases/get-crop-indicators'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { IndicatorPresenter } from '@/infra/http/presenters/indicators-presenter'
 
 @Controller('/indicators')
 export class GetCropIndicatorsController {
@@ -23,8 +24,8 @@ export class GetCropIndicatorsController {
       }
     }
 
-    const indicators = result.value
+    const indicators = result.value.cropsByState
 
-    return { indicators: indicators.indicators }
+    return { indicators: indicators.map(IndicatorPresenter.toHTTP) }
   }
 }
