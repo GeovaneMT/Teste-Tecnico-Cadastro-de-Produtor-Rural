@@ -138,7 +138,6 @@ export class PrismaProducersRepository implements ProducersRepository {
             crops: true,
           },
         },
-        crops: true,
       },
     })
 
@@ -175,7 +174,6 @@ export class PrismaProducersRepository implements ProducersRepository {
             crops: true,
           },
         },
-        crops: true,
       },
     })
 
@@ -212,7 +210,6 @@ export class PrismaProducersRepository implements ProducersRepository {
             crops: true,
           },
         },
-        crops: true,
       },
     })
 

@@ -46,22 +46,22 @@ describe('Create farm (E2E)', () => {
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
     const producer = await producerFactory.makePrismaProducer()
-    // const crop1 = await cropFactory.makePrismaCrop({ownerId: crop.id})
-    // const crop2 = await cropFactory.makePrismaCrop({ownerId: crop.id})
-
+    
+    const farm = await farmFactory.makePrismaFarm({
+      ownerId: producer.id,
+    })
+    
+    // const crop1 = await cropFactory.makePrismaCrop({landId: land.id})
+    // const crop2 = await cropFactory.makePrismaCrop({landId: land.id})
+    
     const response = await request(app.getHttpServer())
-      .post(`/producers/${producer.id}/farms`)
+      .post(`/producers/${producer.id}/farms/${farm.id}/crops`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        ownerId: producer.id.toString(), 
+        landId: farm.id.toString(), 
 
-        name: 'Test Farm', 
-        city: 'City', 
-        state: 'SP', 
-        farmArea: 100, 
-        vegetationArea: 80, 
-        agriculturalArea: 20, 
-        crops: []
+        type: 'SOYBEANS',
+        description: 'Crop description',
       })
 
     if (response.statusCode !== 201) {
@@ -70,21 +70,12 @@ describe('Create farm (E2E)', () => {
       
     expect(response.statusCode).toBe(201)
 
-    const farmOnDatabase = await prisma.farm.findFirst({
+    const cropOnDatabase = await prisma.crop.findFirst({
       where: {
-        name: 'Test Farm',
+        description: 'Crop description',
       },
     })
 
-    expect(farmOnDatabase).toBeTruthy()
-
-    const cropsOnDatabase = await prisma.crop.findMany({
-      where: {
-        landId: farmOnDatabase?.id,
-      },
-    })
-
-    expect(cropsOnDatabase).toHaveLength(0)
-    // expect(farmsOnDatabase).toHaveLength(2)
+    expect(cropOnDatabase).toBeTruthy()
   })
 })

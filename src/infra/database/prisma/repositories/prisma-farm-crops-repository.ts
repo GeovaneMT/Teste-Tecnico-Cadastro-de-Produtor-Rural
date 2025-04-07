@@ -57,7 +57,7 @@ export class PrismaFarmCropsRepository implements FarmCropsRepository {
   async deleteManyByFarmId(farmId: string): Promise<void> {
     await this.prisma.crop.deleteMany({
       where: {
-        ownerId: farmId,
+        landId: farmId,
       },
     })
   }
@@ -65,7 +65,7 @@ export class PrismaFarmCropsRepository implements FarmCropsRepository {
   async findManyByFarmId(farmId: string, { page }: PaginationParams): Promise<FarmCrop[] | null> {
     const farmCrops = await this.prisma.crop.findMany({
       where: {
-        ownerId: farmId,
+        landId: farmId,
       },
       orderBy: {
         createdAt: 'desc',

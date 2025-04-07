@@ -77,21 +77,6 @@ export class PrismaCropsRepository implements CropsRepository {
     return crops.map(PrismaCropMapper.toDomain)
   }
 
-  async findManyByOwnerId(ownerId: string, { page }: PaginationParams): Promise<Crop[]> {
-    const crops = await this.prisma.crop.findMany({
-      where: {
-        ownerId,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
-      take: 20,
-      skip: (page - 1) * 20,
-    })
-
-    return crops.map(PrismaCropMapper.toDomain)
-  }
-
   async findManyRecent({ page }: PaginationParams): Promise<Crop[]> {
     const crops = await this.prisma.crop.findMany({
       orderBy: {

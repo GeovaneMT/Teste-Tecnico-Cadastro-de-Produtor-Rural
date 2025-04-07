@@ -4,6 +4,9 @@ CREATE TYPE "UserRole" AS ENUM ('ADMIN');
 -- CreateEnum
 CREATE TYPE "CropType" AS ENUM ('SOYBEANS', 'CORN', 'COTTON', 'COFFEE', 'SUGARCANE');
 
+-- CreateEnum
+CREATE TYPE "States" AS ENUM ('AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS', 'MT', 'PA', 'PB', 'PE', 'PI', 'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" TEXT NOT NULL,
@@ -35,7 +38,7 @@ CREATE TABLE "farms" (
     "id" TEXT NOT NULL,
     "farm_name" TEXT NOT NULL,
     "city" TEXT NOT NULL,
-    "state" TEXT NOT NULL,
+    "state" "States" NOT NULL,
     "farm_area" TEXT NOT NULL,
     "vegetation_area" TEXT NOT NULL,
     "agricultural_area" TEXT NOT NULL,
@@ -47,7 +50,6 @@ CREATE TABLE "farms" (
 
 -- CreateTable
 CREATE TABLE "crops" (
-    "owner_id" TEXT NOT NULL,
     "farm_id" TEXT NOT NULL,
     "id" TEXT NOT NULL,
     "type" "CropType" NOT NULL,
@@ -61,7 +63,7 @@ CREATE TABLE "crops" (
 -- CreateTable
 CREATE TABLE "notifications" (
     "recipient_id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
+    "user_id" TEXT,
     "id" TEXT NOT NULL,
     "title" TEXT NOT NULL,
     "content" TEXT NOT NULL,
@@ -90,10 +92,7 @@ ALTER TABLE "farms" ADD CONSTRAINT "farms_producer_id_fkey" FOREIGN KEY ("produc
 ALTER TABLE "crops" ADD CONSTRAINT "crops_farm_id_fkey" FOREIGN KEY ("farm_id") REFERENCES "farms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "crops" ADD CONSTRAINT "crops_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "producers"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "notifications" ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "notifications" ADD CONSTRAINT "notifications_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "notifications" ADD CONSTRAINT "notifications_recipient_id_fkey" FOREIGN KEY ("recipient_id") REFERENCES "producers"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -26,7 +26,6 @@ export function makeCrop(
   const crop = Crop.create(
     {
       landId: new UniqueEntityID(),
-      ownerId: new UniqueEntityID(),
       type: getRandomCropType(),
       description: faker.lorem.sentence(10),
       ...override,

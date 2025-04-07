@@ -38,7 +38,6 @@ export class FarmCropFactory {
         id: farmCrop.cropId.toString(),
       },
       data: {
-        ownerId: farmCrop.farmId.toString(),
         landId: farmCrop.farmId.toString(),
       },
     })
