@@ -8,11 +8,11 @@ import { INestApplication } from '@nestjs/common'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 
-import { AdminFactory } from 'test/factories/make-admins'
-import { ProducerFactory } from 'test/factories/make-producers'
-import { FarmFactory } from 'test/factories/make-farms'
-import { FarmCropFactory } from 'test/factories/make-farm-crops'
-import { CropFactory } from 'test/factories/make-crops'
+import { AdminFactory } from 'test/factories/make-admin'
+import { ProducerFactory } from 'test/factories/make-producer'
+import { FarmFactory } from 'test/factories/make-farm'
+import { FarmCropFactory } from 'test/factories/make-farm-crop'
+import { CropFactory } from 'test/factories/make-crop'
 import { CropType } from '@prisma/client'
 
 describe('Fetch total farms (E2E)', () => {

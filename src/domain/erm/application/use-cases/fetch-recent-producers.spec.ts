@@ -1,6 +1,6 @@
 import { FetchRecentProducersUseCase } from '@/domain/erm/application/use-cases/fetch-recent-producers'
 
-import { makeProducer } from 'test/factories/make-producers'
+import { makeProducer } from 'test/factories/make-producer'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'

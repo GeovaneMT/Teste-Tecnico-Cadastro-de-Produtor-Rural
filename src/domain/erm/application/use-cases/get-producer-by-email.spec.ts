@@ -1,17 +1,17 @@
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 import { GetProducerByEmailUseCase } from '@/domain/erm/application/use-cases/get-producer-by-email'
 
-import { makeCrop } from 'test/factories/make-crops'
-import { makeFarm } from 'test/factories/make-farms'
-import { makeProducer } from 'test/factories/make-producers'
-import { makeProducerFarm } from 'test/factories/make-producer-farms'
+import { makeCrop } from 'test/factories/make-crop'
+import { makeFarm } from 'test/factories/make-farm'
+import { makeProducer } from 'test/factories/make-producer'
+import { makeProducerFarm } from 'test/factories/make-producer-farm'
 
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
-import { makeFarmCrop } from 'test/factories/make-farm-crops'
+import { makeFarmCrop } from 'test/factories/make-farm-crop'
 
 let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 let inMemoryFarmsRepository: InMemoryFarmsRepository

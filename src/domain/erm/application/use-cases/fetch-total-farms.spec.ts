@@ -1,6 +1,6 @@
 import { FetchTotalFarmsUseCase } from '@/domain/erm/application/use-cases/fetch-total-farms'
 
-import { makeFarm } from 'test/factories/make-farms'
+import { makeFarm } from 'test/factories/make-farm'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'

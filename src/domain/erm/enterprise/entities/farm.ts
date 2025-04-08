@@ -1,10 +1,11 @@
+import { States } from '@prisma/client'
+
 import { Optional } from '@/core/types/optional'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { FarmCropList } from '@/domain/erm/enterprise/entities/farm-crop-list'
 
-import { States } from '@/domain/erm/utils/state-type-enum'
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 export interface FarmProps {

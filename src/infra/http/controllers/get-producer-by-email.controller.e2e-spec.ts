@@ -7,10 +7,10 @@ import { INestApplication } from '@nestjs/common'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 
-import { FarmFactory } from 'test/factories/make-farms'
-import { AdminFactory } from 'test/factories/make-admins'
-import { ProducerFactory } from 'test/factories/make-producers'
-import { ProducerFarmFactory } from 'test/factories/make-producer-farms'
+import { FarmFactory } from 'test/factories/make-farm'
+import { AdminFactory } from 'test/factories/make-admin'
+import { ProducerFactory } from 'test/factories/make-producer'
+import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
 
 describe('Get producer by email (E2E)', () => {
   let app: INestApplication

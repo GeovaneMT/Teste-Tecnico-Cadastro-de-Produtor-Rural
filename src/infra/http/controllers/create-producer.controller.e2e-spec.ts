@@ -6,9 +6,9 @@ import { INestApplication } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
-import { AdminFactory } from 'test/factories/make-admins'
-import { FarmFactory } from 'test/factories/make-farms'
-import { ProducerFactory } from 'test/factories/make-producers'
+import { AdminFactory } from 'test/factories/make-admin'
+import { FarmFactory } from 'test/factories/make-farm'
+import { ProducerFactory } from 'test/factories/make-producer'
 
 describe('Create producer (E2E)', () => {
   let app: INestApplication

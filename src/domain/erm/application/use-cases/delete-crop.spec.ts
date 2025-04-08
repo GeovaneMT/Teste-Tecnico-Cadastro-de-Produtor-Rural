@@ -1,7 +1,7 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { DeleteCropUseCase } from '@/domain/erm/application/use-cases/delete-crop'
 
-import { makeCrop } from 'test/factories/make-crops'
+import { makeCrop } from 'test/factories/make-crop'
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 
 let inMemoryCropsRepository: InMemoryCropsRepository

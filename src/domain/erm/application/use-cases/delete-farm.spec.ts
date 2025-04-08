@@ -2,8 +2,8 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { DeleteFarmUseCase } from '@/domain/erm/application/use-cases/delete-farm'
 
-import { makeFarm } from 'test/factories/make-farms'
-import { makeFarmCrop } from 'test/factories/make-farm-crops'
+import { makeFarm } from 'test/factories/make-farm'
+import { makeFarmCrop } from 'test/factories/make-farm-crop'
 
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'

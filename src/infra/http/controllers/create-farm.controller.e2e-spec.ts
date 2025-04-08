@@ -8,10 +8,10 @@ import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
-import { AdminFactory } from 'test/factories/make-admins'
-import { CropFactory } from 'test/factories/make-crops'
-import { FarmFactory } from 'test/factories/make-farms'
-import { ProducerFactory } from 'test/factories/make-producers'
+import { AdminFactory } from 'test/factories/make-admin'
+import { CropFactory } from 'test/factories/make-crop'
+import { FarmFactory } from 'test/factories/make-farm'
+import { ProducerFactory } from 'test/factories/make-producer'
 
 describe('Create farm (E2E)', () => {
   let app: INestApplication

@@ -1,0 +1,103 @@
+import { AppModule } from '@/infra/app.module'
+import { DatabaseModule } from '@/infra/database/database.module'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { INestApplication } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { Test } from '@nestjs/testing'
+import request from 'supertest'
+import { FarmFactory } from 'test/factories/make-farm'
+import { ProducerFactory } from 'test/factories/make-producer'
+import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
+import { AdminFactory } from 'test/factories/make-admin'
+import { CropFactory } from 'test/factories/make-crop'
+import { FarmCropFactory } from 'test/factories/make-farm-crop'
+
+describe('Edit crop (E2E)', () => {
+  let app: INestApplication
+  let prisma: PrismaService
+  let adminFactory: AdminFactory
+  let producerFactory: ProducerFactory
+  let farmFactory: FarmFactory
+  let producerFarmFactory: ProducerFarmFactory
+  let cropFactory: CropFactory
+  let farmCropFactory: FarmCropFactory
+  let jwt: JwtService
+
+  beforeAll(async () => {
+    const moduleRef = await Test.createTestingModule({
+      imports: [AppModule, DatabaseModule],
+      providers: [
+        AdminFactory,
+        ProducerFactory,
+        FarmFactory,
+        CropFactory,
+        FarmCropFactory,
+        ProducerFarmFactory,
+      ],
+    }).compile()
+
+    app = moduleRef.createNestApplication()
+
+    prisma = moduleRef.get(PrismaService)
+    adminFactory = moduleRef.get(AdminFactory)
+    producerFactory = moduleRef.get(ProducerFactory)
+    farmFactory = moduleRef.get(FarmFactory)
+    cropFactory = moduleRef.get(CropFactory)
+    farmCropFactory = moduleRef.get(FarmCropFactory)
+    producerFarmFactory = moduleRef.get(ProducerFarmFactory)
+    jwt = moduleRef.get(JwtService)
+
+    await app.init()
+  })
+
+  test('[PUT] /producers/:producerId/farms/:farmId/crops/:cropId', async () => {
+    const user = await adminFactory.makePrismaAdmin()
+
+    const accessToken = jwt.sign({ sub: user.id.toString() })
+    
+    const producer = await producerFactory.makePrismaProducer()
+    const producerId = producer.id.toString()
+    
+    const farm = await farmFactory.makePrismaFarm({ownerId: producer.id})
+    const farmId = farm.id.toString()
+
+    await producerFarmFactory.makePrismaProducerFarm({
+      farmId: farm.id,
+      producerId: producer.id,
+    })
+
+    const crop = await cropFactory.makePrismaCrop({landId: farm.id})
+
+    await farmCropFactory.makePrismaFarmCrop({
+      cropId: crop.id,
+      farmId: farm.id,
+    })
+
+    const response = await request(app.getHttpServer())
+      .put(`/crops/${crop.id}`)
+      .set('Authorization', `Bearer ${accessToken}`)
+      .send({
+        landId: farm.id.toString(),
+
+        type: 'SOYBEANS',
+        description: 'Crop description Updated',
+      })
+
+      if (response.statusCode !== 204) {
+        console.error('Unexpected response:', JSON.stringify(response.body, null, 2))
+      }
+
+    expect(response.statusCode).toBe(204)
+
+    const cropOnDatabase = await prisma.crop.findFirst({
+      where: {
+        landId: farm.id.toString(),
+
+        type: 'SOYBEANS',
+        description: 'Crop description Updated',
+      },
+    })
+
+    expect(cropOnDatabase).toBeTruthy()
+  })
+})

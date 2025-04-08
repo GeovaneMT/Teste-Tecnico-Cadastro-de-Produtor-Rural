@@ -7,10 +7,10 @@ import { INestApplication } from '@nestjs/common'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 
-import { AdminFactory } from 'test/factories/make-admins'
-import { FarmFactory } from 'test/factories/make-farms'
-import { ProducerFactory } from 'test/factories/make-producers'
-import { CropFactory } from 'test/factories/make-crops'
+import { AdminFactory } from 'test/factories/make-admin'
+import { FarmFactory } from 'test/factories/make-farm'
+import { ProducerFactory } from 'test/factories/make-producer'
+import { CropFactory } from 'test/factories/make-crop'
 
 describe('Fetch recent farms (E2E)', () => {
   let app: INestApplication

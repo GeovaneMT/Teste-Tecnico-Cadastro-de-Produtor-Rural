@@ -12,7 +12,7 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 
 import { waitFor } from 'test/utils/wait-for'
-import { AdminFactory } from 'test/factories/make-admins'
+import { AdminFactory } from 'test/factories/make-admin'
 
 describe('On producer created (E2E)', () => {
   let app: INestApplication

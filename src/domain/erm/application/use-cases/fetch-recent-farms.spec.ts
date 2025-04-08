@@ -1,6 +1,6 @@
 import { FetchRecentFarmsUseCase } from '@/domain/erm/application/use-cases/fetch-recent-farms'
 
-import { makeFarm } from 'test/factories/make-farms'
+import { makeFarm } from 'test/factories/make-farm'
 
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'

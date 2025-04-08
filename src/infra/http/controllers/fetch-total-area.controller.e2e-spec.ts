@@ -7,9 +7,9 @@ import { INestApplication } from '@nestjs/common'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 
-import { AdminFactory } from 'test/factories/make-admins'
-import { ProducerFactory } from 'test/factories/make-producers'
-import { FarmFactory } from 'test/factories/make-farms'
+import { AdminFactory } from 'test/factories/make-admin'
+import { ProducerFactory } from 'test/factories/make-producer'
+import { FarmFactory } from 'test/factories/make-farm'
 
 describe('Fetch total farms (E2E)', () => {
   let app: INestApplication

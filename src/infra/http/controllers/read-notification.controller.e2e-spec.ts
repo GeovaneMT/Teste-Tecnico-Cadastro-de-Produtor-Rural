@@ -8,9 +8,9 @@ import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
-import { AdminFactory } from 'test/factories/make-admins'
-import { ProducerFactory } from 'test/factories/make-producers'
-import { NotificationFactory } from 'test/factories/make-notifications'
+import { AdminFactory } from 'test/factories/make-admin'
+import { ProducerFactory } from 'test/factories/make-producer'
+import { NotificationFactory } from 'test/factories/make-notification'
 
 describe('Read notification (E2E)', () => {
   let jwt: JwtService

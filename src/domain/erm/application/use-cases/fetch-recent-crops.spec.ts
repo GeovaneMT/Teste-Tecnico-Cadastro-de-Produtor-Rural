@@ -1,6 +1,6 @@
 import { FetchRecentCropsUseCase } from '@/domain/erm/application/use-cases/fetch-recent-crops'
 
-import { makeCrop } from 'test/factories/make-crops'
+import { makeCrop } from 'test/factories/make-crop'
 
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 

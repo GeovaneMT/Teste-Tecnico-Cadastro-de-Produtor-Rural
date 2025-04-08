@@ -3,7 +3,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 import { EditCropUseCase } from '@/domain/erm/application/use-cases/edit-crop'
 
-import { makeCrop } from 'test/factories/make-crops'
+import { makeCrop } from 'test/factories/make-crop'
 
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 

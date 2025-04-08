@@ -7,7 +7,7 @@ import { INestApplication } from '@nestjs/common'
 import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
 
-import { AdminFactory } from 'test/factories/make-admins'
+import { AdminFactory } from 'test/factories/make-admin'
 
 describe('Authenticate (E2E)', () => {
   let app: INestApplication

@@ -3,8 +3,8 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 import { EditFarmUseCase } from '@/domain/erm/application/use-cases/edit-farm'
 
-import { makeFarm } from 'test/factories/make-farms'
-import { makeFarmCrop } from 'test/factories/make-farm-crops'
+import { makeFarm } from 'test/factories/make-farm'
+import { makeFarmCrop } from 'test/factories/make-farm-crop'
 
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'

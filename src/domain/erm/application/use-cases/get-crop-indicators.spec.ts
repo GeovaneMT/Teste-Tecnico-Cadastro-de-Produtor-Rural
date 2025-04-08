@@ -1,13 +1,13 @@
 import { GetCropIndicatorsUseCase } from '@/domain/erm/application/use-cases/get-crop-indicators'
 
-import { makeFarm } from 'test/factories/make-farms'
+import { makeFarm } from 'test/factories/make-farm'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
-import { makeCrop } from 'test/factories/make-crops'
-import { makeProducer } from 'test/factories/make-producers'
+import { makeCrop } from 'test/factories/make-crop'
+import { makeProducer } from 'test/factories/make-producer'
 
 let inMemoryCropsRepository: InMemoryCropsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository

@@ -1,7 +1,7 @@
 import { GetCropByIdUseCase } from '@/domain/erm/application/use-cases/get-crop-by-id'
 
-import { makeCrop } from 'test/factories/make-crops'
-import { makeFarm } from 'test/factories/make-farms'
+import { makeCrop } from 'test/factories/make-crop'
+import { makeFarm } from 'test/factories/make-farm'
 
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 

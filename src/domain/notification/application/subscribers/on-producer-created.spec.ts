@@ -3,7 +3,7 @@ import { SpyInstance } from 'vitest'
 import { OnProducerCreated } from '@/domain/notification/application/subscribers/on-producer-created'
 
 import { waitFor } from 'test/utils/wait-for'
-import { makeProducer } from 'test/factories/make-producers'
+import { makeProducer } from 'test/factories/make-producer'
 
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'

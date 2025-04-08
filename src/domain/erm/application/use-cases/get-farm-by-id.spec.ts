@@ -1,16 +1,16 @@
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 import { GetFarmByIdUseCase } from '@/domain/erm/application/use-cases/get-farm-by-id'
 
-import { makeCrop } from 'test/factories/make-crops'
-import { makeFarm } from 'test/factories/make-farms'
-import { FarmCropFactory, makeFarmCrop } from 'test/factories/make-farm-crops'
+import { makeCrop } from 'test/factories/make-crop'
+import { makeFarm } from 'test/factories/make-farm'
+import { FarmCropFactory, makeFarmCrop } from 'test/factories/make-farm-crop'
 
 import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
-import { makeProducer } from 'test/factories/make-producers'
+import { makeProducer } from 'test/factories/make-producer'
 import { c } from 'vitest/dist/reporters-5f784f42'
 
 let inMemoryCropsRepository: InMemoryCropsRepository

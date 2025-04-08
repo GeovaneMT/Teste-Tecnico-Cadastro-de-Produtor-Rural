@@ -22,6 +22,14 @@ import { FetchRecentCropsController } from '@/infra/http/controllers/fetch-recen
 import { FetchRecentFarmsController } from '@/infra/http/controllers/fetch-recent-farms.controller'
 import { FetchRecentProducersController } from '@/infra/http/controllers/fetch-recent-producers.controller'
 
+import { EditCropController } from '@/infra/http/controllers/edit-crop.controller'
+import { EditFarmController } from '@/infra/http/controllers/edit-farm.controller'
+import { EditProducerController } from '@/infra/http/controllers/edit-producer.controller'
+
+import { DeleteCropController } from '@/infra/http/controllers/delete-crop'
+import { DeleteFarmController } from '@/infra/http/controllers/delete-farm'
+import { DeleteProducerController } from '@/infra/http/controllers/delete-producer'
+
 
 
 import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/authenticate-admin'
@@ -42,6 +50,14 @@ import { GetCropByIdUseCase } from '@/domain/erm/application/use-cases/get-crop-
 import { GetFarmByIdUseCase } from '@/domain/erm/application/use-cases/get-farm-by-id'
 import { GetCropIndicatorsUseCase } from '@/domain/erm/application/use-cases/get-crop-indicators'
 import { GetProducerByEmailUseCase } from '@/domain/erm/application/use-cases/get-producer-by-email'
+
+import { EditCropUseCase } from '@/domain/erm/application/use-cases/edit-crop'
+import { EditFarmUseCase } from '@/domain/erm/application/use-cases/edit-farm'
+import { EditProducerUseCase } from '@/domain/erm/application/use-cases/edit-producer'
+
+import { DeleteCropUseCase } from '@/domain/erm/application/use-cases/delete-crop'
+import { DeleteFarmUseCase } from '@/domain/erm/application/use-cases/delete-farm'
+import { DeleteProducerUseCase } from '@/domain/erm/application/use-cases/delete-producer'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -64,6 +80,14 @@ import { GetProducerByEmailUseCase } from '@/domain/erm/application/use-cases/ge
     GetFarmByIdController,
     GetCropIndicatorsController,
     GetProducerByEmailController,
+
+    EditCropController,
+    EditFarmController,
+    EditProducerController,
+
+    DeleteCropController,
+    DeleteFarmController,
+    DeleteProducerController,
   ],
   providers: [
     AuthenticateAdminUseCase,
@@ -84,6 +108,14 @@ import { GetProducerByEmailUseCase } from '@/domain/erm/application/use-cases/ge
     GetFarmByIdUseCase,
     GetCropIndicatorsUseCase,
     GetProducerByEmailUseCase,
+
+    EditCropUseCase,
+    EditFarmUseCase,
+    EditProducerUseCase,
+
+    DeleteCropUseCase,
+    DeleteFarmUseCase,
+    DeleteProducerUseCase,
   ],
 })
 export class HttpModule {}

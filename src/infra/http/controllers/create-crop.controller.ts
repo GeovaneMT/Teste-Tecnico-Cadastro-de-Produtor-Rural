@@ -16,7 +16,7 @@ const bodyValidationPipe = new ZodValidationPipe(createCropBodySchema)
 
 type CreateCropBodySchema = z.infer<typeof createCropBodySchema>
 
-@Controller('/producers/:producerId/farms/:farmsId/crops')
+@Controller('/crops')
 export class CreateCropController {
   constructor(private createFarm: CreateCropUseCase) {}
 

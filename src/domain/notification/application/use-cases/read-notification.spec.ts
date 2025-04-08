@@ -3,7 +3,7 @@ import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 
 import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 
-import { makeNotification } from 'test/factories/make-notifications'
+import { makeNotification } from 'test/factories/make-notification'
 import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository'
 
 
