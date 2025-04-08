@@ -1,6 +1,5 @@
 import { States } from '@prisma/client'
 
-import { Optional } from '@/core/types/optional'
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
@@ -9,7 +8,6 @@ import { FarmCropList } from '@/domain/erm/enterprise/entities/farm-crop-list'
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 export interface FarmProps {
-  ownerId: UniqueEntityID
   name: string
   city: string
   state: States
@@ -24,10 +22,7 @@ export interface FarmProps {
   updatedAt?: Date | null
 }
 
-export class Farm extends AggregateRoot<FarmProps> {
-  get ownerId() {
-    return this.props.ownerId
-  }
+export abstract class Farm<Props extends FarmProps> extends AggregateRoot<Props> {
 
   get name() {
     return this.props.name
@@ -63,6 +58,10 @@ export class Farm extends AggregateRoot<FarmProps> {
 
   get updatedAt() {
     return this.props.updatedAt
+  }
+
+  get excerpt() {
+    return this.name.substring(0, 120).trimEnd().concat('...')
   }
 
   set name(name: string) {
@@ -104,21 +103,4 @@ export class Farm extends AggregateRoot<FarmProps> {
     this.props.updatedAt = new Date()
   }
 
-  static create(
-    props: Optional<FarmProps, 'createdAt' | 'crops'>,
-    id?: UniqueEntityID,
-  ) {
-    const farm = new Farm(
-      {
-        ...props,
-        crops: props.crops ?? new FarmCropList(),
-        createdAt: props.createdAt ?? new Date(),
-      },
-      id,
-    )
-    
-    return farm
-  }
-
 }
-

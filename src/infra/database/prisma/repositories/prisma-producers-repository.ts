@@ -144,12 +144,18 @@ export class PrismaProducersRepository implements ProducersRepository {
     if (!producer) {
       return null
     }
-
-    const producerDetails = PrismaProducerDetailsMapper.toDomain(producer)
+    
+    const producerDetails = PrismaProducerDetailsMapper.toDomain({
+      ...producer,
+      farmsDetails: producer.farms,
+    })
 
     await this.cache.set(
       `question:${id}:details`,
-      JSON.stringify(producer),
+      JSON.stringify({
+        ...producer,
+        farmsDetails: producer.farms,
+      }),
     )
 
     return producerDetails
@@ -181,11 +187,17 @@ export class PrismaProducersRepository implements ProducersRepository {
       return null
     }
 
-    const producerDetails = PrismaProducerDetailsMapper.toDomain(producer)
+    const producerDetails = PrismaProducerDetailsMapper.toDomain({
+      ...producer,
+      farmsDetails: producer.farms,
+    })
 
     await this.cache.set(
       `question:${email}:details`,
-      JSON.stringify(producer),
+      JSON.stringify({
+        ...producer,
+        farmsDetails: producer.farms,
+      }),
     )
 
     return producerDetails
@@ -217,11 +229,17 @@ export class PrismaProducersRepository implements ProducersRepository {
       return null
     }
 
-    const producerDetails = PrismaProducerDetailsMapper.toDomain(producer)
+    const producerDetails = PrismaProducerDetailsMapper.toDomain({
+      ...producer,
+      farmsDetails: producer.farms,
+    })
 
     await this.cache.set(
       `question:${document}:details`,
-      JSON.stringify(producer),
+      JSON.stringify({
+        ...producer,
+        farmsDetails: producer.farms,
+      }),
     )
 
     return producerDetails

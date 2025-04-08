@@ -1,7 +1,5 @@
+import { CropType, States } from '@prisma/client'
 import { ValueObject } from '@/core/entities/value-object'
-import { CropType } from '@/domain/erm/utils/crop-type-enum'
-
-import { States } from '@prisma/client'
 
 export type CropTypeWithQuantity = {
   cropType: CropType

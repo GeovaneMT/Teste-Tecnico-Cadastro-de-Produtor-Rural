@@ -1,7 +1,5 @@
 import { User as PrismaUser, Prisma } from '@prisma/client'
-
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-
 import { Admin } from '@/domain/erm/enterprise/entities/admin'
 
 export class PrismaAdminMapper {

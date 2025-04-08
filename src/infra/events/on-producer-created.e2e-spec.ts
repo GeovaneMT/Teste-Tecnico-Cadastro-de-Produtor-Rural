@@ -64,7 +64,7 @@ describe('On producer created (E2E)', () => {
     await waitFor(async () => {
       const notificationOnDatabase = await prisma.notification.findFirst({
         where: {
-          recipientId: producer.body.producer.producerId,
+          recipientId: producer.body.producer.id,
         },
       })
 

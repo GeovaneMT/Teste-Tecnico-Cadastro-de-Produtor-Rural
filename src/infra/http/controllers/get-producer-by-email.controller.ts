@@ -1,7 +1,8 @@
 import { BadRequestException, NotFoundException, Controller, Get, Param } from '@nestjs/common'
+
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 import { ProducerDetailsPresenter } from '@/infra/http/presenters/producer-details-presenter'
 import { GetProducerByEmailUseCase } from '@/domain/erm/application/use-cases/get-producer-by-email'
-import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
 @Controller('/producers/:email')
 export class GetProducerByEmailController {

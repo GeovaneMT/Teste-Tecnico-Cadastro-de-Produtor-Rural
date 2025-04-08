@@ -1,46 +1,36 @@
 import { FetchTotalFarmsUseCase } from '@/domain/erm/application/use-cases/fetch-total-farms'
 
-import { makeFarm } from 'test/factories/make-farm'
-import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
-import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
+import { makeProducerFarm } from 'test/factories/make-producer-farm'
+
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 
-let inMemoryCropsRepository: InMemoryCropsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
-let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
-let inMemoryFarmsRepository: InMemoryFarmsRepository
-
 let inMemoryProducersRepository: InMemoryProducersRepository
+let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
+
 let sut: FetchTotalFarmsUseCase
 
 describe('Fetch Recent Producers', () => {
   beforeEach(() => {
-    inMemoryCropsRepository = new InMemoryCropsRepository()
     inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
-    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository()
     
-    inMemoryFarmsRepository = new InMemoryFarmsRepository(
-      inMemoryCropsRepository, 
+    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository(
       inMemoryFarmCropsRepository, 
-      inMemoryProducersRepository
     )
-    
+
     inMemoryProducersRepository = new InMemoryProducersRepository(
-      inMemoryCropsRepository,
-      inMemoryFarmsRepository,
-      inMemoryFarmCropsRepository,
       inMemoryProducerFarmsRepository,
     )
 
-    sut = new FetchTotalFarmsUseCase(inMemoryFarmsRepository)
+    sut = new FetchTotalFarmsUseCase(inMemoryProducerFarmsRepository)
   })
 
   it('should be able to fetch total farms', async () => {
-    await inMemoryFarmsRepository.create(makeFarm())
-    await inMemoryFarmsRepository.create(makeFarm())
-    await inMemoryFarmsRepository.create(makeFarm())
+    await inMemoryProducerFarmsRepository.create(makeProducerFarm())
+    await inMemoryProducerFarmsRepository.create(makeProducerFarm())
+    await inMemoryProducerFarmsRepository.create(makeProducerFarm())
     
     const result = await sut.execute()
         

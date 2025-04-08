@@ -1,12 +1,9 @@
 import { CropType } from '@prisma/client'
 
 import { Entity } from '@/core/entities/entity'
-import { Optional } from '@/core/types/optional'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 export interface CropProps {
-  landId: UniqueEntityID
-
   type: CropType
   description: string
 
@@ -14,11 +11,7 @@ export interface CropProps {
   updatedAt?: Date | null
 }
 
-export class Crop extends Entity<CropProps> {
-
-  get landId() {
-    return this.props.landId
-  }
+export abstract class Crop<Props extends CropProps> extends Entity<Props> {  
 
   get type() {
     return this.props.type
@@ -48,21 +41,6 @@ export class Crop extends Entity<CropProps> {
 
   private touch() {
     this.props.updatedAt = new Date()
-  }
-
-  static create(
-    props: Optional<CropProps, 'createdAt'>,
-    id?: UniqueEntityID,
-  ) {
-    const crop = new Crop(
-      {
-        ...props,
-        createdAt: props.createdAt ?? new Date(),
-      },
-      id,
-    )
-  
-    return crop
   }
   
 }

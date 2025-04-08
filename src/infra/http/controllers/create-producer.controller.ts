@@ -12,7 +12,6 @@ const createProducerBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
   document: documentValidationSchema.shape.document,
-  farms: z.array(z.string().uuid())
 })
 
 const bodyValidationPipe = new ZodValidationPipe(createProducerBodySchema)
@@ -28,13 +27,12 @@ export class CreateProducerController {
     @Body(bodyValidationPipe) body: CreateProducerBodySchema,
   ) {
 
-    const { name, email, document, farms } = body
+    const { name, email, document } = body
 
     const result = await this.createProducer.execute({
       name,
       email,
       document: Document.create(document),
-      farmsIds: farms,
     })
     
     if (result.isLeft()) {

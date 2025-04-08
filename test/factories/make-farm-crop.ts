@@ -8,16 +8,27 @@ import {
   FarmCrop,
   FarmCropProps,
 } from '@/domain/erm/enterprise/entities/farm-crop'
+import { CropType } from '@prisma/client'
+import { faker } from '@faker-js/faker'
 
 export function makeFarmCrop(
   override: Partial<FarmCropProps> = {},
   id?: UniqueEntityID,
 ) {
+  
+  const getRandomCropType = () => {
+    const values = Object.values(CropType)
+    const randomIndex = Math.floor(Math.random() * values.length);
+    return values[randomIndex] as CropType
+  }
 
   const farmCrop = FarmCrop.create(
     {
-      cropId: new UniqueEntityID(),
       farmId: new UniqueEntityID(),
+
+      type: getRandomCropType(),
+      description: faker.lorem.sentence(10),
+      
       ...override,
     },
     id,
@@ -35,7 +46,7 @@ export class FarmCropFactory {
 
     await this.prisma.crop.update({
       where: {
-        id: farmCrop.cropId.toString(),
+        id: farmCrop.id.toString(),
       },
       data: {
         landId: farmCrop.farmId.toString(),

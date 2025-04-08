@@ -1,5 +1,4 @@
 import { describe, expect, test } from 'vitest'
-
 import { CropType as PrismaCropType, States as PrismaStates } from '@prisma/client'
 import { CropByState } from '@/domain/erm/enterprise/entities/value-objects/crop-by-state'
 

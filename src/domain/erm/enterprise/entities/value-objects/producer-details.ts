@@ -1,8 +1,6 @@
 import { ValueObject } from '@/core/entities/value-object'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-import { Farm } from '@/domain/erm/enterprise/entities/farm'
-
 import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 import { FarmDetails } from '@/domain/erm/enterprise/entities/value-objects/farm-details'
 

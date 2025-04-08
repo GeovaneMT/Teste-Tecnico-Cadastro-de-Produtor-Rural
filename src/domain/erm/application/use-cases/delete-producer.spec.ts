@@ -3,47 +3,37 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { DeleteProducerUseCase } from '@/domain/erm/application/use-cases/delete-producer'
 
 import { makeProducer } from 'test/factories/make-producer'
+import { makeFarmCrop } from 'test/factories/make-farm-crop'
 import { makeProducerFarm } from 'test/factories/make-producer-farm'
 
-import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
-import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 
-let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
-let inMemoryCropsRepository: InMemoryCropsRepository
-let inMemoryFarmsRepository: InMemoryFarmsRepository
 let inMemoryProducersRepository: InMemoryProducersRepository
+let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 
 let sut: DeleteProducerUseCase
 
 describe('Delete Producer', () => {
   beforeEach(() => {
-    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository()
     inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
-    inMemoryCropsRepository = new InMemoryCropsRepository()
-
-    inMemoryFarmsRepository = new InMemoryFarmsRepository(
-      inMemoryCropsRepository, 
+    
+    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository(
       inMemoryFarmCropsRepository, 
-      inMemoryProducersRepository
     )
 
     inMemoryProducersRepository = new InMemoryProducersRepository(
-      inMemoryCropsRepository,
-      inMemoryFarmsRepository,
-      inMemoryFarmCropsRepository,
       inMemoryProducerFarmsRepository,
     )
-
+    
     sut = new DeleteProducerUseCase(
       inMemoryProducersRepository,
     )
   })
 
-  it('should be able to delete a producer', async () => {
+  it('Should be able to delete a producer and its associated farms and crops', async () => {
     const newProducer = makeProducer(
       {},
       new UniqueEntityID('producer-1'),
@@ -51,27 +41,40 @@ describe('Delete Producer', () => {
 
     await inMemoryProducersRepository.create(newProducer)
 
-    inMemoryProducerFarmsRepository.items.push(
-      makeProducerFarm({
-        producerId: newProducer.id,
-        farmId: new UniqueEntityID('1'),
-      }),
-      makeProducerFarm({
-        producerId: newProducer.id,
-        farmId: new UniqueEntityID('2'),
-      }),
-    )
+    const farm1 = makeProducerFarm({
+      producerId: newProducer.id,
+    }, new UniqueEntityID('1'))
+    
+    const farm2 = makeProducerFarm({
+      producerId: newProducer.id,
+    }, new UniqueEntityID('2'))
+
+    inMemoryProducerFarmsRepository.items.push(farm1, farm2)
+    
+    const crop1 = makeFarmCrop({
+      farmId: farm1.id,
+    }, new UniqueEntityID('1'))
+    
+    const crop2 = makeFarmCrop({
+      farmId: farm1.id,
+    }, new UniqueEntityID('2'))
+
+    const crop3 = makeFarmCrop({
+      farmId: farm2.id,
+    }, new UniqueEntityID('3'))
+
+    const crop4 = makeFarmCrop({
+      farmId: farm2.id,
+    }, new UniqueEntityID('4'))
+
+    inMemoryFarmCropsRepository.items.push(crop1, crop2, crop3, crop4)
 
     await sut.execute({
       producerId: 'producer-1',
     })
 
     expect(inMemoryProducersRepository.items).toHaveLength(0)
-
     expect(inMemoryProducerFarmsRepository.items).toHaveLength(0)
-    expect(inMemoryFarmsRepository.items).toHaveLength(0)
-
     expect(inMemoryFarmCropsRepository.items).toHaveLength(0)
-    expect(inMemoryCropsRepository.items).toHaveLength(0)
   })
 })

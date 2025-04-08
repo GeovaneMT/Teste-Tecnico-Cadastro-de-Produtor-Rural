@@ -1,6 +1,5 @@
 import { ValueObject } from '@/core/entities/value-object'
-import { CropType } from '@/domain/erm/utils/crop-type-enum'
-import { States } from '@/domain/erm/utils/state-type-enum'
+import { CropType, States } from '@prisma/client'
 
 export interface StateCropIndicatorsProps {
   state: States

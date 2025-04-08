@@ -10,32 +10,38 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
 import { AdminFactory } from 'test/factories/make-admin'
 import { ProducerFactory } from 'test/factories/make-producer'
-import { FarmFactory } from 'test/factories/make-farm'
-import { CropFactory } from 'test/factories/make-crop'
+import { FarmCropFactory } from 'test/factories/make-farm-crop'
+import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
 
 describe('Delete producer (E2E)', () => {
+  let jwt: JwtService
   let app: INestApplication
   let prisma: PrismaService
+
   let adminFactory: AdminFactory
+  let farmCropFactory: FarmCropFactory
   let producerFactory: ProducerFactory
-  let farmFactory: FarmFactory
-  let cropFactory: CropFactory
-  let jwt: JwtService
+  let producerFarmFactory: ProducerFarmFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [AdminFactory, ProducerFactory, FarmFactory, CropFactory],
+      providers: [
+        AdminFactory,
+        FarmCropFactory,
+        ProducerFactory,
+        ProducerFarmFactory,
+      ],
     }).compile()
 
-    app = moduleRef.createNestApplication()
-
-    prisma = moduleRef.get(PrismaService)
-    adminFactory = moduleRef.get(AdminFactory)
-    farmFactory = moduleRef.get(FarmFactory)
-    cropFactory = moduleRef.get(CropFactory)
-    producerFactory = moduleRef.get(ProducerFactory)
     jwt = moduleRef.get(JwtService)
+    app = moduleRef.createNestApplication()
+    prisma = moduleRef.get(PrismaService)
+
+    adminFactory = moduleRef.get(AdminFactory)
+    farmCropFactory = moduleRef.get(FarmCropFactory)
+    producerFactory = moduleRef.get(ProducerFactory)
+    producerFarmFactory = moduleRef.get(ProducerFarmFactory)
 
     await app.init()
   })
@@ -49,17 +55,17 @@ describe('Delete producer (E2E)', () => {
 
     const producerId = producer.id.toString()
 
-    const farm = await farmFactory.makePrismaFarm({
-      ownerId: producer.id,
+    const producerFarm = await producerFarmFactory.makePrismaProducerFarm({
+      producerId: producer.id,
     })
 
-    const farmId = farm.id.toString()
-
-    const crop = await cropFactory.makePrismaCrop({
-      landId: farm.id,
+    const farmCrop = await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm.id,
     })
 
-    const cropId = crop.id.toString()
+    const farmCropId = farmCrop.id.toString()
+
+    const producerFarmId = producerFarm.id.toString()
 
     const response = await request(app.getHttpServer())
       .delete(`/producers/${producerId}`)
@@ -75,20 +81,20 @@ describe('Delete producer (E2E)', () => {
 
     expect(producerOnDatabase).toBeNull()
 
-    const farmOnDatabase = await prisma.farm.findUnique({
+    const producerFarmOnDatabase = await prisma.farm.findUnique({
       where: {
-        id: farmId,
+        id: producerFarmId,
       },
     })
 
-    expect(farmOnDatabase).toBeNull()
+    expect(producerFarmOnDatabase).toBeNull()
 
-    const cropOnDatabase = await prisma.crop.findUnique({
+    const farmCropOnDatabase = await prisma.crop.findUnique({
       where: {
-        id: cropId,
+        id: farmCropId,
       },
     })
 
-    expect(cropOnDatabase).toBeNull()
+    expect(farmCropOnDatabase).toBeNull()
   })
 })

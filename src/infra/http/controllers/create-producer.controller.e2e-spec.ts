@@ -7,30 +7,35 @@ import { JwtService } from '@nestjs/jwt'
 import { Test } from '@nestjs/testing'
 import request from 'supertest'
 import { AdminFactory } from 'test/factories/make-admin'
-import { FarmFactory } from 'test/factories/make-farm'
+import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
 import { ProducerFactory } from 'test/factories/make-producer'
 
 describe('Create producer (E2E)', () => {
+  let jwt: JwtService
   let app: INestApplication
   let prisma: PrismaService
+
   let adminFactory: AdminFactory
-  let farmFactory: FarmFactory
   let producerFactory: ProducerFactory
-  let jwt: JwtService
+  let producerFarmFactory: ProducerFarmFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [FarmFactory, ProducerFactory, AdminFactory],
+      providers: [
+        AdminFactory,
+        ProducerFactory,
+        ProducerFarmFactory,
+      ],
     }).compile()
 
-    app = moduleRef.createNestApplication()
-
-    prisma = moduleRef.get(PrismaService)
-    adminFactory = moduleRef.get(AdminFactory)
-    farmFactory = moduleRef.get(FarmFactory)
-    producerFactory = moduleRef.get(ProducerFactory)
     jwt = moduleRef.get(JwtService)
+    prisma = moduleRef.get(PrismaService)
+    app = moduleRef.createNestApplication()
+    
+    adminFactory = moduleRef.get(AdminFactory)
+    producerFactory = moduleRef.get(ProducerFactory)
+    producerFarmFactory = moduleRef.get(ProducerFarmFactory)
 
     await app.init()
   })
@@ -40,10 +45,6 @@ describe('Create producer (E2E)', () => {
     const user = await adminFactory.makePrismaAdmin()
     const accessToken = jwt.sign({ sub: user.id.toString() })
 
-    // const producer = await producerFactory.makePrismaProducer()
-    // const farm1 = await farmFactory.makePrismaFarm({ownerId: producer.id})
-    // const farm2 = await farmFactory.makePrismaFarm({ownerId: producer.id})
-
     const response = await request(app.getHttpServer())
       .post('/producers')
       .set('Authorization', `Bearer ${accessToken}`)
@@ -51,9 +52,6 @@ describe('Create producer (E2E)', () => {
         name: 'New producer',
         email: 'Test@email.com',
         document: '48984114871',
-        // document: Document.generateValidDocument().getValue(),
-        farms: [],
-        // farms: [farm1.id.toString(), farm2.id.toString()],
       })
 
     if (response.statusCode !== 201) {
@@ -69,14 +67,5 @@ describe('Create producer (E2E)', () => {
     })
 
     expect(producerOnDatabase).toBeTruthy()
-
-    const farmsOnDatabase = await prisma.farm.findMany({
-      where: {
-        ownerId: producerOnDatabase?.id,
-      },
-    })
-
-    expect(farmsOnDatabase).toHaveLength(0)
-    // expect(farmsOnDatabase).toHaveLength(2)
   })
 })

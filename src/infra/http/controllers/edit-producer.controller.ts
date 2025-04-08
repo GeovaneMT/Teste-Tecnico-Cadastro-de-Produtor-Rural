@@ -1,3 +1,10 @@
+import { z } from 'zod'
+
+import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
+
+import { EditProducerUseCase } from '@/domain/erm/application/use-cases/edit-producer'
+import { documentValidationSchema } from '@/domain/erm/utils/document-validation'
+
 import {
   BadRequestException,
   Body,
@@ -6,16 +13,11 @@ import {
   Param,
   Put,
 } from '@nestjs/common'
-import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { z } from 'zod'
-import { EditProducerUseCase } from '@/domain/erm/application/use-cases/edit-producer'
-import { documentValidationSchema } from '@/domain/erm/utils/document-validation'
 
 const editProducerBodySchema = z.object({
   name: z.string(),
   email: z.string().email(),
   document: documentValidationSchema.shape.document,
-  farms: z.array(z.string().uuid()),
 })
 
 const bodyValidationPipe = new ZodValidationPipe(editProducerBodySchema)
@@ -32,14 +34,14 @@ export class EditProducerController {
     @Body(bodyValidationPipe) body: EditProducerBodySchema,
     @Param('id') producerId: string,
   ) {
-    const { name, email, document, farms } = body
+    const { name, email, document } = body
 
     const result = await this.editProducer.execute({
+      producerId,
+      
       name,
       email,
-      cpfcnpj: document,
-      farmsIds: farms,
-      producerId,
+      document,
     })
 
     if (result.isLeft()) {

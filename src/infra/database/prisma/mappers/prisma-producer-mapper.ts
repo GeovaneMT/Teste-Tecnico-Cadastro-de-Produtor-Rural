@@ -9,13 +9,11 @@ export class PrismaProducerMapper {
 
   static toDomain(raw: PrismaProducer): Producer {
 
-    const document = Document.create(raw.document)
-
     return Producer.create(
       {
         name: raw.name,
         email: raw.email,
-        document,
+        document: Document.create(raw.document),
       
         createdAt: raw.createdAt,
         updatedAt: raw.updatedAt,
@@ -35,4 +33,5 @@ export class PrismaProducerMapper {
       updatedAt: producer.updatedAt,
     }
   }
+  
 }

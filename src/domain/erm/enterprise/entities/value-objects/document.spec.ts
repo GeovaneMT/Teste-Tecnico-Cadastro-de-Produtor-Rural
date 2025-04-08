@@ -1,6 +1,5 @@
 import { expect, test, describe } from 'vitest'
 
-import { CPF } from '@/domain/erm/enterprise/entities/value-objects/cpf'
 import { CNPJ } from '@/domain/erm/enterprise/entities/value-objects/cnpj'
 import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 

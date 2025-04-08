@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { Either, left, right } from '@/core/either'
 
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
-import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
+import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/producer-farms-repository'
 import { CropByState } from '@/domain/erm/enterprise/entities/value-objects/crop-by-state'
 
 type GetCropIndicatorsUseCaseResponse = Either<
@@ -15,10 +15,10 @@ type GetCropIndicatorsUseCaseResponse = Either<
 
 @Injectable()
 export class GetCropIndicatorsUseCase {
-  constructor(private farmsRepository: FarmsRepository) {}
+  constructor(private producerFarmsRepository: ProducerFarmsRepository) {}
 
   async execute(): Promise<GetCropIndicatorsUseCaseResponse> {
-    const cropsByState = await this.farmsRepository.getCropIndicators()
+    const cropsByState = await this.producerFarmsRepository.getCropIndicators()
 
     if (!cropsByState) {
       return left(new ResourceNotFoundError())

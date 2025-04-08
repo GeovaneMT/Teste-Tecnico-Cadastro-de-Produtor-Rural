@@ -3,6 +3,6 @@ import { FarmCrop } from '@/domain/erm/enterprise/entities/farm-crop'
 
 export class FarmCropList extends WatchedList<FarmCrop> {
   compareItems(a: FarmCrop, b: FarmCrop): boolean {
-    return a.cropId.equals(b.cropId)
+    return a.id.equals(b.id)
   }
 }

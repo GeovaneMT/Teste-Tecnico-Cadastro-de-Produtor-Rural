@@ -1,35 +1,48 @@
 import request from 'supertest'
 
-import { JwtService } from '@nestjs/jwt'
+import { AppModule } from '@/infra/app.module'
+
 import { Test } from '@nestjs/testing'
+import { JwtService } from '@nestjs/jwt'
 import { INestApplication } from '@nestjs/common'
 
-import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
 import { AdminFactory } from 'test/factories/make-admin'
 import { ProducerFactory } from 'test/factories/make-producer'
-import { FarmFactory } from 'test/factories/make-farm'
+import { FarmCropFactory } from 'test/factories/make-farm-crop'
+import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
 
 describe('Fetch total farms (E2E)', () => {
-  let app: INestApplication
-  let adminFactory: AdminFactory
-  let producerFactory: ProducerFactory
-  let farmFactory: FarmFactory
   let jwt: JwtService
+  let app: INestApplication
+  let prisma: PrismaService
+
+  let adminFactory: AdminFactory
+  let farmCropFactory: FarmCropFactory
+  let producerFactory: ProducerFactory
+  let producerFarmFactory: ProducerFarmFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [AdminFactory, FarmFactory, ProducerFactory],
+      providers: [
+        AdminFactory,
+        FarmCropFactory,
+        ProducerFactory,
+        ProducerFarmFactory,
+      ],
     }).compile()
 
+    jwt = moduleRef.get(JwtService)
+    prisma = moduleRef.get(PrismaService)
     app = moduleRef.createNestApplication()
 
     adminFactory = moduleRef.get(AdminFactory)
+    farmCropFactory = moduleRef.get(FarmCropFactory)
     producerFactory = moduleRef.get(ProducerFactory)
-    farmFactory = moduleRef.get(FarmFactory)
-    jwt = moduleRef.get(JwtService)
+    producerFarmFactory = moduleRef.get(ProducerFarmFactory)
 
     await app.init()
   })
@@ -45,12 +58,12 @@ describe('Fetch total farms (E2E)', () => {
     })
 
     await Promise.all([
-      farmFactory.makePrismaFarm({
-        ownerId: producer.id,
+      producerFarmFactory.makePrismaProducerFarm({
+        producerId: producer.id,
         name: 'Farm 01',
       }),
-      farmFactory.makePrismaFarm({
-        ownerId: producer.id,
+      producerFarmFactory.makePrismaProducerFarm({
+        producerId: producer.id,
         name: 'Farm 02',
       }),
     ])

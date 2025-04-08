@@ -1,91 +1,123 @@
-
 import request from 'supertest'
 
-import { JwtService } from '@nestjs/jwt'
+import { AppModule } from '@/infra/app.module'
+
 import { Test } from '@nestjs/testing'
+import { JwtService } from '@nestjs/jwt'
 import { INestApplication } from '@nestjs/common'
 
-import { AppModule } from '@/infra/app.module'
 import { DatabaseModule } from '@/infra/database/database.module'
+import { PrismaService } from '@/infra/database/prisma/prisma.service'
 
 import { AdminFactory } from 'test/factories/make-admin'
 import { ProducerFactory } from 'test/factories/make-producer'
-import { FarmFactory } from 'test/factories/make-farm'
 import { FarmCropFactory } from 'test/factories/make-farm-crop'
-import { CropFactory } from 'test/factories/make-crop'
-import { CropType } from '@prisma/client'
+import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
 
 describe('Fetch total farms (E2E)', () => {
-  let app: INestApplication
-  let adminFactory: AdminFactory
-  let producerFactory: ProducerFactory
-  let cropFactory: CropFactory
-  let farmCropFactory: FarmCropFactory
-  let farmFactory: FarmFactory
   let jwt: JwtService
+  let app: INestApplication
+  let prisma: PrismaService
+
+  let adminFactory: AdminFactory
+  let farmCropFactory: FarmCropFactory
+  let producerFactory: ProducerFactory
+  let producerFarmFactory: ProducerFarmFactory
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
-      providers: [AdminFactory, FarmFactory, ProducerFactory, CropFactory, FarmCropFactory],
+      providers: [
+        AdminFactory,
+        FarmCropFactory,
+        ProducerFactory,
+        ProducerFarmFactory,
+      ],
     }).compile()
 
+    jwt = moduleRef.get(JwtService)
+    prisma = moduleRef.get(PrismaService)
     app = moduleRef.createNestApplication()
 
     adminFactory = moduleRef.get(AdminFactory)
-    producerFactory = moduleRef.get(ProducerFactory)
-    farmFactory = moduleRef.get(FarmFactory)
-    cropFactory = moduleRef.get(CropFactory)
     farmCropFactory = moduleRef.get(FarmCropFactory)
-    jwt = moduleRef.get(JwtService)
+    producerFactory = moduleRef.get(ProducerFactory)
+    producerFarmFactory = moduleRef.get(ProducerFarmFactory)
 
     await app.init()
   })
 
+
   test('[GET] /indicators', async () => {
+
     const user = await adminFactory.makePrismaAdmin()
 
     const accessToken = jwt.sign({ sub: user.id.toString() })
-
-    const producer = await producerFactory.makePrismaProducer({
-      name: 'Producer 01',
-    })
-
-    const farm1 = await farmFactory.makePrismaFarm({
-      ownerId: producer.id,
-      name: 'Farm 01',
-    })
-    const farm2 = await farmFactory.makePrismaFarm({
-      ownerId: producer.id,
-      name: 'Farm 02',
-    })
-
-    const farm3 = await farmFactory.makePrismaFarm({
-      ownerId: producer.id,
-      name: 'Farm 03',
-    })
-
-    const farm4 = await farmFactory.makePrismaFarm({
-      ownerId: producer.id,
-      name: 'Farm 04',
-    })    
     
-    await cropFactory.makePrismaCrop({
-      landId: farm1.id,
-      ownerId: producer.id,
+    const producer1 = await producerFactory.makePrismaProducer({ name: 'Producer 01' })
+
+    const producer2 = await producerFactory.makePrismaProducer({ name: 'Producer 02' })
+
+    const producerFarm1 = await producerFarmFactory.makePrismaProducerFarm({
+      producerId: producer1.id,
+      name: 'Producer Farm 01',
     })
-    await cropFactory.makePrismaCrop({
-      landId: farm2.id,
-      ownerId: producer.id,
+
+    const producerFarm2 = await producerFarmFactory.makePrismaProducerFarm({
+      producerId: producer1.id,
+      name: 'Producer Farm 02',
     })
-    await cropFactory.makePrismaCrop({
-      landId: farm3.id,
-      ownerId: producer.id,
+
+    const producerFarm3 = await producerFarmFactory.makePrismaProducerFarm({
+      producerId: producer2.id,
+      name: 'Producer Farm 03',
     })
-    await cropFactory.makePrismaCrop({
-      landId: farm4.id,
-      ownerId: producer.id,
+
+    const producerFarm4 = await producerFarmFactory.makePrismaProducerFarm({
+      producerId: producer2.id,
+      name: 'Producer Farm 04',
     })
+
+    await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm1.id,
+      description: 'Farm Crop 01',
+    })
+
+    await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm1.id,
+      description: 'Farm Crop 02',
+    })
+
+    await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm2.id,
+      description: 'Farm Crop 03',
+    })
+
+    await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm2.id,
+      description: 'Farm Crop 04',
+    })
+
+    await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm3.id,
+      description: 'Farm Crop 05',
+    })
+
+    await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm3.id,
+      description: 'Farm Crop 06',
+    })
+
+    await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm4.id,
+      description: 'Farm Crop 07',
+    })
+
+    await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm4.id,
+      description: 'Farm Crop 08',
+    })
+
     const response = await request(app.getHttpServer())
       .get('/indicators')
       .set('Authorization', `Bearer ${accessToken}`)

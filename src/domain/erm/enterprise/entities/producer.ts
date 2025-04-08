@@ -4,7 +4,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
 import { ProducerFarmList } from '@/domain/erm/enterprise/entities/producer-farm-list'
-import { ProducerCreatedEvent } from '../events/producer-created-event'
+import { ProducerCreatedEvent } from '@/domain/erm/enterprise/events/producer-created-event'
 
 export interface ProducerProps {
   name: string

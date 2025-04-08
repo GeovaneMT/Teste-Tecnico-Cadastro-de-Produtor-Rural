@@ -1,43 +1,48 @@
+import request from 'supertest'
+
 import { AppModule } from '@/infra/app.module'
+
+import { Test } from '@nestjs/testing'
+import { JwtService } from '@nestjs/jwt'
+import { INestApplication } from '@nestjs/common'
+
 import { DatabaseModule } from '@/infra/database/database.module'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
-import { INestApplication } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-import { Test } from '@nestjs/testing'
-import request from 'supertest'
-import { FarmFactory } from 'test/factories/make-farm'
-import { ProducerFactory } from 'test/factories/make-producer'
-import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
+
 import { AdminFactory } from 'test/factories/make-admin'
+import { ProducerFactory } from 'test/factories/make-producer'
+import { FarmCropFactory } from 'test/factories/make-farm-crop'
+import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
 
 describe('Edit producer (E2E)', () => {
+  let jwt: JwtService
   let app: INestApplication
   let prisma: PrismaService
+
   let adminFactory: AdminFactory
+  let farmCropFactory: FarmCropFactory
   let producerFactory: ProducerFactory
-  let farmFactory: FarmFactory
   let producerFarmFactory: ProducerFarmFactory
-  let jwt: JwtService
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule, DatabaseModule],
       providers: [
         AdminFactory,
+        FarmCropFactory,
         ProducerFactory,
-        FarmFactory,
         ProducerFarmFactory,
       ],
     }).compile()
 
+    jwt = moduleRef.get(JwtService)
+    prisma = moduleRef.get(PrismaService)
     app = moduleRef.createNestApplication()
 
-    prisma = moduleRef.get(PrismaService)
     adminFactory = moduleRef.get(AdminFactory)
+    farmCropFactory = moduleRef.get(FarmCropFactory)
     producerFactory = moduleRef.get(ProducerFactory)
-    farmFactory = moduleRef.get(FarmFactory)
     producerFarmFactory = moduleRef.get(ProducerFarmFactory)
-    jwt = moduleRef.get(JwtService)
 
     await app.init()
   })
@@ -48,22 +53,18 @@ describe('Edit producer (E2E)', () => {
     const accessToken = jwt.sign({ sub: user.id.toString() })
     
     const producer = await producerFactory.makePrismaProducer()
+
+    const producerFarm = await producerFarmFactory.makePrismaProducerFarm({
+      producerId: producer.id,
+    })
+
+    const farmCrop = await farmCropFactory.makePrismaFarmCrop({
+      farmId: producerFarm.id,
+    })
+
     const producerId = producer.id.toString()
-    
-    const farm1 = await farmFactory.makePrismaFarm({ownerId: producer.id})
-    const farm2 = await farmFactory.makePrismaFarm({ownerId: producer.id})
-
-    await producerFarmFactory.makePrismaProducerFarm({
-      farmId: farm1.id,
-      producerId: producer.id,
-    })
-
-    await producerFarmFactory.makePrismaProducerFarm({
-      farmId: farm2.id,
-      producerId: producer.id,
-    })
-
-    const farm3 = await farmFactory.makePrismaFarm({ownerId: producer.id})
+    const producerFarmId = producerFarm.id.toString()
+    const farmCropId = farmCrop.id.toString()
 
     const response = await request(app.getHttpServer())
       .put(`/producers/${producerId}`)
@@ -72,7 +73,6 @@ describe('Edit producer (E2E)', () => {
         name: 'New name',
         email: 'email@email.com',
         document: '48984114871',
-        farms: [farm1.id.toString(), farm3.id.toString()],
       })
 
       if (response.statusCode !== 204) {
@@ -81,8 +81,10 @@ describe('Edit producer (E2E)', () => {
 
     expect(response.statusCode).toBe(204)
 
-    const producerOnDatabase = await prisma.producer.findFirst({
+    const producerOnDatabase = await prisma.producer.findUnique({
       where: {
+        id: producerId,
+
         name: 'New name',
         email: 'email@email.com',
         document: '48984114871',
@@ -91,22 +93,21 @@ describe('Edit producer (E2E)', () => {
 
     expect(producerOnDatabase).toBeTruthy()
 
-    const farmsOnDatabase = await prisma.farm.findMany({
+    const producerFarmOnDatabase = await prisma.farm.findUnique({
       where: {
-        ownerId: producerOnDatabase?.id,
+        id: producerFarmId,
       },
     })
 
-    expect(farmsOnDatabase).toHaveLength(2)
-    expect(farmsOnDatabase).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          id: farm1.id.toString(),
-        }),
-        expect.objectContaining({
-          id: farm3.id.toString(),
-        }),
-      ]),
-    )
+    expect(producerFarmOnDatabase).toBeTruthy()
+
+    const farmCropOnDatabase = await prisma.crop.findUnique({
+      where: {
+        id: farmCropId,
+      },
+    })
+
+    expect(farmCropOnDatabase).toBeTruthy()
+
   })
 })

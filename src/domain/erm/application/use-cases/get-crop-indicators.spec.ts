@@ -1,42 +1,32 @@
 import { GetCropIndicatorsUseCase } from '@/domain/erm/application/use-cases/get-crop-indicators'
 
-import { makeFarm } from 'test/factories/make-farm'
-import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
-import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
+import { makeProducer } from 'test/factories/make-producer'
+import { makeFarmCrop } from 'test/factories/make-farm-crop'
+import { makeProducerFarm } from 'test/factories/make-producer-farm'
+
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
-import { makeCrop } from 'test/factories/make-crop'
-import { makeProducer } from 'test/factories/make-producer'
 
-let inMemoryCropsRepository: InMemoryCropsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
-let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
-let inMemoryFarmsRepository: InMemoryFarmsRepository
-
 let inMemoryProducersRepository: InMemoryProducersRepository
+let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
+
 let sut: GetCropIndicatorsUseCase
 
 describe('Get Crop Indicators', () => {
   beforeEach(() => {
-    inMemoryCropsRepository = new InMemoryCropsRepository()
     inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
-    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository()
     
-    inMemoryFarmsRepository = new InMemoryFarmsRepository(
-      inMemoryCropsRepository, 
+    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository(
       inMemoryFarmCropsRepository, 
-      inMemoryProducersRepository
-    )
-    
-    inMemoryProducersRepository = new InMemoryProducersRepository(
-      inMemoryCropsRepository,
-      inMemoryFarmsRepository,
-      inMemoryFarmCropsRepository,
-      inMemoryProducerFarmsRepository,
     )
 
-    sut = new GetCropIndicatorsUseCase(inMemoryFarmsRepository)
+    inMemoryProducersRepository = new InMemoryProducersRepository(
+      inMemoryProducerFarmsRepository,
+    )    
+
+    sut = new GetCropIndicatorsUseCase(inMemoryProducerFarmsRepository)
   })
 
   it('should be able to fetch crop indicators', async () => {
@@ -48,23 +38,23 @@ describe('Get Crop Indicators', () => {
 
     await inMemoryProducersRepository.create(newProducer)
 
-    const farm1 = makeFarm({ ownerId: newProducer.id })
-    await inMemoryFarmsRepository.create(farm1)
+    const farm1 = makeProducerFarm({ producerId: newProducer.id })
+    await inMemoryProducerFarmsRepository.create(farm1)
 
-    const farm2 = makeFarm({ ownerId: newProducer.id })
-    await inMemoryFarmsRepository.create(farm2)
+    const farm2 = makeProducerFarm({ producerId: newProducer.id })
+    await inMemoryProducerFarmsRepository.create(farm2)
 
-    const farm3 = makeFarm({ ownerId: newProducer.id })
-    await inMemoryFarmsRepository.create(farm3)
+    const farm3 = makeProducerFarm({ producerId: newProducer.id })
+    await inMemoryProducerFarmsRepository.create(farm3)
     
-    const crop1 = makeCrop({landId: farm1.id})
-    await inMemoryCropsRepository.create(crop1)
+    const crop1 = makeFarmCrop({farmId: farm1.id})
+    await inMemoryFarmCropsRepository.create(crop1)
 
-    const crop2 = makeCrop({landId: farm2.id})
-    await inMemoryCropsRepository.create(crop2)
+    const crop2 = makeFarmCrop({farmId: farm2.id})
+    await inMemoryFarmCropsRepository.create(crop2)
 
-    const crop3 = makeCrop({landId: farm3.id})
-    await inMemoryCropsRepository.create(crop3)
+    const crop3 = makeFarmCrop({farmId: farm3.id})
+    await inMemoryFarmCropsRepository.create(crop3)
     
     const result = await sut.execute()
     

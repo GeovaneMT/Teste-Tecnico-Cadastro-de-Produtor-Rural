@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common'
-import { Either, right } from '@/core/either'
+import { Either, left, right } from '@/core/either'
 
 import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/producer-farms-repository'
-import { FarmWithOwner } from '@/domain/erm/enterprise/entities/value-objects/farm-with-author'
+import { ProducerFarm } from '@/domain/erm/enterprise/entities/producer-farm'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
 interface FetchProducerFarmsUseCaseRequest {
   producerId: string
@@ -10,9 +11,9 @@ interface FetchProducerFarmsUseCaseRequest {
 }
 
 type FetchProducerFarmsUseCaseResponse = Either<
-  null,
+  ResourceNotFoundError,
   {
-    farms: FarmWithOwner[]
+    producerFarms: ProducerFarm[]
   }
 >
 
@@ -24,16 +25,19 @@ export class FetchProducerFarmsUseCase {
     producerId,
     page,
   }: FetchProducerFarmsUseCaseRequest): Promise<FetchProducerFarmsUseCaseResponse> {
-    const farms =
-      await this.producerFarmsRepository.findManyByProducerIdWithOwner(
+    const producerFarms = await this.producerFarmsRepository.findManyByProducerId(
         producerId,
         {
           page,
         },
       )
 
+      if (!producerFarms) {
+        return left(new ResourceNotFoundError())
+      }
+
     return right({
-      farms,
+      producerFarms,
     })
   }
 }

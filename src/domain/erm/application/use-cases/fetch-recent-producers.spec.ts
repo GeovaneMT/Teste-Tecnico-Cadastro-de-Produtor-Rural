@@ -1,43 +1,33 @@
 import { FetchRecentProducersUseCase } from '@/domain/erm/application/use-cases/fetch-recent-producers'
 
 import { makeProducer } from 'test/factories/make-producer'
-import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
-import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
+
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 
-let inMemoryCropsRepository: InMemoryCropsRepository
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
-let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
-let inMemoryFarmsRepository: InMemoryFarmsRepository
-
 let inMemoryProducersRepository: InMemoryProducersRepository
+let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
+
 let sut: FetchRecentProducersUseCase
 
 describe('Fetch Recent Producers', () => {
   beforeEach(() => {
-    inMemoryCropsRepository = new InMemoryCropsRepository()
     inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
-    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository()
     
-    inMemoryFarmsRepository = new InMemoryFarmsRepository(
-      inMemoryCropsRepository, 
+    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository(
       inMemoryFarmCropsRepository, 
-      inMemoryProducersRepository
     )
 
     inMemoryProducersRepository = new InMemoryProducersRepository(
-      inMemoryCropsRepository,
-      inMemoryFarmsRepository,
-      inMemoryFarmCropsRepository,
       inMemoryProducerFarmsRepository,
     )
     
     sut = new FetchRecentProducersUseCase(inMemoryProducersRepository)
   })
 
-  it('should be able to fetch recent producers', async () => {
+  it('Should be able to fetch recent producers', async () => {
     await inMemoryProducersRepository.create(
       makeProducer({ createdAt: new Date(2022, 0, 20) }),
     )
@@ -63,7 +53,7 @@ describe('Fetch Recent Producers', () => {
     ])
   })
 
-  it('should be able to fetch paginated recent producers', async () => {
+  it('Should be able to fetch paginated recent producers', async () => {
     for (let i = 1; i <= 22; i++) {
       await inMemoryProducersRepository.create(makeProducer())
     }

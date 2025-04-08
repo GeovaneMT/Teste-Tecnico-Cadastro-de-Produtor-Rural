@@ -1,16 +1,16 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common' 
 
 import { DomainEvents } from '@/core/events/domain-events'
 import { EventHandler } from '@/core/events/event-handler'
 
-import { AdminsRepository } from '@/domain/erm/application/repositories/admins-repository'
 import { ProducerCreatedEvent } from '@/domain/erm/enterprise/events/producer-created-event'
+import { ProducersRepository } from '@/domain/erm/application/repositories/producers-repository'
 import { SendNotificationUseCase } from '@/domain/notification/application/use-cases/send-notification'
 
 @Injectable()
 export class OnProducerCreated implements EventHandler {
   constructor(
-    private adminsRepository: AdminsRepository,
+    private producersRepository: ProducersRepository,
     private sendNotification: SendNotificationUseCase,
   ) {
     this.setupSubscriptions()
@@ -18,20 +18,24 @@ export class OnProducerCreated implements EventHandler {
 
   setupSubscriptions(): void {
     DomainEvents.register(
-      this.sendNewProducerNotification.bind(this),
+      this.sendNewAnswerNotification.bind(this),
       ProducerCreatedEvent.name,
     )
   }
 
-  private async sendNewProducerNotification({ producer }: ProducerCreatedEvent) {
+  private async sendNewAnswerNotification({ producer: producerFromEvent }: ProducerCreatedEvent) {
+    const producer = await this.producersRepository.findById(
+      producerFromEvent.id.toString(),
+    )
 
+    if (producer) {
       await this.sendNotification.execute({
         recipientId: producer.id.toString(),
-        title: `Novo produtor criado: "${producer.name
+        title: `Nova resposta em "${producer.name
           .substring(0, 40)
           .concat('...')}"`,
-        content: producer.excerpt,
+        content: producerFromEvent.excerpt,
       })
-    
+    }
   }
 }

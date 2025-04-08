@@ -1,7 +1,7 @@
-import { Farm } from '@/domain/erm/enterprise/entities/farm'
+import { ProducerFarm } from '@/domain/erm/enterprise/entities/producer-farm'
 
 export class FarmPresenter {
-  static toHTTP(farm: Farm) {
+  static toHTTP(farm: ProducerFarm) {
     return {
       id: farm.id.toString(),
       

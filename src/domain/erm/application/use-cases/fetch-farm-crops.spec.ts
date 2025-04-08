@@ -1,90 +1,127 @@
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
-import { FetchProducerFarmsUseCase } from '@/domain/erm/application/use-cases/fetch-producer-farms'
-import { makeProducerFarm } from 'test/factories/make-producer-farm'
-import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
-import { makeProducer } from 'test/factories/make-producer'
 
-let inMemoryProducersRepository: InMemoryProducersRepository
+import { FetchProducerFarmsUseCase } from '@/domain/erm/application/use-cases/fetch-farm-crops'
+
+import { makeFarmCrop } from 'test/factories/make-farm-crop'
+import { makeProducer } from 'test/factories/make-producer'
+import { makeProducerFarm } from 'test/factories/make-producer-farm'
+
+import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
+import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
+import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
+
+let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
 let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
+let inMemoryProducersRepository: InMemoryProducersRepository
+
 let sut: FetchProducerFarmsUseCase
 
-describe('Fetch Producer Farms', () => {
+describe('Fetch farm crops', () => {
   beforeEach(() => {
-    inMemoryProducersRepository = new InMemoryProducersRepository()
+    inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
+
     inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository(
-      inMemoryProducersRepository,
+      inMemoryFarmCropsRepository
     )
-    sut = new FetchProducerFarmsUseCase(inMemoryProducerFarmsRepository)
+
+    inMemoryProducersRepository = new InMemoryProducersRepository(
+      inMemoryProducerFarmsRepository
+    )
+
+    sut = new FetchProducerFarmsUseCase(inMemoryFarmCropsRepository)
   })
 
-  it('should be able to fetch producer farms', async () => {
-    const producer = makeProducer({ name: 'John Doe' })
+  it('Should be able to fetch farm crops', async () => {
+    const producer = makeProducer()
 
     inMemoryProducersRepository.items.push(producer)
 
-    const farm1 = makeProducerFarm({
-      producerId: new UniqueEntityID('producer-1'),
-      farmId: producer.id,
-    })
+    const farm = makeProducerFarm({
+      name: 'John Doe',
+      producerId: producer.id,
+    }, new UniqueEntityID('farm-1'))
 
-    const farm2 = makeProducerFarm({
-      producerId: new UniqueEntityID('producer-1'),
-      farmId: producer.id,
-    })
+    inMemoryProducerFarmsRepository.create(farm)
+    const crop1 = makeFarmCrop({
+      farmId: farm.id,
+    }, new UniqueEntityID('crop-1'))
+    
+    const crop2 = makeFarmCrop({
+      farmId: farm.id,    
+    }, new UniqueEntityID('crop-2'))
 
-    const farm3 = makeProducerFarm({
-      producerId: new UniqueEntityID('producer-1'),
-      farmId: producer.id,
-    })
+    const crop3 = makeFarmCrop({
+      farmId: farm.id,
+    }, new UniqueEntityID('crop-3'))
 
-    await inMemoryProducerFarmsRepository.create(farm1)
-    await inMemoryProducerFarmsRepository.create(farm2)
-    await inMemoryProducerFarmsRepository.create(farm3)
-
+    inMemoryFarmCropsRepository.items.push(crop1, crop2, crop3)
+    
     const result = await sut.execute({
-      producerId: 'producer-1',
+      landId: 'farm-1',
       page: 1,
     })
 
-    expect(result.value?.farms).toHaveLength(3)
-    expect(result.value?.farms).toEqual(
+    if (result.isLeft()) {
+      throw new Error(result.value.message)
+    }
+            
+    expect(result.value.farmCrops).toHaveLength(3)
+
+    expect(result.value.farmCrops).toHaveLength(3)
+
+    expect(result.value.farmCrops).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          owner: 'John Doe',
-          farmId: farm1.id,
+          props: expect.objectContaining({
+            farmId: expect.objectContaining({ value: 'farm-1' }),
+          }),
+          _id: crop1.id,
         }),
         expect.objectContaining({
-          owner: 'John Doe',
-          farmId: farm2.id,
+          props: expect.objectContaining({
+            farmId: expect.objectContaining({ value: 'farm-1' }),
+          }),
+          _id: crop2.id,
         }),
         expect.objectContaining({
-          owner: 'John Doe',
-          farmId: farm3.id,
+          props: expect.objectContaining({
+            farmId: expect.objectContaining({ value: 'farm-1' }),
+          }),
+          _id: crop3.id,
         }),
-      ]),
-    )
-  })
+      ])
+    )  
 
+    })
+    
   it('should be able to fetch paginated producer farms', async () => {
     const producer = makeProducer({ name: 'John Doe' })
 
     inMemoryProducersRepository.items.push(producer)
 
     for (let i = 1; i <= 22; i++) {
-      await inMemoryProducerFarmsRepository.create(
-        makeProducerFarm({
-          producerId: new UniqueEntityID('producer-1'),
-          farmId: producer.id,
-        }),
-      )
+      const farm = makeProducerFarm({
+        producerId: producer.id,
+      }, new UniqueEntityID(`farm-1`))
+
+      await inMemoryProducerFarmsRepository.create(farm)
+
+      const crop = makeFarmCrop({
+        farmId: farm.id,
+      }, new UniqueEntityID(`crop-1`))
+
+      await inMemoryFarmCropsRepository.create(crop)
     }
 
     const result = await sut.execute({
-      producerId: 'producer-1',
+      landId: 'farm-1',
       page: 2,
     })
 
-    expect(result.value?.farms).toHaveLength(2)
+    if (result.isLeft()) {
+      throw new Error(result.value.message)
+    }
+
+    expect(result.value.farmCrops).toHaveLength(2)
   })
 })

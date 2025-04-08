@@ -1,15 +1,13 @@
 import { ValueObject } from '@/core/entities/value-object'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-import { States } from '@/domain/erm/utils/state-type-enum'
-import { Crop } from '@/domain/erm/enterprise/entities/crop'
+import { FarmCrop } from '@/domain/erm/enterprise/entities/farm-crop'
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
-
+import { States } from '@prisma/client'
 
 export interface FarmDetailsProps {
   farmId: UniqueEntityID
   ownerId: UniqueEntityID
-  owner: string
 
   name: string
   city: string
@@ -19,7 +17,7 @@ export interface FarmDetailsProps {
   vegetationArea: string
   agriculturalArea: string
 
-  crops: Crop[]
+  farmCrops: FarmCrop[]
 
   createdAt: Date
   updatedAt?: Date | null
@@ -33,10 +31,6 @@ export class FarmDetails extends ValueObject<FarmDetailsProps> {
   get ownerId() {
     return this.props.ownerId
   } 
-
-  get owner() {
-    return this.props.owner
-  }
 
   get name() {
     return this.props.name
@@ -62,8 +56,8 @@ export class FarmDetails extends ValueObject<FarmDetailsProps> {
     return this.props.agriculturalArea
   }
 
-  get crops() {
-    return this.props.crops
+  get farmCrops() {
+    return this.props.farmCrops
   }
 
   get createdAt() {

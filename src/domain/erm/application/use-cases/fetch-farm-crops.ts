@@ -1,39 +1,43 @@
 import { Injectable } from '@nestjs/common'
-import { Either, right } from '@/core/either'
+import { Either, left, right } from '@/core/either'
 
-import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/producer-farms-repository'
-import { FarmWithOwner } from '@/domain/erm/enterprise/entities/value-objects/farm-with-author'
+import { FarmCrop } from '@/domain/erm/enterprise/entities/farm-crop'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { FarmCropsRepository } from '@/domain/erm/application/repositories/farm-crops-repository'
 
-interface FetchProducerFarmsUseCaseRequest {
-  producerId: string
+interface FetchFarmCropsUseCaseRequest {
+  landId: string
   page: number
 }
 
-type FetchProducerFarmsUseCaseResponse = Either<
-  null,
+type FetchFarmCropsUseCaseResponse = Either<
+  ResourceNotFoundError,
   {
-    farms: FarmWithOwner[]
+    farmCrops: FarmCrop[]
   }
 >
 
 @Injectable()
 export class FetchProducerFarmsUseCase {
-  constructor(private producerFarmsRepository: ProducerFarmsRepository) {}
+  constructor(private farmCropsRepository: FarmCropsRepository) {}
 
   async execute({
-    producerId,
+    landId,
     page,
-  }: FetchProducerFarmsUseCaseRequest): Promise<FetchProducerFarmsUseCaseResponse> {
-    const farms =
-      await this.producerFarmsRepository.findManyByProducerIdWithOwner(
-        producerId,
+  }: FetchFarmCropsUseCaseRequest): Promise<FetchFarmCropsUseCaseResponse> {
+    const farmCrops = await this.farmCropsRepository.findManyByFarmId(
+      landId,
         {
           page,
         },
       )
 
+      if (!farmCrops) {
+        return left(new ResourceNotFoundError())
+      }
+
     return right({
-      farms,
+      farmCrops,
     })
   }
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common'
 
 import { Either, left, right } from '@/core/either'
 
-import { FarmsRepository } from '@/domain/erm/application/repositories/farms-repository'
+import { ProducerFarmsRepository } from '@/domain/erm/application/repositories/producer-farms-repository'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
 type FetchTotalAreaUseCaseResponse = Either<
@@ -14,10 +14,10 @@ type FetchTotalAreaUseCaseResponse = Either<
 
 @Injectable()
 export class FetchTotalAreaUseCase {
-  constructor(private farmsRepository: FarmsRepository) {}
+  constructor(private producerFarmsRepository: ProducerFarmsRepository) {}
 
   async execute(): Promise<FetchTotalAreaUseCaseResponse> {
-    const totalArea = await this.farmsRepository.findTotalArea()
+    const totalArea = await this.producerFarmsRepository.findTotalArea()
 
     if (!totalArea || totalArea <= 0) {
       return left(new ResourceNotFoundError())

@@ -24,7 +24,7 @@ describe('Authenticate Admin', () => {
     )
   })
 
-  it('should be able to authenticate a admin', async () => {
+  it('Should be able to authenticate a admin', async () => {
     const admin = makeAdmin({
       email: 'johndoe@example.com',
       password: await fakeHasher.hash('123456'),

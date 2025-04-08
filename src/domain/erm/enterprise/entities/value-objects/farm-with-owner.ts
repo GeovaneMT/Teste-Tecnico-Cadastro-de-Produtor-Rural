@@ -5,6 +5,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { FarmCropList } from '@/domain/erm/enterprise/entities/farm-crop-list'
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
+import { Optional } from '@/core/types/optional'
 
 export interface FarmWithOwnerProps {
   farmId: UniqueEntityID
@@ -76,7 +77,17 @@ export class FarmWithOwner extends ValueObject<FarmWithOwnerProps> {
     return this.props.updatedAt
   }
 
-  static create(props: FarmWithOwnerProps) {
-    return new FarmWithOwner(props)
-  }
+    static create(
+      props: Optional<FarmWithOwnerProps, 'createdAt' | 'crops'>,
+    ) {
+      const farmWithOwner = new FarmWithOwner(
+        {
+          ...props,
+          crops: props.crops ?? new FarmCropList(),
+          createdAt: props.createdAt ?? new Date(),
+        },
+      )
+  
+      return farmWithOwner
+    }
 }

@@ -3,6 +3,7 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Notification } from '@/domain/notification/enterprise/entities/notification'
 
 export class PrismaNotificationMapper {
+
   static toDomain(raw: PrismaNotification): Notification {
     return Notification.create(
       {
@@ -31,4 +32,5 @@ export class PrismaNotificationMapper {
       createdAt: notification.createdAt,
     }
   }
+  
 }

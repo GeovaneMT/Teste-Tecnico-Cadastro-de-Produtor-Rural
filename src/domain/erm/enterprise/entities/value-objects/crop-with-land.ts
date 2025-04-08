@@ -1,6 +1,7 @@
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { ValueObject } from '@/core/entities/value-object'
 import { CropType } from '@prisma/client'
+
+import { ValueObject } from '@/core/entities/value-object'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 export interface CropWithLandProps {
   cropId: UniqueEntityID

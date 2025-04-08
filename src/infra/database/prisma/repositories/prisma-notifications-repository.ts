@@ -42,4 +42,5 @@ export class PrismaNotificationsRepository implements NotificationsRepository {
       data,
     })
   }
+  
 }

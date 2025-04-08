@@ -1,22 +1,28 @@
-import { Entity } from '@/core/entities/entity'
+import { Optional } from '@/core/types/optional'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
-export interface FarmCropProps {
+import { Crop, CropProps } from '@/domain/erm/enterprise/entities/crop'
+
+export interface FarmCropProps extends CropProps {
   farmId: UniqueEntityID
-  cropId: UniqueEntityID
 }
 
-export class FarmCrop extends Entity<FarmCropProps> {
+export class FarmCrop extends Crop<FarmCropProps> {
   get farmId() {
     return this.props.farmId
   }
 
-  get cropId() {
-    return this.props.cropId
-  }
-
-  static create(props: FarmCropProps, id?: UniqueEntityID) {
-    const farmCrop = new FarmCrop(props, id)
+  static create(
+    props: Optional<FarmCropProps, 'createdAt'>,
+    id?: UniqueEntityID,
+  ) {
+    const farmCrop = new FarmCrop(
+      {
+        ...props,
+        createdAt: props.createdAt ?? new Date(),
+      },
+      id,
+    )
 
     return farmCrop
   }

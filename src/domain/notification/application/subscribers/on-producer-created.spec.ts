@@ -5,12 +5,11 @@ import { OnProducerCreated } from '@/domain/notification/application/subscribers
 import { waitFor } from 'test/utils/wait-for'
 import { makeProducer } from 'test/factories/make-producer'
 
-import { InMemoryCropsRepository } from 'test/repositories/in-memory-crops-repository'
-import { InMemoryFarmsRepository } from 'test/repositories/in-memory-farms-repository'
 import { InMemoryAdminsRepository } from 'test/repositories/in-memory-admins-repository'
+import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository'
+
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
-import { InMemoryNotificationsRepository } from 'test/repositories/in-memory-notifications-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
 
 import {
@@ -19,14 +18,14 @@ import {
   SendNotificationUseCaseResponse,
 } from '@/domain/notification/application/use-cases/send-notification'
 
-let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
-let inMemoryProducersRepository: InMemoryProducersRepository
-let inMemoryNotificationsRepository: InMemoryNotificationsRepository
-let inMemoryAdminsRepository: InMemoryAdminsRepository
-let inMemoryCropsRepository: InMemoryCropsRepository
-let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
-let inMemoryFarmsRepository: InMemoryFarmsRepository
 let sendNotificationUseCase: SendNotificationUseCase
+
+let inMemoryAdminsRepository: InMemoryAdminsRepository
+let inMemoryNotificationsRepository: InMemoryNotificationsRepository
+
+let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
+let inMemoryProducersRepository: InMemoryProducersRepository
+let inMemoryProducerFarmsRepository: InMemoryProducerFarmsRepository
 
 let sendNotificationExecuteSpy: SpyInstance<
   [SendNotificationUseCaseRequest],
@@ -36,22 +35,16 @@ let sendNotificationExecuteSpy: SpyInstance<
 describe('On Producer Created', () => {
   beforeEach(() => {
 
-    inMemoryCropsRepository = new InMemoryCropsRepository()
     inMemoryAdminsRepository = new InMemoryAdminsRepository()
-    inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
-    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository()
     inMemoryNotificationsRepository = new InMemoryNotificationsRepository()
     
-    inMemoryFarmsRepository = new InMemoryFarmsRepository(
-      inMemoryCropsRepository, 
+    inMemoryFarmCropsRepository = new InMemoryFarmCropsRepository()
+    
+    inMemoryProducerFarmsRepository = new InMemoryProducerFarmsRepository(
       inMemoryFarmCropsRepository, 
-      inMemoryProducersRepository
     )
 
     inMemoryProducersRepository = new InMemoryProducersRepository(
-      inMemoryCropsRepository,
-      inMemoryFarmsRepository,
-      inMemoryFarmCropsRepository,
       inMemoryProducerFarmsRepository,
     )
 
@@ -61,7 +54,7 @@ describe('On Producer Created', () => {
 
     sendNotificationExecuteSpy = vi.spyOn(sendNotificationUseCase, 'execute')
 
-    new OnProducerCreated(inMemoryAdminsRepository, sendNotificationUseCase)
+    new OnProducerCreated(inMemoryProducersRepository, sendNotificationUseCase)
   })
 
   it('should  send a notification when an producer is created', async () => {

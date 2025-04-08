@@ -10,6 +10,7 @@ import { AdminsRepository } from '@/domain/erm/application/repositories/admins-r
 
 @Injectable()
 export class PrismaAdminsRepository implements AdminsRepository {
+  
   constructor(
     private prisma: PrismaService
   ) {}
@@ -76,4 +77,5 @@ export class PrismaAdminsRepository implements AdminsRepository {
 
     return PrismaAdminMapper.toDomain(admin)
   }
+
 }

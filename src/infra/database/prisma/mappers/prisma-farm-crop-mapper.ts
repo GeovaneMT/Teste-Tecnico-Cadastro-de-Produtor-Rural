@@ -10,18 +10,38 @@ export class PrismaFarmCropMapper {
 
     return FarmCrop.create(
       {
-        cropId: new UniqueEntityID(raw.id),
         farmId: new UniqueEntityID(raw.landId),
+
+        type: raw.type,
+        description: raw.description,
+
+        createdAt: raw.createdAt,
+        updatedAt: raw.updatedAt,
       },
       new UniqueEntityID(raw.id),
     )
+  }
+
+  static toPrisma(
+    farmCrop: FarmCrop,
+  ): Prisma.CropUncheckedCreateInput {
+    return {
+      id: farmCrop.id.toString(),
+      landId: farmCrop.farmId.toString(),
+
+      type: farmCrop.type,    
+      description: farmCrop.description,
+
+      createdAt: farmCrop.createdAt,
+      updatedAt: farmCrop.updatedAt,
+    }
   }
 
   static toPrismaUpdateMany(
     crops: FarmCrop[],
   ): Prisma.CropUpdateManyArgs {
     const cropIds = crops.map((crop) => {
-      return crop.cropId.toString()
+      return crop.id.toString()
     })
 
     return {
@@ -35,4 +55,5 @@ export class PrismaFarmCropMapper {
       },
     }
   }
+
 }

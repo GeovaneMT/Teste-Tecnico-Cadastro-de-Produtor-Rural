@@ -6,57 +6,57 @@ import { CryptographyModule } from '@/infra/cryptography/cryptography.module'
 import { AuthenticateController } from '@/infra/http/controllers/authenticate.controller'
 import { ReadNotificationController } from '@/infra/http/controllers/read-notification.controller'
 
-import { CreateCropController } from '@/infra/http/controllers/create-crop.controller'
-import { CreateFarmController } from '@/infra/http/controllers/create-farm.controller'
+import { CreateFarmCropController } from '@/infra/http/controllers/create-farm-crop.controller'
+import { CreateProducerFarmController } from '@/infra/http/controllers/create-producer-farm.controller'
 import { CreateAccountController } from '@/infra/http/controllers/create-account.controller'
 import { CreateProducerController } from '@/infra/http/controllers/create-producer.controller'
 
-import { GetCropByIdController } from '@/infra/http/controllers/get-crop-by-id.controller'
-import { GetFarmByIdController } from '@/infra/http/controllers/get-farm-by-id.controller'
+import { GetCropByIdController } from '@/infra/http/controllers/get-farm-crop-by-id.controller'
+import { GetFarmByIdController } from '@/infra/http/controllers/get-producer-farm-by-id.controller'
 import { GetCropIndicatorsController } from '@/infra/http/controllers/get-crop-indicators.controller'
 import { GetProducerByEmailController } from '@/infra/http/controllers/get-producer-by-email.controller'
 
 import { FetchTotalAreaController } from '@/infra/http/controllers/fetch-total-area.controller'
 import { FetchTotalFarmsController } from '@/infra/http/controllers/fetch-total-farms.controller'
-import { FetchRecentCropsController } from '@/infra/http/controllers/fetch-recent-crops.controller'
-import { FetchRecentFarmsController } from '@/infra/http/controllers/fetch-recent-farms.controller'
+import { FetchRecentFarmCropsController } from '@/infra/http/controllers/fetch-recent-farm-crops.controller'
+import { FetchRecentProducerFarmsController } from '@/infra/http/controllers/fetch-recent-producer-farms.controller'
 import { FetchRecentProducersController } from '@/infra/http/controllers/fetch-recent-producers.controller'
 
-import { EditCropController } from '@/infra/http/controllers/edit-crop.controller'
-import { EditFarmController } from '@/infra/http/controllers/edit-farm.controller'
+import { EditCropController } from '@/infra/http/controllers/edit-farm-crop.controller'
+import { EditProducerFarmController } from '@/infra/http/controllers/edit-producer-farm.controller'
 import { EditProducerController } from '@/infra/http/controllers/edit-producer.controller'
 
-import { DeleteCropController } from '@/infra/http/controllers/delete-crop'
-import { DeleteFarmController } from '@/infra/http/controllers/delete-farm'
-import { DeleteProducerController } from '@/infra/http/controllers/delete-producer'
+import { DeleteFarmCropController } from '@/infra/http/controllers/delete-farm-crop.controller'
+import { DeleteFarmController } from '@/infra/http/controllers/delete-producer-farm.controller'
+import { DeleteProducerController } from '@/infra/http/controllers/delete-producer.controller'
 
 
 
 import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/authenticate-admin'
 import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 
-import { CreateCropUseCase } from '@/domain/erm/application/use-cases/create-crop'
-import { CreateFarmUseCase } from '@/domain/erm/application/use-cases/create-farm'
+import { CreateFarmCropUseCase } from '@/domain/erm/application/use-cases/create-farm-crop'
+import { CreateProducerFarmUseCase } from '@/domain/erm/application/use-cases/create-producer-farm'
 import { RegisterAdminUseCase } from '@/domain/erm/application/use-cases/register-admin'
 import { CreateProducerUseCase } from '@/domain/erm/application/use-cases/create-producer'
 
 import { FetchTotalAreaUseCase } from '@/domain/erm/application/use-cases/fetch-total-area'
 import { FetchTotalFarmsUseCase } from '@/domain/erm/application/use-cases/fetch-total-farms'
-import { FetchRecentCropsUseCase } from '@/domain/erm/application/use-cases/fetch-recent-crops'
-import { FetchRecentFarmsUseCase } from '@/domain/erm/application/use-cases/fetch-recent-farms'
+import { FetchRecentFarmCropsUseCase } from '@/domain/erm/application/use-cases/fetch-recent-farm-crops'
+import { FetchRecentProducerFarmsUseCase } from '@/domain/erm/application/use-cases/fetch-recent-producer-farms'
 import { FetchRecentProducersUseCase } from '@/domain/erm/application/use-cases/fetch-recent-producers'
 
-import { GetCropByIdUseCase } from '@/domain/erm/application/use-cases/get-crop-by-id'
-import { GetFarmByIdUseCase } from '@/domain/erm/application/use-cases/get-farm-by-id'
+import { GetFarmCropByIdUseCase } from '@/domain/erm/application/use-cases/get-farm-crop-by-id'
+import { GetProducerFarmByIdUseCase } from '@/domain/erm/application/use-cases/get-producer-farm-by-id'
 import { GetCropIndicatorsUseCase } from '@/domain/erm/application/use-cases/get-crop-indicators'
 import { GetProducerByEmailUseCase } from '@/domain/erm/application/use-cases/get-producer-by-email'
 
-import { EditCropUseCase } from '@/domain/erm/application/use-cases/edit-crop'
-import { EditFarmUseCase } from '@/domain/erm/application/use-cases/edit-farm'
+import { EditFarmCropUseCase } from '@/domain/erm/application/use-cases/edit-farm-crop'
+import { EditProducerFarmUseCase } from '@/domain/erm/application/use-cases/edit-producer-farm'
 import { EditProducerUseCase } from '@/domain/erm/application/use-cases/edit-producer'
 
-import { DeleteCropUseCase } from '@/domain/erm/application/use-cases/delete-crop'
-import { DeleteFarmUseCase } from '@/domain/erm/application/use-cases/delete-farm'
+import { DeleteFarmCropUseCase } from '@/domain/erm/application/use-cases/delete-farm-crop'
+import { DeleteProducerFarmUseCase } from '@/domain/erm/application/use-cases/delete-producer-farm'
 import { DeleteProducerUseCase } from '@/domain/erm/application/use-cases/delete-producer'
 
 @Module({
@@ -65,15 +65,15 @@ import { DeleteProducerUseCase } from '@/domain/erm/application/use-cases/delete
     AuthenticateController,
     ReadNotificationController,
 
-    CreateCropController,
-    CreateFarmController,
+    CreateFarmCropController,
+    CreateProducerFarmController,
     CreateAccountController,
     CreateProducerController,
 
     FetchTotalAreaController,
     FetchTotalFarmsController,
-    FetchRecentCropsController,
-    FetchRecentFarmsController,
+    FetchRecentFarmCropsController,
+    FetchRecentProducerFarmsController,
     FetchRecentProducersController,
 
     GetCropByIdController,
@@ -82,10 +82,10 @@ import { DeleteProducerUseCase } from '@/domain/erm/application/use-cases/delete
     GetProducerByEmailController,
 
     EditCropController,
-    EditFarmController,
+    EditProducerFarmController,
     EditProducerController,
 
-    DeleteCropController,
+    DeleteFarmCropController,
     DeleteFarmController,
     DeleteProducerController,
   ],
@@ -93,28 +93,28 @@ import { DeleteProducerUseCase } from '@/domain/erm/application/use-cases/delete
     AuthenticateAdminUseCase,
     ReadNotificationUseCase,
 
-    CreateCropUseCase,
-    CreateFarmUseCase,
+    CreateFarmCropUseCase,
+    CreateProducerFarmUseCase,
     RegisterAdminUseCase,
     CreateProducerUseCase,
 
     FetchTotalAreaUseCase,
     FetchTotalFarmsUseCase,
-    FetchRecentCropsUseCase,
-    FetchRecentFarmsUseCase,
+    FetchRecentFarmCropsUseCase,
+    FetchRecentProducerFarmsUseCase,
     FetchRecentProducersUseCase,
     
-    GetCropByIdUseCase,
-    GetFarmByIdUseCase,
+    GetFarmCropByIdUseCase,
+    GetProducerFarmByIdUseCase,
     GetCropIndicatorsUseCase,
     GetProducerByEmailUseCase,
 
-    EditCropUseCase,
-    EditFarmUseCase,
+    EditFarmCropUseCase,
+    EditProducerFarmUseCase,
     EditProducerUseCase,
 
-    DeleteCropUseCase,
-    DeleteFarmUseCase,
+    DeleteFarmCropUseCase,
+    DeleteProducerFarmUseCase,
     DeleteProducerUseCase,
   ],
 })

@@ -10,9 +10,11 @@ interface deleteProducerUseCaseRequest {
   producerId: string
 }
 
+type successMessage = { message: string }
+
 type deleteProducerUseCaseResponse = Either<
   ResourceNotFoundError | NotAllowedError,
-  null
+  successMessage
 >
 
 @Injectable()
@@ -32,6 +34,6 @@ export class DeleteProducerUseCase {
 
     await this.producersRepository.delete(producer)
 
-    return right(null)
+    return right({message: 'producer deleted successfully'})
   }
 }
