@@ -15,7 +15,7 @@ interface CreateProducerFarmUseCaseRequest {
   city: string
   state: States
 
-  farmArea: FarmArea
+  farmArea: string
   vegetationArea: string
   agriculturalArea: string  
 }

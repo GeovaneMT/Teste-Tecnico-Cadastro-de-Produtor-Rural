@@ -10,6 +10,7 @@ import {
 } from '@/domain/erm/enterprise/entities/farm-crop'
 import { CropType } from '@prisma/client'
 import { faker } from '@faker-js/faker'
+import { PrismaFarmCropMapper } from '@/infra/database/prisma/mappers/prisma-farm-crop-mapper'
 
 export function makeFarmCrop(
   override: Partial<FarmCropProps> = {},
@@ -44,13 +45,19 @@ export class FarmCropFactory {
   async makePrismaFarmCrop(data: Partial<FarmCropProps> = {}): Promise<FarmCrop> {
     const farmCrop = makeFarmCrop(data)
 
-    await this.prisma.crop.update({
-      where: {
-        id: farmCrop.id.toString(),
-      },
-      data: {
-        landId: farmCrop.farmId.toString(),
-      },
+    await this.prisma.crop.create({
+      // data: {
+      //   id: farmCrop.id.toString(),
+
+      //   landId: farmCrop.farmId.toString(),
+        
+      //   type: farmCrop.type,
+      //   description: farmCrop.description,
+
+      //   createdAt: farmCrop.createdAt,
+      //   updatedAt: farmCrop.updatedAt,
+      // },
+      data: PrismaFarmCropMapper.toPrisma(farmCrop)
     })
 
     return farmCrop

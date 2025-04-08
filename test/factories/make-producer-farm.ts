@@ -7,6 +7,7 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 import { ProducerFarm, ProducerFarmProps } from '@/domain/erm/enterprise/entities/producer-farm'
+import { PrismaProducerFarmMapper } from '@/infra/database/prisma/mappers/prisma-producer-farm-mapper'
 
 export function makeProducerFarm(
   override: Partial<ProducerFarmProps> = {},
@@ -51,13 +52,24 @@ export class ProducerFarmFactory {
   async makePrismaProducerFarm(data: Partial<ProducerFarmProps> = {}): Promise<ProducerFarm> {
     const producerFarm = makeProducerFarm(data)
 
-    await this.prisma.farm.update({
-      where: {
-        id: producerFarm.id.toString(),
-      },
-      data: {
-        ownerId: producerFarm.producerId.toString(),
-      },
+    await this.prisma.farm.create({
+      // data: {
+      //   id: producerFarm.id.toString(),
+
+      //   ownerId: producerFarm.producerId.toString(),
+        
+      //   name: producerFarm.name,
+      //   city: producerFarm.city,
+      //   state: producerFarm.state,
+        
+      //   farmArea: producerFarm.farmArea.getValue().toString(),
+      //   agriculturalArea: producerFarm.agriculturalArea,
+      //   vegetationArea: producerFarm.vegetationArea,
+
+      //   createdAt: producerFarm.createdAt,
+      //   updatedAt: producerFarm.updatedAt,
+      // },
+      data: PrismaProducerFarmMapper.toPrisma(producerFarm),
     })
 
     return producerFarm

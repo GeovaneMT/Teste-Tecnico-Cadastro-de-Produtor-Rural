@@ -46,7 +46,7 @@ describe('Edit producer farm', () => {
       city: 'farm_city',
       state: 'SP',
 
-      farmArea: FarmArea.create({ farmArea: 10, agriculturalArea: 4, vegetationArea: 4 }),
+      farmArea: '10',
       vegetationArea: '4',
       agriculturalArea: '4',
     })

@@ -75,7 +75,7 @@ describe('Fetch recent farm crops (E2E)', () => {
     
     expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({
-      famrCrops: expect.arrayContaining([
+      farmCrops: expect.arrayContaining([
         expect.objectContaining({ description: 'Farm Crop 01' }),
         expect.objectContaining({ description: 'Farm Crop 02' }),
       ]),

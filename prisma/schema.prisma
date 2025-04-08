@@ -97,7 +97,7 @@ model Farm {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime? @updatedAt @map("updated_at")
 
-  owner Producer @relation(fields: [ownerId], references: [id])
+  owner Producer @relation(fields: [ownerId], references: [id], onDelete: Cascade)
 
   @@map("farms")
 }
@@ -126,8 +126,8 @@ model Notification {
 
   createdAt DateTime @default(now()) @map("created_at")
 
-  user      User?    @relation(fields: [userId], references: [id])
-  recipient Producer @relation(fields: [recipientId], references: [id])
+  user      User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  recipient Producer @relation(fields: [recipientId], references: [id], onDelete: Cascade)
 
   @@index([recipientId, readAt])
   @@map("notifications")

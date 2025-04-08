@@ -70,7 +70,7 @@ describe('Get farm by id (E2E)', () => {
     const farmId = farm.id.toString()
 
     const response = await request(app.getHttpServer())
-      .get(`/farms/${farmId}`)
+      .get(`/producer-farms/${farmId}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send()
 
@@ -79,16 +79,29 @@ describe('Get farm by id (E2E)', () => {
     }
     
     expect(response.statusCode).toBe(200)
+
     expect(response.body).toEqual({
-      producerFarm: expect.objectContaining({
+      producerFarmDetails: expect.objectContaining({
         name: 'Farm 01',
-        farmCrops: [
+        crops: [
           expect.objectContaining({
             id: crop.id.toString(),
           }),
         ],
+        city: expect.any(String),
+        state: expect.any(String),
+        agriculturalArea: expect.any(String),
+        vegetationArea: expect.any(String),
+        farmArea: expect.objectContaining({
+          value: expect.any(Number),
+        }),
+        createdAt: expect.any(String),
+        updatedAt: expect.any(String),
+        farmId: expect.any(String),
+        ownerId: expect.any(String),
       }),
     })
+
 
   })
 })

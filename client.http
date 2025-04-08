@@ -1,7 +1,5 @@
 @baseUrl = http://localhost:3333
 @authToken = {{authenticate.response.body.access_token}}
-@FarmId = {{create_farm.response.body.farm._id.value}}
-@ProducerId = {{create_producer.response.body.producer._id.value}}
 
 # @name create_account
 POST {{baseUrl}}/accounts
@@ -35,25 +33,6 @@ Authorization: Bearer {{authToken}}
   "name": "Geovanne",
   "email": "ge@email.com",
   "document": "529.982.247-25",
-  "farms": []
-}
-
-###
-
-# @name create_farm
-POST {{baseUrl}}/producers/{{ProducerId}}/farms
-Content-Type: application/json
-Authorization: Bearer {{authToken}}
-
-{
-  "ownerId": "{{ProducerId}}",
-  "name": "Test Farm",
-  "city": "City",
-  "state": "SP",
-  "farmArea": 100,
-  "vegetationArea": 80,
-  "agriculturalArea": 20,
-  "crops": []
 }
 
 ###

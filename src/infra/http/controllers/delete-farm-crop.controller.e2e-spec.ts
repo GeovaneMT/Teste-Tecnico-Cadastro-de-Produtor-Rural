@@ -66,7 +66,7 @@ describe('Delete producer (E2E)', () => {
     const farmCropId = farmCrop.id.toString()
 
     const response = await request(app.getHttpServer())
-      .delete(`/crops/${farmCropId}`)
+      .delete(`/farm-crops/${farmCropId}`)
       .set('Authorization', `Bearer ${accessToken}`)
 
     expect(response.statusCode).toBe(204)

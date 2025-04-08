@@ -61,7 +61,7 @@ describe('Create farm crop (E2E)', () => {
       .post(`/farm-crops`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
-        farm: producerFarm.id.toString(), 
+        farmId: producerFarm.id.toString(), 
 
         type: 'SOYBEANS',
         description: 'Crop soy description',

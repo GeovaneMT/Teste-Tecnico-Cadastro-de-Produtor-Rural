@@ -40,7 +40,7 @@ export class CreateProducerFarmController {
       city,
       state,
       
-      farmArea: FarmArea.create({ farmArea, agriculturalArea, vegetationArea }),
+      farmArea: farmArea.toString(),
       vegetationArea: vegetationArea.toString(),
       agriculturalArea: agriculturalArea.toString(),
     })

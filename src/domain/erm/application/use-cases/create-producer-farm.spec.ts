@@ -1,9 +1,9 @@
 import { CreateProducerFarmUseCase } from '@/domain/erm/application/use-cases/create-producer-farm'
+import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 import { InMemoryProducersRepository } from 'test/repositories/in-memory-producers-repository'
 import { InMemoryFarmCropsRepository } from 'test/repositories/in-memory-farm-crops-repository'
 import { InMemoryProducerFarmsRepository } from 'test/repositories/in-memory-producer-farms-repository'
-import { FarmArea } from '../../enterprise/entities/value-objects/farm-area'
 
 let inMemoryFarmCropsRepository: InMemoryFarmCropsRepository
 let inMemoryProducersRepository: InMemoryProducersRepository
@@ -30,11 +30,12 @@ describe('Create producer farm', () => {
 
     const result = await sut.execute({
       producerId: '1',
+
       name: 'farm_name',
       city: 'farm_city',
       state: 'SP',
 
-      farmArea: FarmArea.create({ farmArea: 10, agriculturalArea: 4, vegetationArea: 4 }),
+      farmArea: '10',
       vegetationArea: '4',
       agriculturalArea: '4',
     })
