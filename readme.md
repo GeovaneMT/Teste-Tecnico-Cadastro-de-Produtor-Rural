@@ -40,7 +40,7 @@ This is a NodeJS backend application using Postgres as the database, built to ma
 **Getting Started**
 -------------------
 
-1. Clone the repository: `git clone https://github.com/your-repo/rural-producer-registry.git`
+1. Clone the repository: `git clone https://github.com/GeovaneMT/Teste-Tecnico-Cadastro-de-Produtor-Rural.git`
 2. Install dependencies: `npm install`
 3. Create a Postgres database and update the `database.json` file with your credentials
 4. Run the application: `npm start`
