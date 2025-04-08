@@ -41,9 +41,9 @@ This is a NodeJS backend application using Postgres as the database, built to ma
 -------------------
 
 1. Clone the repository: `git clone https://github.com/GeovaneMT/Teste-Tecnico-Cadastro-de-Produtor-Rural.git`
-2. Install dependencies: `npm install`
-3. Create a Postgres database and update the `database.json` file with your credentials
-4. Run the application: `npm start`
+2. Install dependencies: `pnpm install`
+3. Create a Postgres database using the docker compose and update the `database.json` file with your credentials
+4. Run the application: `pnpm start`
 
 **Endpoints**
 ------------
@@ -56,16 +56,26 @@ This is a NodeJS backend application using Postgres as the database, built to ma
 * `PUT /producers/:id`: Update a rural producer
 * `DELETE /producers/:id`: Delete a rural producer
 
-### Aggregated Data Endpoints
+### Farms Endpoints
 
-* `GET /aggregated-data/total-farms`: Retrieve the total number of farms
-* `GET /aggregated-data/total-hectares`: Retrieve the total number of hectares
-* `GET /aggregated-data/crop-production-by-state`: Retrieve crop production data by state
+* `POST /producer-farms`: Create a new rural producer-farm
+* `GET /producer-farms`: Retrieve a list of all rural producer-farms
+* `GET /producer-farms/:id`: Retrieve a single rural producer-farm by ID
+* `PUT /producer-farms/:id`: Update a rural producer-farm
+* `DELETE /producer-farms/:id`: Delete a rural producer-farm
+
+### Crops Endpoints
+
+* `POST /farm-crops`: Create a new rural farm-crop
+* `GET /farm-crops`: Retrieve a list of all rural farm-crops
+* `GET /farm-crops/:id`: Retrieve a single rural farm-crop by ID
+* `PUT /farm-crops/:id`: Update a rural farm-crop
+* `DELETE /farm-crops/:id`: Delete a rural farm-crop
 
 **Database Schema**
 ------------------
 
-The database schema is defined in the `database.json` file. The schema consists of the following tables:
+The database schema is defined in the `database.json` file. The schema consists of the following main tables:
 
 * `producers`: stores rural producer data
 * `farms`: stores farm data
