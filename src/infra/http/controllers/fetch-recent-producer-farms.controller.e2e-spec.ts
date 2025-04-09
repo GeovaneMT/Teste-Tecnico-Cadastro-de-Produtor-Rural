@@ -81,7 +81,7 @@ describe('Fetch recent producer farms (E2E)', () => {
     })
 
     const response = await request(app.getHttpServer())
-    .get('/farms')
+    .get('/producer-farms')
     .set('Authorization', `Bearer ${accessToken}`)
     .send()
     

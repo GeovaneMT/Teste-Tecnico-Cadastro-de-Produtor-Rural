@@ -14,7 +14,7 @@ import { ProducerFactory } from 'test/factories/make-producer'
 import { FarmCropFactory } from 'test/factories/make-farm-crop'
 import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
 
-describe('Edit producer (E2E)', () => {
+describe('Edit a producer (E2E)', () => {
   let jwt: JwtService
   let app: INestApplication
   let prisma: PrismaService

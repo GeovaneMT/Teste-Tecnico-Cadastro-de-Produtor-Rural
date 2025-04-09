@@ -3,7 +3,7 @@ import { CropPresenter } from '@/infra/http/presenters/farm-crop-presenter'
 import { GetFarmCropByIdUseCase } from '@/domain/erm/application/use-cases/get-farm-crop-by-id'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
-@Controller('/crops/:id')
+@Controller('/farm-crops/:id')
 export class GetCropByIdController {
   constructor(private getFarmCropById: GetFarmCropByIdUseCase) {}
 

@@ -14,7 +14,7 @@ import { ProducerFactory } from 'test/factories/make-producer'
 import { FarmCropFactory } from 'test/factories/make-farm-crop'
 import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
 
-describe('Edit crop (E2E)', () => {
+describe('Edit a farm crop (E2E)', () => {
   let jwt: JwtService
   let app: INestApplication
   let prisma: PrismaService
@@ -67,7 +67,7 @@ describe('Edit crop (E2E)', () => {
     const farmCropId = farmCrop.id.toString()
 
     const response = await request(app.getHttpServer())
-      .put(`/crops/${farmCropId}`)
+      .put(`farm-/crops/${farmCropId}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         landId: producerFarmId,

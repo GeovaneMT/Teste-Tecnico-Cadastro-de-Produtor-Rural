@@ -14,7 +14,7 @@ import { ProducerFactory } from 'test/factories/make-producer'
 import { FarmCropFactory } from 'test/factories/make-farm-crop'
 import { ProducerFarmFactory } from 'test/factories/make-producer-farm'
 
-describe('Get farm by id (E2E)', () => {
+describe('Get farm crop by id (E2E)', () => {
   let jwt: JwtService
   let app: INestApplication
   let prisma: PrismaService
@@ -47,7 +47,7 @@ describe('Get farm by id (E2E)', () => {
     await app.init()
   })
 
-  test('[GET] /crops/:id', async () => {
+  test('[GET] /farm-crops/:id', async () => {
     const user = await adminFactory.makePrismaAdmin({
       name: 'John Doe',
     })
@@ -67,7 +67,7 @@ describe('Get farm by id (E2E)', () => {
     const farmCropId = farmCrop.id.toString()
 
     const response = await request(app.getHttpServer())
-      .get(`/crops/${farmCropId}`)
+      .get(`/farm-crops/${farmCropId}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send()
 

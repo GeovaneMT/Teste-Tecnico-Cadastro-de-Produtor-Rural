@@ -25,7 +25,7 @@ const bodyValidationPipe = new ZodValidationPipe(EditFarmCropBodySchema)
 
 type EditFarmCropBodySchema = z.infer<typeof EditFarmCropBodySchema>
 
-@Controller('crops/:id')
+@Controller('farm-crops/:id')
 export class EditCropController {
   constructor(private editFarmCrop: EditFarmCropUseCase) {}
 
