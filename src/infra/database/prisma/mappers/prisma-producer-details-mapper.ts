@@ -14,7 +14,6 @@ type PrismaProducerDetails = PrismaProducer & {
 export class PrismaProducerDetailsMapper {
 
   static toDomain(raw: PrismaProducerDetails): ProducerDetails {
-        
     return ProducerDetails.create({
       producerId: new UniqueEntityID(raw.id),
 
