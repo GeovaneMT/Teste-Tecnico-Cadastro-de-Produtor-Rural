@@ -306,7 +306,7 @@ export class PrismaProducerFarmsRepository implements ProducerFarmsRepository {
 
     await this.cache.set(
       `producer:${id}:details`,
-      JSON.stringify(farm),
+      JSON.stringify(farmDetails),
     )
 
     return farmDetails

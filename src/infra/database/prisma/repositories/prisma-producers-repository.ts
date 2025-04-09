@@ -7,6 +7,7 @@ import { PrismaService } from '@/infra/database/prisma/prisma.service'
 import { CacheRepository } from '@/infra/cache/cache-repository'
 
 import { PrismaProducerMapper } from '@/infra/database/prisma/mappers/prisma-producer-mapper'
+import { PrismaFarmDetailsMapper } from '@/infra/database/prisma/mappers/prisma-farm-details-mapper'
 import { PrismaProducerDetailsMapper } from '@/infra/database/prisma/mappers/prisma-producer-details-mapper'
 
 import { Document } from '@/domain/erm/enterprise/entities/value-objects/document'
@@ -75,6 +76,10 @@ export class PrismaProducersRepository implements ProducersRepository {
         id: data.id,
       },
     })
+
+    this.cache.delete(`producer:${data.id}:details`),
+    this.cache.delete(`producer:${data.email}:details`),
+    this.cache.delete(`producer:${data.document}:details`)
   }
   
   async findById(id: string): Promise<Producer | null> {
@@ -120,7 +125,7 @@ export class PrismaProducersRepository implements ProducersRepository {
   }
 
   async findDetailsById(id: string): Promise<ProducerDetails | null> {
-    const cacheHit = await this.cache.get(`question:${id}:details`)
+    const cacheHit = await this.cache.get(`producer:${id}:details`)
 
     if (cacheHit) {
       const producer = JSON.parse(cacheHit)
@@ -151,18 +156,15 @@ export class PrismaProducersRepository implements ProducersRepository {
     })
 
     await this.cache.set(
-      `question:${id}:details`,
-      JSON.stringify({
-        ...producer,
-        farmsDetails: producer.farms,
-      }),
+      `producer:${id}:details`,
+      JSON.stringify(producerDetails),
     )
 
     return producerDetails
   }
 
   async findDetailsByEmail(email: string): Promise<ProducerDetails | null> {
-    const cacheHit = await this.cache.get(`question:${email}:details`)
+    const cacheHit = await this.cache.get(`producer:${email}:details`)
 
     if (cacheHit) {
       const producer = JSON.parse(cacheHit)
@@ -187,24 +189,28 @@ export class PrismaProducersRepository implements ProducersRepository {
       return null
     }
 
+    const farmsDetails = producer.farms.map((farm) => 
+      PrismaFarmDetailsMapper.toDomain({
+        ...farm,
+        owner: farm.owner,
+      })
+    )
+
     const producerDetails = PrismaProducerDetailsMapper.toDomain({
       ...producer,
       farmsDetails: producer.farms,
     })
 
     await this.cache.set(
-      `question:${email}:details`,
-      JSON.stringify({
-        ...producer,
-        farmsDetails: producer.farms,
-      }),
+      `producer:${email}:details`,
+      JSON.stringify(producerDetails),
     )
 
     return producerDetails
   }
 
   async findDetailsByDocument(document: Document): Promise<ProducerDetails | null> {
-    const cacheHit = await this.cache.get(`question:${document}:details`)
+    const cacheHit = await this.cache.get(`producer:${document}:details`)
 
     if (cacheHit) {
       const producer = JSON.parse(cacheHit)
@@ -235,11 +241,8 @@ export class PrismaProducersRepository implements ProducersRepository {
     })
 
     await this.cache.set(
-      `question:${document}:details`,
-      JSON.stringify({
-        ...producer,
-        farmsDetails: producer.farms,
-      }),
+      `producer:${document}:details`,
+      JSON.stringify(producerDetails),
     )
 
     return producerDetails
