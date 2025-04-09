@@ -40,7 +40,7 @@ This is a NodeJS backend application using Postgres as the database, built to ma
 The application uses token-based authentication to secure its endpoints. The authentication system is built with the following key aspects:
 
 1. **Token Generation and Verification**  
-   When a user successfully logs in via the `/sessions` endpoint, the backend verifies the submitted credentials against the stored, hashed password. If the credentials are valid, the system generates an access token (typically a JWT) that is signed using RSA keys.  
+   When a user successfully logs in via the `/sessions` endpoint, the backend verifies the submitted credentials against the stored, hashed password. If the credentials are valid, the system generates an access token (JWT) that is signed using RSA keys.  
    
    The tokens are signed with a private key and can be verified by using the corresponding public key. This ensures that tokens issued by the application are tamper-resistant and that only the application can generate valid tokens.
 
@@ -98,7 +98,7 @@ don't forget to run pnpx prisma migrate to create a prisma client
 ### indicators Endpoints
 
 * `GET /totalArea`: Returns the total area of all farms
-* `GET /totalFarmsArea`: Returns the total area of all farms
+* `GET /totalFarmsArea`: Returns the total farms quantity
 * `GET /indicators`:Returns the total planted crops, by state.
 
 **Validation Logic**
