@@ -21,7 +21,14 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
         const publicKey = env.get('JWT_PUBLIC_KEY')
 
         return {
-          signOptions: { algorithm: 'RS256' },
+          signOptions: { 
+            algorithm: 'RS256',
+            expiresIn: env.get('JWT_EXPIRES_IN'),
+          },
+          cookie: {
+            cookieName: 'refreshToken',
+            signed: false,
+          },
           privateKey: Buffer.from(privateKey, 'base64'),
           publicKey: Buffer.from(publicKey, 'base64'),
         }

@@ -1,18 +1,20 @@
-# development url
-@baseUrl = http://localhost:3333
+# Development URL
+# @baseUrl = http://localhost:3333
 
-#production url
-# @baseUrl = https://rural-erm.onrender.com
+# Production URL
+@baseUrl = https://your-production-url.com
 @authToken = {{authenticate.response.body.access_token}}
+
+###
 
 # @name create_account
 POST {{baseUrl}}/accounts
 Content-Type: application/json
 
 {
-  "name": "Geovane M.T",
-  "email": "geovane@test.com.br",
-  "password": "123456"
+  "name": "your name",
+  "email": "your email",
+  "password": "your password"
 }
 
 ###
@@ -22,19 +24,8 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "email": "geovane@test.com.br",
-  "password": "123456"
-}
-
-###
-
-# @name refresh
-PATCH {{baseUrl}}/token/refresh
-Content-Type: application/json
-
-{
-  "email": "geovane@test.com.br",
-  "password": "123456"
+  "email": "your email",
+  "password": "your password"
 }
 
 ###
@@ -45,9 +36,9 @@ Content-Type: application/json
 Authorization: Bearer {{authToken}}
 
 {
-  "name": "Geovanne",
-  "email": "geovane@email.com",
-  "document": "48984114871"
+  "name": "producer_name",
+  "email": "producer_email@example.com",
+  "document": "producer_document"
 }
 
 ###
@@ -60,6 +51,6 @@ Authorization: Bearer {{authToken}}
 ###
 
 # @name get_producer_by_email
-GET {{baseUrl}}/producers/ge@email.com
+GET {{baseUrl}}/producers/producer_email@example.com
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

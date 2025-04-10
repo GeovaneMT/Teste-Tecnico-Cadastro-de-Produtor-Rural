@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common'
 
 import { Either, left, right } from '@/core/either'
 
+import { EnvService } from '@/infra/env/env.service'
+
 import { Encrypter } from '@/domain/erm/application/cryptography/encrypter'
 import { HashComparer } from '@/domain/erm/application/cryptography/hash-comparer'
 import { AdminsRepository } from '@/domain/erm/application/repositories/admins-repository'
@@ -16,6 +18,7 @@ type AuthenticateAdminUseCaseResponse = Either<
   WrongCredentialsError,
   {
     accessToken: string
+    refreshToken: string
   }
 >
 
@@ -25,6 +28,7 @@ export class AuthenticateAdminUseCase {
     private adminsRepository: AdminsRepository,
     private hashComparer: HashComparer,
     private encrypter: Encrypter,
+    private env: EnvService,
   ) {}
 
   async execute({
@@ -50,8 +54,15 @@ export class AuthenticateAdminUseCase {
       sub: admin.id.toString(),
     })
 
+    const refreshTokenExpiresIn = this.env.get('JWT_REFRESH_TOKEN_EXPIRES_IN') || '7d'
+    const refreshToken = await this.encrypter.encrypt({
+      sub: admin.id.toString(),
+      expiresIn: refreshTokenExpiresIn,
+    })
+
     return right({
       accessToken,
+      refreshToken,
     })
   }
 }

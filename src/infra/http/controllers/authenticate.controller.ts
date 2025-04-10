@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { Response as ExpressResponse } from 'express'
 
 import { Public } from '@/infra/auth/public'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
@@ -7,6 +8,7 @@ import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/aut
 import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
 
 import {
+  Res,
   Body,
   Post,
   UsePipes,
@@ -14,6 +16,7 @@ import {
   BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common'
+
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -29,7 +32,7 @@ export class AuthenticateController {
 
   @Post()
   @UsePipes(new ZodValidationPipe(authenticateBodySchema))
-  async handle(@Body() body: AuthenticateBodySchema) {
+  async handle(@Body() body: AuthenticateBodySchema, @Res({ passthrough: true }) response: ExpressResponse) {
     const { email, password } = body
 
     const result = await this.authenticateAdmin.execute({
@@ -48,7 +51,14 @@ export class AuthenticateController {
       }
     }
 
-    const { accessToken } = result.value
+    const { accessToken, refreshToken } = result.value
+
+    response.cookie('refresh_token', refreshToken, {
+      path: '/',
+      secure: false,
+      sameSite: true,
+      httpOnly: true,
+    })
 
     return {
       access_token: accessToken,

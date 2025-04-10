@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common'
+import { EnvModule } from '@/infra/env/env.module'
 
 import { DatabaseModule } from '@/infra/database/database.module'
 import { CryptographyModule } from '@/infra/cryptography/cryptography.module'
 
+import { RefreshController } from '@/infra/http/controllers/refresh.controller'
 import { AuthenticateController } from '@/infra/http/controllers/authenticate.controller'
 import { ReadNotificationController } from '@/infra/http/controllers/read-notification.controller'
 
@@ -32,6 +34,7 @@ import { DeleteProducerController } from '@/infra/http/controllers/delete-produc
 
 
 
+import { RefreshAdminUseCase } from '@/domain/erm/application/use-cases/refresh-admin'
 import { AuthenticateAdminUseCase } from '@/domain/erm/application/use-cases/authenticate-admin'
 import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 
@@ -60,8 +63,9 @@ import { DeleteProducerFarmUseCase } from '@/domain/erm/application/use-cases/de
 import { DeleteProducerUseCase } from '@/domain/erm/application/use-cases/delete-producer'
 
 @Module({
-  imports: [DatabaseModule, CryptographyModule],
+  imports: [DatabaseModule, CryptographyModule, EnvModule],
   controllers: [
+    RefreshController,
     AuthenticateController,
     ReadNotificationController,
 
@@ -90,6 +94,7 @@ import { DeleteProducerUseCase } from '@/domain/erm/application/use-cases/delete
     DeleteProducerController,
   ],
   providers: [
+    RefreshAdminUseCase,
     AuthenticateAdminUseCase,
     ReadNotificationUseCase,
 

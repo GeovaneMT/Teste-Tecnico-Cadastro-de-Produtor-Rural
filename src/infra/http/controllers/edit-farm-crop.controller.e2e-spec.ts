@@ -67,7 +67,7 @@ describe('Edit a farm crop (E2E)', () => {
     const farmCropId = farmCrop.id.toString()
 
     const response = await request(app.getHttpServer())
-      .put(`farm-/crops/${farmCropId}`)
+      .put(`/farm-crops/${farmCropId}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send({
         landId: producerFarmId,
