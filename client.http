@@ -11,7 +11,7 @@ Content-Type: application/json
 
 {
   "name": "Geovane M.T",
-  "email": "geovane@test.com.br",
+  "email": "geovane4@test.com.br",
   "password": "123456"
 }
 
@@ -22,7 +22,7 @@ POST {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "email": "geovane@test.com.br",
+  "email": "geovane4@test.com.br",
   "password": "123456"
 }
 

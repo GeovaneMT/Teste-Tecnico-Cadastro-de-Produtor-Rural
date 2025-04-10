@@ -62,6 +62,9 @@ import { DeleteFarmCropUseCase } from '@/domain/erm/application/use-cases/delete
 import { DeleteProducerFarmUseCase } from '@/domain/erm/application/use-cases/delete-producer-farm'
 import { DeleteProducerUseCase } from '@/domain/erm/application/use-cases/delete-producer'
 
+import { APP_GUARD } from '@nestjs/core'
+import { RolesGuard } from '@/infra/auth/role-guard'
+
 @Module({
   imports: [DatabaseModule, CryptographyModule, EnvModule],
   controllers: [

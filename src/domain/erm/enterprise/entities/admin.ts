@@ -1,8 +1,12 @@
+import { UserRole } from '@prisma/client'
+
 import { Optional } from '@/core/types/optional'
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 export interface AdminProps {
+  role: UserRole
+
   name: string
   email: string
   password: string
@@ -12,6 +16,11 @@ export interface AdminProps {
 }
 
 export class Admin extends Entity<AdminProps> {
+
+  get role() {
+    return this.props.role
+  }
+  
   get name() {
     return this.props.name
   }

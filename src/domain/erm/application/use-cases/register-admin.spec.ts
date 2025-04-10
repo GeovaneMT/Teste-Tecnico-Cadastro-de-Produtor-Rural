@@ -18,6 +18,7 @@ describe('Register Admin', () => {
 
   it('should be able to register a new admin', async () => {
     const result = await sut.execute({
+      role: 'ADMIN',
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',
@@ -31,6 +32,7 @@ describe('Register Admin', () => {
 
   it('should hash admin password upon registration', async () => {
     const result = await sut.execute({
+      role: 'ADMIN',
       name: 'John Doe',
       email: 'johndoe@example.com',
       password: '123456',

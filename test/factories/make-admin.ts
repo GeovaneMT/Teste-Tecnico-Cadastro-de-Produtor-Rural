@@ -10,6 +10,7 @@ import {
   Admin,
   AdminProps,
 } from '@/domain/erm/enterprise/entities/admin'
+import { UserRole } from '@prisma/client'
 
 export function makeAdmin(
   override: Partial<AdminProps> = {},
@@ -17,6 +18,7 @@ export function makeAdmin(
 ) {
   const admin = Admin.create(
     {
+      role: UserRole.ADMIN,
       name: faker.person.fullName(),
       email: faker.internet.email(),
       password: faker.internet.password(),

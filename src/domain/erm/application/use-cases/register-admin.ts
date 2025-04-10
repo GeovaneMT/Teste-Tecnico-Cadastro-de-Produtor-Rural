@@ -1,3 +1,4 @@
+import { UserRole } from '@prisma/client'
 import { Injectable } from '@nestjs/common'
 
 import { Either, left, right } from '@/core/either'
@@ -8,6 +9,7 @@ import { AdminsRepository } from '@/domain/erm/application/repositories/admins-r
 import { AdminAlreadyExistsError } from '@/domain/erm/application/use-cases/errors/admin-already-exists-error'
 
 interface RegisterAdminUseCaseRequest {
+  role: UserRole
   name: string
   email: string
   password: string
@@ -28,6 +30,7 @@ export class RegisterAdminUseCase {
   ) {}
 
   async execute({
+    role,
     name,
     email,
     password,
@@ -41,6 +44,7 @@ export class RegisterAdminUseCase {
     const hashedPassword = await this.hashGenerator.hash(password)
 
     const admin = Admin.create({
+      role,
       name,
       email,
       password: hashedPassword,

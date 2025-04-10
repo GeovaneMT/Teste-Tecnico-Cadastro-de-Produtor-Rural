@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { UserRole } from '@prisma/client'
 
 import { Public } from '@/infra/auth/public'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
@@ -17,6 +18,7 @@ import {
 } from '@nestjs/common'
 
 const createAccountBodySchema = z.object({
+  role: z.nativeEnum(UserRole).optional().nullable(),
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
@@ -33,9 +35,10 @@ export class CreateAccountController {
   @HttpCode(201)
   @UsePipes(new ZodValidationPipe(createAccountBodySchema))
   async handle(@Body() body: CreateAccountBodySchema) {
-    const { name, email, password } = body
+    const { role, name, email, password } = body
 
     const result = await this.registerAdmin.execute({
+      role: role? role : UserRole.ADMIN,
       name,
       email,
       password,

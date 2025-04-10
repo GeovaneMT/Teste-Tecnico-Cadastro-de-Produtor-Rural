@@ -6,6 +6,8 @@ export class PrismaAdminMapper {
   static toDomain(raw: PrismaUser): Admin {
     return Admin.create(
       {
+        role: raw.role,
+        
         name: raw.name,
         email: raw.email,
         password: raw.password,

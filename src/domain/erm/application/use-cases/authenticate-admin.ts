@@ -51,11 +51,13 @@ export class AuthenticateAdminUseCase {
     }
 
     const accessToken = await this.encrypter.encrypt({
+      role: admin.role,
       sub: admin.id.toString(),
     })
 
     const refreshTokenExpiresIn = this.env.get('JWT_REFRESH_TOKEN_EXPIRES_IN') || '7d'
     const refreshToken = await this.encrypter.encrypt({
+      role: admin.role,
       sub: admin.id.toString(),
       expiresIn: refreshTokenExpiresIn,
     })
