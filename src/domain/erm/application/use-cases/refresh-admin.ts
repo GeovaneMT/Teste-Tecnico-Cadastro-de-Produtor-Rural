@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common'
 import { Request as ExpressRequest } from 'express'
 
-import { Either, right } from '@/core/either'
+import { Either, left, right } from '@/core/either'
+
 import { EnvService } from '@/infra/env/env.service'
+
 import { Encrypter } from '@/domain/erm/application/cryptography/encrypter'
+import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
 
 interface RefreshAdminUseCaseRequest {
   request: ExpressRequest
 }
 
 type RefreshAdminUseCaseResponse = Either<
-  null,
+  WrongCredentialsError,
   {
     accessToken: string
-    newRefreshToken: string
+    refreshToken: string
   }
 >
 
@@ -25,33 +28,28 @@ export class RefreshAdminUseCase {
   ) {}
 
   async execute({
-    request,
+    request
   }: RefreshAdminUseCaseRequest): Promise<RefreshAdminUseCaseResponse> {
-
-    const refreshToken = request.cookies['refresh_token']
-
-    if (!refreshToken) {
-      throw new Error('Missing refresh token')
+    
+    const doesNotHaveRefreshToken = !request.cookies['refresh_token']
+    
+    if (doesNotHaveRefreshToken) {
+      return left(new WrongCredentialsError())
     }
 
-    try {
-      const accessToken = await this.encrypter.encrypt({
-        sub: request.user,
-      })
-  
-      const refreshTokenExpiresIn = this.env.get('JWT_REFRESH_TOKEN_EXPIRES_IN') || '7d'
-      const newRefreshToken = await this.encrypter.encrypt({
-        sub: request.user,
-        expiresIn: refreshTokenExpiresIn,
-      })
-      
-      return right({
-        accessToken,
-        newRefreshToken,
-      })
+    const accessToken = await this.encrypter.encrypt({
+      sub: request.user,
+    })
 
-    } catch (error) {
-      throw new Error('Error during token encryption',)
-    }
+    const refreshTokenExpiresIn = this.env.get('JWT_REFRESH_TOKEN_EXPIRES_IN') || '7d'
+    const refreshToken = await this.encrypter.encrypt({
+      sub: request.user,
+      expiresIn: refreshTokenExpiresIn,
+    })
+
+    return right({
+      accessToken,
+      refreshToken,
+    })
   }
 }

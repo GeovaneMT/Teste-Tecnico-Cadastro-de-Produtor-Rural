@@ -3,6 +3,7 @@ import { Response as ExpressResponse, Request as ExpressRequest } from 'express'
 
 import { Public } from '@/infra/auth/public'
 import { RefreshAdminUseCase } from '@/domain/erm/application/use-cases/refresh-admin'
+import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
 
 import {
   Res,
@@ -11,6 +12,7 @@ import {
   BadRequestException,
   Patch,
   Req,
+  UnauthorizedException,
 } from '@nestjs/common'
 
 const authenticateBodySchema = z.object({
@@ -34,20 +36,26 @@ export class RefreshController {
 
     if (!body) {
       throw new BadRequestException()
-    }   
+    }
 
     const result = await this.refreshAdmin.execute({
       request
     })
 
-    if (result.isLeft() || !result.value) {
-      console.log(result.value)
-      throw new BadRequestException(result.value)
+    if (result.isLeft()) {
+      const error = result.value
+
+      switch (error.constructor) {
+        case WrongCredentialsError:
+          throw new UnauthorizedException(error.message)
+        default:
+          throw new BadRequestException(error.message)
+      }
     }
 
-    const { accessToken, newRefreshToken } = result.value
+    const { accessToken, refreshToken } = result.value
 
-    response.cookie('refresh_token', newRefreshToken, {
+    response.cookie('refresh_token', refreshToken, {
       path: '/',
       secure: false,
       sameSite: true,

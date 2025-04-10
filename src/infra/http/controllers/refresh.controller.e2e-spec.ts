@@ -1,5 +1,6 @@
 import request from 'supertest'
 import { hash } from 'bcryptjs'
+import cookieParser from 'cookie-parser'
 
 import { Test } from '@nestjs/testing'
 import { INestApplication } from '@nestjs/common'
@@ -21,12 +22,14 @@ describe('Refresh (E2E)', () => {
 
     app = moduleRef.createNestApplication()
 
+    app.use(cookieParser())
+
     adminFactory = moduleRef.get(AdminFactory)
 
     await app.init()
   })
 
-  test('[POST] /token/refresh', async () => {
+  test('[PATCH] /token/refresh', async () => {
     await adminFactory.makePrismaAdmin({
       email: 'johndoe@example.com',
       password: await hash('123456', 8),
@@ -43,7 +46,7 @@ describe('Refresh (E2E)', () => {
 
     const cookies = authResponse.get('Set-Cookie')
 
-    if (!cookies) {
+    if (!cookies || cookies.length === 0) {
       throw new Error('Cookies not found')
     }
 
@@ -55,13 +58,12 @@ describe('Refresh (E2E)', () => {
         password: '123456',
       })
 
-    expect(response.statusCode).toBe(201)
+    expect(response.statusCode).toBe(200)
     expect(response.body).toEqual({
       access_token: expect.any(String),
     })
-    expect(response.get('Set-Cookie')).toEqual([
-      expect.stringContaining('refresh_token='),
-      expect.stringContaining('Path=/;'),
-    ])
+    expect(response.get('Set-Cookie')).toContainEqual(expect.stringContaining('refresh_token='))
+    expect(response.get('Set-Cookie')).toContainEqual(expect.stringContaining('Path=/;'))
+    
   })
 })
