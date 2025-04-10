@@ -9,7 +9,7 @@ import { Encrypter } from '@/domain/erm/application/cryptography/encrypter'
 import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
 
 interface RefreshAdminUseCaseRequest {
-  request: ExpressRequest
+  request: ExpressRequest,
 }
 
 type RefreshAdminUseCaseResponse = Either<
@@ -32,7 +32,7 @@ export class RefreshAdminUseCase {
   }: RefreshAdminUseCaseRequest): Promise<RefreshAdminUseCaseResponse> {
     
     const doesNotHaveRefreshToken = !request.cookies['refresh_token']
-    
+
     if (doesNotHaveRefreshToken) {
       return left(new WrongCredentialsError())
     }
