@@ -1,7 +1,13 @@
 import { z } from 'zod'
-import { Response as ExpressResponse, Request as ExpressRequest } from 'express'
+import { JwtService } from '@nestjs/jwt'
+import { Response as ExpressResponse } from 'express'
 
 import { Public } from '@/infra/auth/public'
+import { EnvService } from '@/infra/env/env.service'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { CurrentUser } from '@/infra/auth/current-user-decorator'
+import { JwtRefreshTokenGuard } from '@/infra/auth/jwt-refresh.guard'
+
 import { RefreshAdminUseCase } from '@/domain/erm/application/use-cases/refresh-admin'
 import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
 
@@ -14,10 +20,8 @@ import {
   Req,
   UnauthorizedException,
   UseGuards,
-  Headers,
 } from '@nestjs/common'
-import { JwtService } from '@nestjs/jwt'
-import { UserPayload } from '@/infra/auth/jwt.strategy'
+
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -28,42 +32,27 @@ type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 
 @Public()
 @Controller('/token/refresh')
+@UseGuards(JwtRefreshTokenGuard)
+
 export class RefreshController {
   constructor(
-    private jwtService: JwtService,
     private refreshAdmin: RefreshAdminUseCase
   ) {}
 
   @Patch()
   async handle(
+    @CurrentUser() user: UserPayload,
     @Body() body: AuthenticateBodySchema,
     @Res({ passthrough: true }) response: ExpressResponse,
-    @Req() request: ExpressRequest,
   ) {
-    const refToken = request.cookies?.['refresh_token']
-
-    if (!refToken) {
-      console.log(' refToken', refToken)
-      throw new UnauthorizedException('refToken missing')
-    }
     
-    const decodedToken = this.jwtService.decode(refToken) as UserPayload
-    
-    const user: UserPayload = {
-      sub: decodedToken.sub,
-      role: decodedToken.role,
-    }
-
-    console.log(' user', user)
-
-    if (!body) {
+    if(!body) {
       throw new BadRequestException()
     }
 
     const result = await this.refreshAdmin.execute({
       user
     })
-
 
     if (result.isLeft()) {
       const error = result.value

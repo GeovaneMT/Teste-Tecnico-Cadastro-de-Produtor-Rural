@@ -7,7 +7,7 @@ import { PassportStrategy } from '@nestjs/passport'
 
 import { EnvService } from '@/infra/env/env.service'
 
-const tokenPayloadSchema = z.object({
+export const tokenPayloadSchema = z.object({
   role: z.nativeEnum(UserRole),
   sub: z.string().uuid(),
 })
