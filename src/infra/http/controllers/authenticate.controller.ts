@@ -1,8 +1,6 @@
 import { z } from 'zod'
-import { UserRole } from '@prisma/client'
 import { Response as ExpressResponse } from 'express'
 
-import { Roles } from '@/infra/auth/roles.decorator'
 import { Public } from '@/infra/auth/public.decorator'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
@@ -33,7 +31,6 @@ export class AuthenticateController {
   constructor(private authenticateAdmin: AuthenticateAdminUseCase) {}
 
   @Post()
-  @Roles(UserRole.ADMIN)
   @UsePipes(new ZodValidationPipe(authenticateBodySchema))
   async handle(@Body() body: AuthenticateBodySchema, @Res({ passthrough: true }) response: ExpressResponse) {
     const { email, password } = body

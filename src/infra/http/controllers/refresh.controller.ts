@@ -17,7 +17,9 @@ import {
   Controller,
   BadRequestException,
   UnauthorizedException,
+  UseGuards,
 } from '@nestjs/common'
+import { JwtRefreshTokenGuard } from '@/infra/auth/jwt-refresh.guard'
 
 
 const authenticateBodySchema = z.object({
@@ -29,6 +31,7 @@ type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 
 @Public()
 @Controller('/token/refresh')
+@UseGuards(JwtRefreshTokenGuard)
 
 export class RefreshController {
   constructor(
@@ -37,6 +40,7 @@ export class RefreshController {
 
   @Patch()
   @Roles(UserRole.ADMIN)
+
   async handle(
     @CurrentUser() user: UserPayload,
     @Body() body: AuthenticateBodySchema,

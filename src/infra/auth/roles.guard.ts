@@ -1,4 +1,5 @@
 
+import { JwtService } from '@nestjs/jwt'
 import { Reflector } from '@nestjs/core'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { ROLES_KEY } from '@/infra/auth/roles.decorator'
@@ -12,7 +13,11 @@ import {
 
 @Injectable()
 export class RolesGuard implements CanActivate {
-  constructor(private reflector: Reflector) {}
+
+  constructor(
+    private jwtService: JwtService,
+    private reflector: Reflector
+  ) {}
 
   canActivate(context: ExecutionContext): boolean {
     const requiredRoles = this.reflector.getAllAndOverride<string[]>(ROLES_KEY, [
@@ -29,12 +34,15 @@ export class RolesGuard implements CanActivate {
 
     if (!currentUser || !requiredRoles.includes(currentUser.role)) {
       const request = context.switchToHttp().getRequest()
-      const { user: tokenUser  }: { user: UserPayload } = request.cookies?.['refresh_token']
+      const refToken = request.cookies?.['refresh_token']
 
-      if (!tokenUser || !requiredRoles.includes(tokenUser.role)) {
+      const user = this.jwtService.decode(refToken)
+      
+      if (!user || !requiredRoles.includes(user.role)) {
         throw new ForbiddenException('You do not have access to this resource')
       }
-      
+
+      return true
     }
 
     return true

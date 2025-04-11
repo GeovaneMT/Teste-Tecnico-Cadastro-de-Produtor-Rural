@@ -34,14 +34,14 @@ describe('Create a farm crop (E2E)', () => {
       ],
     }).compile()
 
+    jwt = moduleRef.get(JwtService)
     app = moduleRef.createNestApplication()
-
     prisma = moduleRef.get(PrismaService)
+
     adminFactory = moduleRef.get(AdminFactory)
     producerFactory = moduleRef.get(ProducerFactory)
     farmCropFactory = moduleRef.get(FarmCropFactory)
     producerFarmFactory = moduleRef.get(ProducerFarmFactory)
-    jwt = moduleRef.get(JwtService)
 
     await app.init()
   })
