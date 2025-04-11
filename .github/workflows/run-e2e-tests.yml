@@ -16,24 +16,32 @@ jobs:
           POSTGRESQL_USERNAME: docker
           POSTGRESQL_PASSWORD: docker
           POSTGRESQL_DATABASE: postgre
-        volumes:
-          - ./data/pg:/data/postgres
-          
-    steps:
-      - uses: actions/checkout@v3
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
-      - uses: actions/setup-node@v3
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
           node-version: 18
           cache: 'pnpm'
-          
-      - run: corepack enable
-      
-      - run: corepack prepare pnpm@latest --activate
-    
-      - run: pnpm install --frozen-lockfile
 
-      - run: pnpm run test:e2e
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run E2E Tests
+        run: pnpm run test:e2e
         env:
           PORT: "3333"
           NEST_PUBLIC_API_BASE_URL: "https://rural-erm.onrender.com"
@@ -44,7 +52,3 @@ jobs:
           
           JWT_EXPIRES_IN: "10m"
           JWT_REFRESH_TOKEN_EXPIRES_IN: "7d"
-          
-          REDIS_DB: "0"
-          REDIS_PORT: "6379"
-          REDIS_HOST: "redis://<redis-host>"
