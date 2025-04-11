@@ -4,10 +4,16 @@ import { makeAdmin } from 'test/factories/make-admin'
 import { FakeHasher } from 'test/cryptography/fake-hasher'
 import { FakeEncrypter } from 'test/cryptography/fake-encrypter'
 import { InMemoryAdminsRepository } from 'test/repositories/in-memory-admins-repository'
+import { EnvService } from '@/infra/env/env.service'
+import { ConfigService } from '@nestjs/config'
+import { Env } from '@/infra/env/env'
 
 let inMemoryAdminsRepository: InMemoryAdminsRepository
 let fakeHasher: FakeHasher
 let encrypter: FakeEncrypter
+
+let env: EnvService
+let configService: ConfigService<Env, true>
 
 let sut: AuthenticateAdminUseCase
 
@@ -17,10 +23,15 @@ describe('Authenticate Admin', () => {
     fakeHasher = new FakeHasher()
     encrypter = new FakeEncrypter()
 
+    
+    configService = new ConfigService<Env, true>()
+    env = new EnvService(configService)
+
     sut = new AuthenticateAdminUseCase(
       inMemoryAdminsRepository,
       fakeHasher,
       encrypter,
+      env,
     )
   })
 
@@ -38,8 +49,11 @@ describe('Authenticate Admin', () => {
     })
 
     expect(result.isRight()).toBe(true)
+
     expect(result.value).toEqual({
       accessToken: expect.any(String),
+      refreshToken: expect.any(String),
     })
+      
   })
 })
