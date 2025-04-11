@@ -16,6 +16,9 @@ jobs:
           POSTGRESQL_USERNAME: docker
           POSTGRESQL_PASSWORD: docker
           POSTGRESQL_DATABASE: postgre
+          PGDATA: /data/postgres
+        volumes:
+          - ./data/pg:/data/postgres
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
