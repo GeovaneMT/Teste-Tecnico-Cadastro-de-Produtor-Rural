@@ -1,9 +1,7 @@
 import { z } from 'zod'
-import { JwtService } from '@nestjs/jwt'
 import { Response as ExpressResponse } from 'express'
 
 import { Public } from '@/infra/auth/public'
-import { EnvService } from '@/infra/env/env.service'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
 import { CurrentUser } from '@/infra/auth/current-user-decorator'
 import { JwtRefreshTokenGuard } from '@/infra/auth/jwt-refresh.guard'
@@ -45,7 +43,7 @@ export class RefreshController {
     @Body() body: AuthenticateBodySchema,
     @Res({ passthrough: true }) response: ExpressResponse,
   ) {
-    
+
     if(!body) {
       throw new BadRequestException()
     }
