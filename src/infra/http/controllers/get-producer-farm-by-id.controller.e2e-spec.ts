@@ -47,15 +47,16 @@ describe('Get farm by id (E2E)', () => {
     await app.init()
   })
 
-
   test('[GET] /producer-farms/:id', async () => {
 
     const user = await adminFactory.makePrismaAdmin({
       name: 'John Doe',
     })
 
-    const accessToken = jwt.sign({ sub: user.id.toString() })
-
+    const accessToken = jwt.sign({
+      sub: user.id.toString(),
+      role: user.role
+    })
     const producer = await producerFactory.makePrismaProducer()
 
     const farm = await producerFarmFactory.makePrismaProducerFarm({

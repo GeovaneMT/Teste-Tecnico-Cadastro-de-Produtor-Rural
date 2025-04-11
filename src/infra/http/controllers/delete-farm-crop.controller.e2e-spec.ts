@@ -49,8 +49,10 @@ describe('Delete a farm crop (E2E)', () => {
   test('[DELETE] /farm-crops/:cropId', async () => {
     const user = await adminFactory.makePrismaAdmin()
 
-    const accessToken = jwt.sign({ sub: user.id.toString() })
-
+    const accessToken = jwt.sign({
+      sub: user.id.toString(),
+      role: user.role
+    })
     const producer = await producerFactory.makePrismaProducer()
 
     const producerFarm = await producerFarmFactory.makePrismaProducerFarm({

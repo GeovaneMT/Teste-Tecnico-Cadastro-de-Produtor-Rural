@@ -51,8 +51,11 @@ describe('Get producer by email (E2E)', () => {
       name: 'John Doe',
     })
 
-    const accessToken = jwt.sign({ sub: user.id.toString() })
-
+    const accessToken = jwt.sign({
+      sub: user.id.toString(),
+      role: user.role
+    })
+    
     const producer = await producerFactory.makePrismaProducer({email: 'producer@email.com', name : 'Producer 01'})
 
     await producerFarmFactory.makePrismaProducerFarm({

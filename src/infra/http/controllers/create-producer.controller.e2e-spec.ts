@@ -43,8 +43,10 @@ describe('Create a producer (E2E)', () => {
   test('[POST] /producers', async () => {
 
     const user = await adminFactory.makePrismaAdmin()
-    const accessToken = jwt.sign({ sub: user.id.toString() })
-
+    const accessToken = jwt.sign({
+      sub: user.id.toString(),
+      role: user.role
+    })
     const response = await request(app.getHttpServer())
       .post('/producers')
       .set('Authorization', `Bearer ${accessToken}`)

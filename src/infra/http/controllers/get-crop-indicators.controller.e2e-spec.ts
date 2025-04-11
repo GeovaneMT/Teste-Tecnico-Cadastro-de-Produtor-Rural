@@ -52,8 +52,10 @@ describe('Fetch total farms (E2E)', () => {
 
     const user = await adminFactory.makePrismaAdmin()
 
-    const accessToken = jwt.sign({ sub: user.id.toString() })
-    
+    const accessToken = jwt.sign({
+      sub: user.id.toString(),
+      role: user.role
+    })    
     const producer1 = await producerFactory.makePrismaProducer({ name: 'Producer 01' })
 
     const producer2 = await producerFactory.makePrismaProducer({ name: 'Producer 02' })

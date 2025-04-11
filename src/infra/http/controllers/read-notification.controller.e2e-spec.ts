@@ -41,8 +41,10 @@ describe('Read notification (E2E)', () => {
       name: 'John Doe',
     })
 
-    const accessToken = jwt.sign({ sub: user.id.toString() })
-
+    const accessToken = jwt.sign({
+      sub: user.id.toString(),
+      role: user.role
+    })
     const producer = await producerFactory.makePrismaProducer({
       name: 'John Doe',
     })

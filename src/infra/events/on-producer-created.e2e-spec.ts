@@ -40,8 +40,10 @@ describe('On producer created (E2E)', () => {
   it('should send a notification when producer is created', async () => {
     const user = await adminFactory.makePrismaAdmin()
 
-    const accessToken = jwt.sign({ sub: user.id.toString() })
-
+    const accessToken = jwt.sign({
+      sub: user.id.toString(),
+      role: user.role
+    })
     await request(app.getHttpServer())
       .post('/producers')
       .set('Authorization', `Bearer ${accessToken}`)

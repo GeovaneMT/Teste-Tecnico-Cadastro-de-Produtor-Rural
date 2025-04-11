@@ -13,7 +13,11 @@ import {
   Patch,
   Req,
   UnauthorizedException,
+  UseGuards,
+  Headers,
 } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 
 const authenticateBodySchema = z.object({
   email: z.string().email(),
@@ -22,25 +26,44 @@ const authenticateBodySchema = z.object({
 
 type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 
-@Controller('/token/refresh')
 @Public()
+@Controller('/token/refresh')
 export class RefreshController {
-  constructor(private refreshAdmin: RefreshAdminUseCase) {}
+  constructor(
+    private jwtService: JwtService,
+    private refreshAdmin: RefreshAdminUseCase
+  ) {}
 
   @Patch()
   async handle(
     @Body() body: AuthenticateBodySchema,
     @Res({ passthrough: true }) response: ExpressResponse,
-    @Req() request: ExpressRequest
+    @Req() request: ExpressRequest,
   ) {
+    const refToken = request.cookies?.['refresh_token']
+
+    if (!refToken) {
+      console.log(' refToken', refToken)
+      throw new UnauthorizedException('refToken missing')
+    }
+    
+    const decodedToken = this.jwtService.decode(refToken) as UserPayload
+    
+    const user: UserPayload = {
+      sub: decodedToken.sub,
+      role: decodedToken.role,
+    }
+
+    console.log(' user', user)
 
     if (!body) {
       throw new BadRequestException()
     }
 
     const result = await this.refreshAdmin.execute({
-      request
+      user
     })
+
 
     if (result.isLeft()) {
       const error = result.value

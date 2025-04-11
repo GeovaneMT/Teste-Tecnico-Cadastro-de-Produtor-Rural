@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common'
-import { Request as ExpressRequest } from 'express'
 
 import { Either, left, right } from '@/core/either'
 
 import { EnvService } from '@/infra/env/env.service'
+import { UserPayload } from '@/infra/auth/jwt.strategy'
 
 import { Encrypter } from '@/domain/erm/application/cryptography/encrypter'
 import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
 
 interface RefreshAdminUseCaseRequest {
-  request: ExpressRequest,
+  user: UserPayload,
 }
 
 type RefreshAdminUseCaseResponse = Either<
@@ -28,22 +28,22 @@ export class RefreshAdminUseCase {
   ) {}
 
   async execute({
-    request
+    user
   }: RefreshAdminUseCaseRequest): Promise<RefreshAdminUseCaseResponse> {
     
-    const doesNotHaveRefreshToken = !request.cookies['refresh_token']
-
-    if (doesNotHaveRefreshToken) {
+    if(!user) {
       return left(new WrongCredentialsError())
     }
 
     const accessToken = await this.encrypter.encrypt({
-      sub: request.user,
+      role: user.role,
+      sub: user.sub,
     })
 
     const refreshTokenExpiresIn = this.env.get('JWT_REFRESH_TOKEN_EXPIRES_IN') || '7d'
     const refreshToken = await this.encrypter.encrypt({
-      sub: request.user,
+      role: user.role,
+      sub: user.sub,
       expiresIn: refreshTokenExpiresIn,
     })
 

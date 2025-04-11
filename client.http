@@ -60,6 +60,6 @@ Authorization: Bearer {{authToken}}
 ###
 
 # @name get_producer_by_email
-GET {{baseUrl}}/producers/ge@email.com
+GET {{baseUrl}}/producers/geovane@email.com
 Content-Type: application/json
 Authorization: Bearer {{authToken}}

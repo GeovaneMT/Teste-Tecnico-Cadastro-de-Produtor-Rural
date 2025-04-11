@@ -50,8 +50,10 @@ describe('Edit a producer farm (E2E)', () => {
   test('[PUT] /producer-farms/:farmId', async () => {
     const user = await adminFactory.makePrismaAdmin()
 
-    const accessToken = jwt.sign({ sub: user.id.toString() })
-    
+    const accessToken = jwt.sign({
+      sub: user.id.toString(),
+      role: user.role
+    })    
     const producer = await producerFactory.makePrismaProducer()
 
     const producerFarm = await producerFarmFactory.makePrismaProducerFarm({
