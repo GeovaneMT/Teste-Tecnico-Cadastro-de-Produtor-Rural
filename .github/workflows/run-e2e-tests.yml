@@ -32,10 +32,8 @@ jobs:
           node-version: 18
           cache: 'pnpm'
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 8
+      - name: GitHub Action for pnpm
+        uses: znck/pnpm@v0.1.0-alpha.1
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
