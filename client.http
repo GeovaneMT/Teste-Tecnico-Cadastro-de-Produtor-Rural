@@ -1,8 +1,6 @@
-# development url
 @baseUrl = http://localhost:3333
 
 #production url
-# @baseUrl = https://rural-erm.onrender.com
 @authToken = {{authenticate.response.body.access_token}}
 
 # @name create_account
