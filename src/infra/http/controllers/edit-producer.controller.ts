@@ -1,9 +1,11 @@
 import { z } from 'zod'
+import { UserRole } from '@prisma/client'
 
+import { Roles } from '@/infra/auth/roles.decorator'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
-import { EditProducerUseCase } from '@/domain/erm/application/use-cases/edit-producer'
 import { documentValidationSchema } from '@/domain/erm/utils/document-validation'
+import { EditProducerUseCase } from '@/domain/erm/application/use-cases/edit-producer'
 
 import {
   BadRequestException,
@@ -29,6 +31,7 @@ export class EditProducerController {
   constructor(private editProducer: EditProducerUseCase) {}
 
   @Put()
+  @Roles(UserRole.ADMIN)
   @HttpCode(204)
   async handle(
     @Body(bodyValidationPipe) body: EditProducerBodySchema,

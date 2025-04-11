@@ -1,6 +1,8 @@
 import { z } from 'zod'
+import { UserRole } from '@prisma/client'
 import { Post, Body, Controller, BadRequestException, ConflictException } from '@nestjs/common'
 
+import { Roles } from '@/infra/auth/roles.decorator'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
 import { documentValidationSchema } from '@/domain/erm/utils/document-validation'
@@ -23,6 +25,7 @@ export class CreateProducerController {
   constructor(private createProducer: CreateProducerUseCase) {}
 
   @Post()
+  @Roles(UserRole.ADMIN)
   async handle(
     @Body(bodyValidationPipe) body: CreateProducerBodySchema,
   ) {

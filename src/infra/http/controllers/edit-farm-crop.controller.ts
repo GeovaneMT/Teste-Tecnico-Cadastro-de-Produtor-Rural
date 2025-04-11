@@ -1,8 +1,10 @@
 
 import { z } from 'zod'
-import { CropType } from '@prisma/client'
+import { CropType, UserRole } from '@prisma/client'
 
+import { Roles } from '@/infra/auth/roles.decorator'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
+
 import { EditFarmCropUseCase } from '@/domain/erm/application/use-cases/edit-farm-crop'
 
 import {
@@ -30,6 +32,7 @@ export class EditCropController {
   constructor(private editFarmCrop: EditFarmCropUseCase) {}
 
   @Put()
+  @Roles(UserRole.ADMIN)
   @HttpCode(204)
   async handle(
     @Body(bodyValidationPipe) body: EditFarmCropBodySchema,

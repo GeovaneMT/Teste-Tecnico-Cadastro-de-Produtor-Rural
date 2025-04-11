@@ -1,5 +1,9 @@
+import { UserRole } from '@prisma/client'
 import { BadRequestException, NotFoundException, Controller, Get, Param } from '@nestjs/common'
+
+import { Roles } from '@/infra/auth/roles.decorator'
 import { CropPresenter } from '@/infra/http/presenters/farm-crop-presenter'
+
 import { GetFarmCropByIdUseCase } from '@/domain/erm/application/use-cases/get-farm-crop-by-id'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
@@ -8,6 +12,7 @@ export class GetCropByIdController {
   constructor(private getFarmCropById: GetFarmCropByIdUseCase) {}
 
   @Get()
+  @Roles(UserRole.ADMIN)
   async handle(@Param('id') id: string) {
     const result = await this.getFarmCropById.execute({
       id,

@@ -1,7 +1,8 @@
 import { z } from 'zod'
 import { UserRole } from '@prisma/client'
+import { Roles } from '@/infra/auth/roles.decorator'
 
-import { Public } from '@/infra/auth/public'
+import { Public } from '@/infra/auth/public.decorator'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 
 import { RegisterAdminUseCase } from '@/domain/erm/application/use-cases/register-admin'
@@ -33,6 +34,7 @@ export class CreateAccountController {
 
   @Post()
   @HttpCode(201)
+  @Roles(UserRole.ADMIN)
   @UsePipes(new ZodValidationPipe(createAccountBodySchema))
   async handle(@Body() body: CreateAccountBodySchema) {
     const { role, name, email, password } = body

@@ -1,10 +1,11 @@
 import { z } from 'zod'
+import { UserRole } from '@prisma/client'
 import { Response as ExpressResponse } from 'express'
 
-import { Public } from '@/infra/auth/public'
+import { Roles } from '@/infra/auth/roles.decorator'
+import { Public } from '@/infra/auth/public.decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
-import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { JwtRefreshTokenGuard } from '@/infra/auth/jwt-refresh.guard'
+import { CurrentUser } from '@/infra/auth/current-user.decorator'
 
 import { RefreshAdminUseCase } from '@/domain/erm/application/use-cases/refresh-admin'
 import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors/wrong-credentials-error'
@@ -12,12 +13,10 @@ import { WrongCredentialsError } from '@/domain/erm/application/use-cases/errors
 import {
   Res,
   Body,
+  Patch,
   Controller,
   BadRequestException,
-  Patch,
-  Req,
   UnauthorizedException,
-  UseGuards,
 } from '@nestjs/common'
 
 
@@ -30,7 +29,6 @@ type AuthenticateBodySchema = z.infer<typeof authenticateBodySchema>
 
 @Public()
 @Controller('/token/refresh')
-@UseGuards(JwtRefreshTokenGuard)
 
 export class RefreshController {
   constructor(
@@ -38,6 +36,7 @@ export class RefreshController {
   ) {}
 
   @Patch()
+  @Roles(UserRole.ADMIN)
   async handle(
     @CurrentUser() user: UserPayload,
     @Body() body: AuthenticateBodySchema,

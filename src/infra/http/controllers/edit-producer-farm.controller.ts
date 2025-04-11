@@ -1,8 +1,10 @@
 
 import { z } from 'zod'
-import { CropType, States } from '@prisma/client'
+import { States, UserRole } from '@prisma/client'
 
+import { Roles } from '@/infra/auth/roles.decorator'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
+
 import { EditProducerFarmUseCase } from '@/domain/erm/application/use-cases/edit-producer-farm'
 
 import {
@@ -13,7 +15,6 @@ import {
   Param,
   Put,
 } from '@nestjs/common'
-import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
 
 const EditProducerFarmBodySchema = z.object({
   producerId: z.string().uuid(),
@@ -36,6 +37,7 @@ export class EditProducerFarmController {
   constructor(private editProducerFarm: EditProducerFarmUseCase) {}
 
   @Put()
+  @Roles(UserRole.ADMIN)
   @HttpCode(204)
   async handle(
     @Body(bodyValidationPipe) body: EditProducerFarmBodySchema,

@@ -7,7 +7,7 @@ import {
 
 import { JwtService } from '@nestjs/jwt'
 import { ConfigService } from '@nestjs/config'
-import { tokenPayloadSchema, UserPayload } from './jwt.strategy'
+import { tokenPayloadSchema, UserPayload } from '@/infra/auth/jwt.strategy'
 
 @Injectable()
 export class JwtRefreshTokenGuard implements CanActivate {

@@ -1,9 +1,11 @@
+import { UserRole } from '@prisma/client'
+
 import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
-import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 
-import { CurrentUser } from '@/infra/auth/current-user-decorator'
-import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { Roles } from '@/infra/auth/roles.decorator'
+
+import { ReadNotificationUseCase } from '@/domain/notification/application/use-cases/read-notification'
 
 import {
   BadRequestException,
@@ -20,9 +22,9 @@ export class ReadNotificationController {
   constructor(private readNotification: ReadNotificationUseCase) {}
 
   @Patch()
+  @Roles(UserRole.ADMIN)
   @HttpCode(204)
   async handle(
-    @CurrentUser() user: UserPayload,
     @Param('notificationId') notificationId: string,
     @Param('producerId') producerId: string,
   ) {

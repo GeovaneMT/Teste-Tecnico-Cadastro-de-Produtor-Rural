@@ -1,3 +1,8 @@
+import { UserRole } from '@prisma/client'
+
+import { Roles } from '@/infra/auth/roles.decorator'
+import { DeleteProducerFarmUseCase } from '@/domain/erm/application/use-cases/delete-producer-farm'
+
 import {
   BadRequestException,
   Controller,
@@ -6,14 +11,13 @@ import {
   Param,
 } from '@nestjs/common'
 
-import { DeleteProducerFarmUseCase } from '@/domain/erm/application/use-cases/delete-producer-farm'
-
 @Controller('producer-farms/:id')
 export class DeleteFarmController {
   constructor(private deleteProducerFarm: DeleteProducerFarmUseCase) {}
 
   @Delete()
   @HttpCode(204)
+  @Roles(UserRole.ADMIN)
   async handle(
     @Param('id') producerFarmId: string,
   ) {

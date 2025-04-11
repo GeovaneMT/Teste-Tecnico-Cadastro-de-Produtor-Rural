@@ -1,8 +1,10 @@
 import { z } from 'zod'
-import { CropType } from '@prisma/client'
+import { CropType, UserRole } from '@prisma/client'
 import { Post, Body, Controller } from '@nestjs/common'
 
+import { Roles } from '@/infra/auth/roles.decorator'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
+
 import { CreateFarmCropUseCase } from '@/domain/erm/application/use-cases/create-farm-crop'
 
 const createFarmCropBodySchema = z.object({
@@ -21,6 +23,7 @@ export class CreateFarmCropController {
   constructor(private createFarmCrop: CreateFarmCropUseCase) {}
 
   @Post()
+  @Roles(UserRole.ADMIN)
   async handle(
     @Body(bodyValidationPipe) body: CreateFarmCropBodySchema,
   ) {

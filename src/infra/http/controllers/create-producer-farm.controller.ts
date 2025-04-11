@@ -1,9 +1,10 @@
 import { z } from 'zod'
-import { States } from '@prisma/client'
+import { States, UserRole } from '@prisma/client'
 import { Post, Body, Controller } from '@nestjs/common'
 
+import { Roles } from '@/infra/auth/roles.decorator'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
-import { FarmArea } from '@/domain/erm/enterprise/entities/value-objects/farm-area'
+
 import { CreateProducerFarmUseCase } from '@/domain/erm/application/use-cases/create-producer-farm'
 
 const createProducerFarmBodySchema = z.object({
@@ -27,6 +28,7 @@ export class CreateProducerFarmController {
   constructor(private createProducerFarm: CreateProducerFarmUseCase) {}
 
   @Post()
+  @Roles(UserRole.ADMIN)
   async handle(
     @Body(bodyValidationPipe) body: CreateProducerFarmBodySchema,
   ) {

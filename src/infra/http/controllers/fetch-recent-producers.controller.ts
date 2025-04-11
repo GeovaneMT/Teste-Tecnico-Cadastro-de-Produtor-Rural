@@ -1,11 +1,14 @@
 import { z } from 'zod'
+import { UserRole } from '@prisma/client'
 import { BadRequestException, NotFoundException, Controller, Get, Query } from '@nestjs/common'
 
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+
+import { Roles } from '@/infra/auth/roles.decorator'
 import { ZodValidationPipe } from '@/infra/http/pipes/zod-validation-pipe'
 import { ProducerPresenter } from '@/infra/http/presenters/producer-presenter'
 
 import { FetchRecentProducersUseCase } from '@/domain/erm/application/use-cases/fetch-recent-producers'
-import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
 
 const pageQueryParamSchema = z
   .string()
@@ -23,6 +26,7 @@ export class FetchRecentProducersController {
   constructor(private fetchRecentProducers: FetchRecentProducersUseCase) {}
 
   @Get()
+  @Roles(UserRole.ADMIN)
   async handle(@Query('page', queryValidationPipe) page: PageQueryParamSchema) {
     const result = await this.fetchRecentProducers.execute({
       page,
